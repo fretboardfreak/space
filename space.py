@@ -13,7 +13,8 @@ STATE = None
 def load(save_file):
     '''Load game state directly. Useful when used on the interpreter'''
     global STATE
-    STATE = pickle.load(save_file)
+    with open(save_file, 'r') as sf:
+        STATE = pickle.load(sf)
 
 def main():
     args = parse_cmd_line()
@@ -33,9 +34,7 @@ def parse_cmd_line():
 
 def load_save_or_start_new_game(save_file):
     if os.path.exists(save_file):
-        global STATE
-        with open(save_file, 'r') as sf:
-            STATE = pickle.load(sf)
+        load(save_file)
     else:
         start_new_game(save_file)
 
