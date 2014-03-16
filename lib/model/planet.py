@@ -39,7 +39,7 @@ class Planet(object):
             rates[res] = rates.get(res, float()) + modifier
         return rates
 
-    def __modify_rate(self, resource, modifier):
+    def _modify_rate(self, resource, modifier):
         if resource not in self.__resource_names:
             raise KeyError('Resource %s not found on planet %s.' %
                            (resource, self.name))
@@ -73,9 +73,11 @@ class Planet(object):
         return ("Planet(name=%s, emperor=%s, resources=%s, rates=%s)" %
                 (self.name, self.emperor, self.resources, self.rates))
 
-    def show(self):
+    def show(self, rates=None):
+        if rates is None:
+            rates = True
         self.update()
-        res = '\n'.join(['- %s: %d' % (name, amt)
+        res = '\n'.join(['- %s: %d (%s)' % (name, amt, self.rates[name])
                          for name, amt in self.resources.iteritems()])
         res = indent(res, '  ')
         return "%s, owner %s\n%s" % (self.name, self.emperor, res)

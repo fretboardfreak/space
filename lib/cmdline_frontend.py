@@ -2,8 +2,12 @@ import sys, pickle, readline
 from argparse import ArgumentParser
 from cmd import Cmd
 from functools import partial
+from random import randint
 
-from lib.model import GameState, User, Galaxy, Coord
+from lib.model import GameState, User, Galaxy, Coord, METAL, THORIUM
+from lib.namegen import NameGen
+
+DEBUG = True
 
 class SpaceEngine(object):
     def __init__(self, save_file, user_interface):
@@ -15,43 +19,58 @@ class SpaceEngine(object):
         with open(self.state.save_file, 'r') as sf:
             self.state = pickle.load(sf)
 
-    def start_new_game(self):
-        #TODO farm most/some of this to a ui method
-        msg = 'Do you want to start a new game?'
-        self.ui.input_bool(msg) or sys.exit(0)
-
-        self.state.galaxy = Galaxy()
-
-        name = self.ui.input_text("Great another wanna be space emperor! "
-                                  "What's your name then? ")
-
-        home_coords = Coord()
-        sec_x = self.ui.input_int('Ok, now we need to find your home planet. '
-                                  'Enter the sector coords:\nx=')
-        sec_y = self.ui.input_int('y=')
-        home_coords.sector = (sec_x, sec_y)
-
-        sys_x = self.ui.input_int('Now the system coords:\nx=')
-        sys_y = self.ui.input_int('y=')
-        home_coords.system = (sys_x, sys_y)
-
-        system = self.state.galaxy.systems[home_coords]
-        planet_num_qry = ('That system has %s planets. Which one did you say '
-                          'was yours?\n%s\nplanet=' %
-                          (len(system.planets),
-                           '\n'.join([' %s. %s' % (i, p.name) for i,p in
-                                      enumerate(system.planets)])))
-        planet_num = self.ui.input_int(planet_num_qry, min=0,
-                                       max=len(system.planets)-1)
-        home_coords.planet = planet_num
-        home_planet = system.planets[planet_num]
-
-        self.state.user = User(name, home_coords, home_planet)
-        self.save()
-
     def save(self):
         with open(self.state.save_file, 'w') as fd:
             pickle.dump(self.state, fd)
+
+    def start_new_game(self):
+        msg = 'Do you want to start a new game?'
+        self.ui.input_bool(msg) or sys.exit(0)
+
+        if DEBUG and self.ui.input_bool('create test state?'):
+            self.create_test_state()
+            return
+
+        try:
+            # create new galaxy
+            self.state.galaxy = Galaxy()
+
+            # create new user
+            system_callback = lambda coords: self.state.galaxy.get_system(coords)
+            user_info = self.ui.newgame_get_user_info(system_callback)
+            self.state.user = User(*user_info)
+        finally:
+            self.save()
+
+    def create_test_state(self):
+        self.state.galaxy = Galaxy()
+        name = NameGen('lib/namegen_lang.txt').gen_word()
+        home_coords = Coord(float('%d.%d' % (randint(0, 100), randint(0, 100))),
+                            float('%d.%d' % (randint(0, 100), randint(0, 100))),
+                            randint(0, 4))
+        system = self.state.galaxy.get_system(home_coords)
+        home_planet = system.planets[home_coords.planet]
+        self.state.user = User(name, home_coords, home_planet)
+
+        # TODO: implement optional randomized range of rates
+        if self.ui.input_bool('do you want some randomized rates?'):
+            interactive = self.ui.input_bool(
+                    'do you want to specify the rates yourself?')
+            if interactive:
+                def get_rate():
+                    return randint(self.ui.input_int('  10*min rate='),
+                                   self.ui.input_int('  10*max rate='))/10.0
+            else:
+                def get_rate():
+                    return randint(0, 10)/10.0
+
+            for planet in self.state.user.planets.values():
+                for res in [METAL, THORIUM]:
+                    if interactive: print planet.name, res,
+                    planet._modify_rate(res, get_rate())
+
+        self.save()
+
 
 class SpaceUI(object):
     @staticmethod
@@ -100,6 +119,35 @@ class SpaceUI(object):
     @staticmethod
     def show_planets(engine, *args, **kwargs):
         print engine.state.user.show_planets()
+
+    @staticmethod
+    def newgame_get_user_info(system_query_cb):
+        name = SpaceUI.input_text("Great another wanna be space emperor! "
+                                  "What's your name then? ")
+
+        home_coords = Coord()
+        sec_x = SpaceUI.input_int('Ok, now we need to find your home planet. '
+                                  'Enter the sector coords:\nx=')
+        sec_y = SpaceUI.input_int('y=')
+        home_coords.sector = (sec_x, sec_y)
+
+        sys_x = SpaceUI.input_int('Now the system coords:\nx=')
+        sys_y = SpaceUI.input_int('y=')
+        home_coords.system = (sys_x, sys_y)
+
+        system = system_query_cb(home_coords)
+        #TODO: replace this ugliness with a System.show_planets method
+        planet_num_qry = ('That system has %s planets. Which one did you say '
+                          'was yours?\n%s\nplanet=' %
+                          (len(system.planets),
+                           '\n'.join([' %s. %s' % (i, p.name) for i,p in
+                                      enumerate(system.planets)])))
+        planet_num = SpaceUI.input_int(planet_num_qry, min=0,
+                                       max=len(system.planets)-1)
+        home_coords.planet = planet_num
+        home_planet = system.planets[planet_num]
+
+        return (name, home_coords, home_planet)
 
 class SpaceCmd(Cmd):
     def __init__(self, engine):
