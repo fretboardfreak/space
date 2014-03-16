@@ -10,6 +10,7 @@ from argparse import ArgumentParser
 from collections import defaultdict
 from cmd import Cmd
 from functools import partial
+from time import time
 
 from lib.namegen import NameGen
 from lib.rst import indent, wrap
@@ -24,8 +25,9 @@ def parse_args():
     epilog = 'Stay awesome, spacelings!'
     parser = ArgumentParser(description=__doc__,
                             epilog=epilog)
-    parser.add_argument('-s', '--save-file', default='space.sav', dest='save_file',
-                        help='The persistant game save file.')
+    parser.add_argument(
+            '-s', '--save-file', default='space.sav', dest='save_file',
+            help='The persistant game save file.')
     return parser.parse_args()
 
 class SpaceEngine(object):
@@ -63,7 +65,7 @@ class SpaceEngine(object):
                           (len(system.planets),
                            '\n'.join([' %s. %s' % (i, p.name) for i,p in
                                       enumerate(system.planets)])))
-        planet_num = self.ui.input_int(planet_num_qry, min=1,
+        planet_num = self.ui.input_int(planet_num_qry, min=0,
                                        max=len(system.planets)-1)
         home_coords.planet = planet_num
         home_planet = system.planets[planet_num]
@@ -231,7 +233,7 @@ class DefaultAttrDict(defaultdict):
 ### Object Model
 
 # resources
-METALS = 'metals'
+METAL = 'metal'
 THORIUM = 'thorium'
 
 class Coord(object):
@@ -241,7 +243,7 @@ class Coord(object):
         if planet is None: planet = 0
         self.x = float(x)
         self.y = float(y)
-        self.planet = int(0)
+        self.planet = int(planet)
 
     @property
     def sector(self):
@@ -267,8 +269,16 @@ class Coord(object):
         self.x = float('.'.join([sys_x, str(self.x).split('.')[0]]))
         self.y = float('.'.join([sys_y, str(self.y).split('.')[0]]))
 
+    def __eq__(self, other):
+        return (other.x == self.x and
+                other.y == self.y and
+                other.planet == self.planet)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def __hash__(self):
-        return hash((self.x, self.y))
+        return hash((self.x, self.y, self.planet))
 
     def __repr__(self):
         return "Coord(%s, %s, %s)" % (self.x, self.y, self.planet)
@@ -300,13 +310,12 @@ class User(object):
         planets = []
         for coord, planet in self.planets.iteritems():
             planets.append('%s: %s' % (coord, planet.show()))
-        planets = indent('\n'.join(planets), '    ')
-        return planets
+        return '\n'.join(planets)
 
     def show(self):
+        planets = indent(self.show_planets(), '    ')
         return ("User: %s\n  planets:\n%s" %
-                (self.name, self.show_planets()))
-
+                (self.name, planets))
 
 class Galaxy(object):
     def __init__(self):
@@ -342,12 +351,58 @@ class System(object):
 
 class Planet(object):
     def __init__(self):
-        self._max_resources = AttrDict([(THORIUM, 1e6),
-                                        (METALS, 10e6)])
-        self.resources = AttrDict([(THORIUM, 0),
-                                   (METALS, 0)])
+        self.__resource_names = [THORIUM, METAL]
+        self.__max_resources = AttrDict([(THORIUM, 1e6),
+                                        (METAL, 10e6)])
+        self.__resource_rates = []
+        self.resources = AttrDict(
+                [(res, random.randint(0, self.__max_resources[res]))
+                 for res in self.__resource_names])
+
         self.name = self.__get_new_name()
         self.emperor = None
+        self.__last_update = time()
+
+    @property
+    def thorium(self):
+        return self.resources[THORIUM]
+
+    @property
+    def metal(self):
+        return self.resources[METAL]
+
+    @property
+    def rates(self):
+        rates = AttrDict(zip(self.__resource_names,
+                         [float()] * len(self.__resource_names)))
+        for res, modifier in self.__resource_rates:
+            rates[res] = rates.get(res, float()) + modifier
+        return rates
+
+    def __modify_rate(self, resource, modifier):
+        if resource not in self.__resource_names:
+            raise KeyError('Resource %s not found on planet %s.' %
+                           (resource, self.name))
+        self.__resource_rates.append((resource, float(modifier)))
+
+    def update(self):
+        """ update things that change over time on planets
+
+            Resources: When something is constructed that modifies the income
+                rate of a resource, a rate modifier is added to
+                self.__resource_rates of the form (resource, float) where the
+                float is the per second rate modifier.  All the rate modifiers
+                for each resource type are accumulated together before the
+                update amount is calculated.
+        """
+        no_secs = time() - self.__last_update
+        for res in self.__resource_names:
+            update = no_secs * self.rates[res]
+            new_val = self.resources[res] + update
+            if new_val > self.__max_resources[res]:
+                new_val = self.__max_resources[res]
+            self.resources[res] = new_val
+        self.__last_update = time()
 
     def __get_new_name(self, lang_file=None):
         if not lang_file:
@@ -355,15 +410,15 @@ class Planet(object):
         return NameGen(lang_file).gen_word()
 
     def __repr__(self):
-        return ("Planet(name=%s, resources=%s, emperor=%s)" %
-                (self.name, self.resources, self.emperor))
+        return ("Planet(name=%s, emperor=%s, resources=%s, rates=%s)" %
+                (self.name, self.emperor, self.resources, self.rates))
 
     def show(self):
-        res = '\n'.join(['- %s: %s' % (name, amt)
+        self.update()
+        res = '\n'.join(['- %s: %d' % (name, amt)
                          for name, amt in self.resources.iteritems()])
         res = indent(res, '  ')
         return "%s, owner %s\n%s" % (self.name, self.emperor, res)
-
 
 if __name__ == "__main__":
     sys.exit(main())
