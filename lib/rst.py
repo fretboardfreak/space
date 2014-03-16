@@ -14,7 +14,7 @@ RST Constructs to be supported:
     - table
 """
 #import docutils.core
-import sys, os.path
+#import sys, os.path
 
 
 #def toHtml(text):
