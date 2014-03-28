@@ -78,3 +78,7 @@ class System(object):
             msg += " at %s" % coords
         msg += "\n[%s]" % ', '.join([p.show() for p in self.planets])
         return msg
+
+class Building(object):
+    def __init__(self):
+        self.build_cost =
