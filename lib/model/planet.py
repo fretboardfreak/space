@@ -1,25 +1,24 @@
 import random
 from time import time
 
-from resources import THORIUM, METAL
-
 from lib.namegen import NameGen
 from lib.rst import indent
 from lib.util import AttrDict
 from resources import (update, ORE, METAL, THORIUM,
                        HYDROCARBON, DEUTERIUM, SUN,
-                       ELECTRICITY, ALL_RESOURCES)
+                       ELECTRICITY, ALL_RESOURCES,
+                       ResourceError)
 
 class Planet(object):
     #TODO: make max_resources a range per planet instance
-    max_resources = AttrDict([(ORE, 15e6), (THORIUM, 1e6), (METAL, 10e6)],
+    max_resources = AttrDict([(ORE, 15e6), (THORIUM, 1e6), (METAL, 10e6),
                               (HYDROCARBON, 4e5), (DEUTERIUM, 2e5),
-                              (SUN, None), (ELECTRICITY, None))
+                              (SUN, None), (ELECTRICITY, None)])
 
     def __init__(self):
         self.__resource_rates = []
         self.resources = AttrDict(
-                [(res, random.randint(0, max_resources[res]))
+                [(res, random.randint(0, self.max_resources[res]))
                  for res in ALL_RESOURCES])
 
         self.name = self.__get_new_name()
@@ -72,12 +71,23 @@ class Planet(object):
     def update(self):
         new_t = time()
         num_secs = new_t - self.last_update
-        update_resources(self.resources, self.rates, num_secs,
-                         __cls__.max_resources)
+        update(self.resources, self.rates, num_secs,
+               self.max_resources)
         self.last_update = new_t
 
-    def build_building(self, building_type):
+    def build_building(self, building):
+        self.update()
+        can_afford, needed = self._can_afford(building.cost)
+        if not can_afford:
+            raise ResourceError("Not enough resources.",
+                                needed)
 
+    def _can_afford(self, cost):
+        """ Given a cost dictionary determine if the planet
+            has more (True) or less (False) resources than
+            required.
+        """
+        pass
 
     def __get_new_name(self, lang_file=None):
         if not lang_file:
