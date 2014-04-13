@@ -9,10 +9,16 @@ class Galaxy(object):
     def __init__(self):
         self.__systems = defaultdict(System)
 
-    def get_system(self, coord):
+    @property
+    def system(self, coord):
         system_coord = Coord(coord.x, coord.y)
         system_coord.planet = None
         return self.__systems[system_coord]
+
+    @property
+    def planet(self, coord):
+        system = self.system(coord)
+        return system.planets[coord.planet]
 
     def __repr__(self):
         return ("Galaxy(systems=[%s])" %

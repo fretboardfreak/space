@@ -1,4 +1,5 @@
 from time import time
+from math import pi
 
 from lib.util import AttrDict
 from lib.namegen import NameGen
@@ -11,12 +12,12 @@ class Planet(object):
     max_resources = Resources(ore=15e6, metal=10e6, thorium=1e6,
                               hydrocarbon=4e5, deuterium=2e5)
 
-    def __init__(self):
-        self.rate_modifiers = []
+    def __init__(self, sun_data_cb=None):
         self.resources = Resources()
         self.name = self.__get_new_name()
         self.emperor = None
         self.last_update = time()
+        self.sun_data_cb = sun_data_cb
 
         # keys will be the building classname
         self.buildings = AttrDict()
@@ -24,12 +25,9 @@ class Planet(object):
     @property
     def rates(self):
         rates = Resources()
-        for reason, modifier in self.rate_modifiers:
-            rates += modifier
+        for bld in self.buildings.itervalues():
+            rates += bld.modifier
         return rates
-
-    def modify_rate(self, reason, modifier):
-        self.rate_modifiers.append((reason, modifier))
 
     def update(self):
         new_t = time()
@@ -72,9 +70,10 @@ class Planet(object):
         return NameGen(lang_file).gen_word()
 
     def __repr__(self):
-        return ("%s(name=%s, emperor=%s, buildings=%s, resources=%s, "
-                "rates=%s)" % (self.__class__.__name__, self.name,
-                self.emperor, self.buildings, self.resources, self.rates))
+        return ("%s(name=%s, emperor=%s, buildings=%s, electricity=%s, "
+                "resources=%s, rates=%s)" % (self.__class__.__name__,
+                self.name, self.emperor, self.buildings, self.electricity,
+                self.resources, self.rates))
 
     def show(self, rates=None):
         if rates is None:
@@ -88,7 +87,8 @@ class Planet(object):
         else:
             res = indent(self.resources, '- ')
         res = indent(res, '  ')
-        bldngs = '\n'.join(['- %s' % str(bld) for bld in self.buildings])
+        bldngs = '\n'.join(['- %s' % str(bld)
+                            for bld in self.buildings.itervalues()])
         return ("%s, owner %s\n%s\n%s" %
                 (self.name, self.emperor, bldngs, res))
 
@@ -114,8 +114,14 @@ class Planet(object):
 
     @property
     def sun(self):
-        pass
+        if not self.sun_data_cb: return 0
+        sun_brightness, sun_distance = self.sun_data_cb()
+        return 1 + (sun_brightness / (4 * pi * pow(sun_distance, 2)))
 
     @property
     def electricity(self):
-        return self.rates.electricity
+        return sum([bld.electricity for bld in self.buildings.itervalues()])
+
+    @property
+    def research(self):
+        return set()

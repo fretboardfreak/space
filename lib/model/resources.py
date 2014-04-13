@@ -12,7 +12,7 @@ SUN = 'sun'
 ELECTRICITY = 'electricity'
 
 ALL_RESOURCES = [ORE, METAL, THORIUM, HYDROCARBON,
-                 DEUTERIUM, SUN, ELECTRICITY]
+                 DEUTERIUM]
 
 # Trade Value: defined in terms of 1 ORE as unit value
 TRADE_MODIFIER = AttrDict([
@@ -21,8 +21,6 @@ TRADE_MODIFIER = AttrDict([
     (THORIUM, 4.0),
     (HYDROCARBON, 3.0),
     (DEUTERIUM, 5.0),
-    (SUN, 0.0), # cannot be traded
-    (ELECTRICITY, 0.0) # cannot be traded
     ])
 
 class Resources(AttrDict):

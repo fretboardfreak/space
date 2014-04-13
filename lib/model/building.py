@@ -1,5 +1,6 @@
 from lib.util import AttrDict
 from resources import Resources
+from math import log10
 
 
 class Building(object):
@@ -12,6 +13,10 @@ class Building(object):
     @property
     def modifier(self):
         return Resources()
+
+    @property
+    def electricity(self):
+        return 0
 
     @property
     def requirements(self):
@@ -52,7 +57,12 @@ class Mine(Building):
 
     @property
     def modifier(self):
-        return Resources(ore=2*self.level)
+        return Resources(ore=2*self.level,
+                         metal=0.25*self.level)
+
+    @property
+    def electricity(self):
+        return -1 * pow(self.level, 2)
 
     @property
     def requirements(self):
@@ -67,22 +77,27 @@ class Mine(Building):
 
 
 class SolarPowerPlant(Building):
-    def __init__(self, level=None):
+    def __init__(self, level=None, sun_cb=None):
+        self.sun_cb = sun_cb
         super(SolarPowerPlant, self).__init__(level)
 
     @property
     def modifier(self):
-        return Resources(electricity=10+2*self.level)
+        return Resources()
+
+    @property
+    def electricity(self):
+        if not self.sun_cb: return 0
+        return 10 * abs(log10(self.sun_cb())) * self.level
 
     @property
     def requirements(self):
         return AttrDict([
             ('resources', Resources(
                 ore=10+(5*self.level),
-                metal=100+(6*self.level))),
+                metal=50+(6*self.level))),
             ('research', set()),
             ('buildings', set()),
             ])
-
 
 ALL_BUILDINGS = [Mine, SolarPowerPlant]
