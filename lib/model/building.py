@@ -10,6 +10,12 @@ class Building(object):
         else:
             self.level = level
 
+    def __getstate__(self):
+        return (self.level,)
+
+    def __setstate__(self, state):
+        (self.level,) = state
+
     @property
     def modifier(self):
         return Resources()

@@ -20,3 +20,9 @@ class User(object):
         planets = indent(self.show_planets(), '    ')
         return ("User: %s\n  planets:\n%s" %
                 (self.name, planets))
+
+    def __getstate__(self):
+        return (self.name, self.planets)
+
+    def __setstate__(self, state):
+        (self.name, self.planets) = state

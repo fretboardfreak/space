@@ -33,16 +33,8 @@ class Resources(AttrDict):
         for res in set(ALL_RESOURCES).difference(set(kwargs.keys())):
             self.setdefault(res, 0)
 
-        # force print of sun and electricity even if val is 0
-        self.force_print_all = kwargs.get('force_print_all', False)
-
     def __repr__(self):
         res_list = deepcopy(ALL_RESOURCES)
-        if not self.force_print_all:
-            if self.sun == 0:
-                res_list.remove(SUN)
-            if self.electricity == 0:
-                res_list.remove(ELECTRICITY)
         return '(%s)' % ', '.join(["%s: %s" % (res, self[res])
                                      for res in res_list])
 

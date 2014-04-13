@@ -7,3 +7,9 @@ class GameState(object):
     def __repr__(self):
         return ("GameState(save_file=%s,%s,%s)" %
                 (self.save_file, self.user, self.galaxy))
+
+    def __getstate__(self):
+        return (self.save_file, self.user, self.galaxy)
+
+    def __setstate__(self, state):
+        (self.save_file, self.user, self.galaxy) = state

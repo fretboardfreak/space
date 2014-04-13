@@ -2,6 +2,7 @@
 """
 
 from gamestate import GameState
+from user import User
 from galaxy import Galaxy
 from system import System
 from planet import Planet

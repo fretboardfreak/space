@@ -12,15 +12,24 @@ class Planet(object):
     max_resources = Resources(ore=15e6, metal=10e6, thorium=1e6,
                               hydrocarbon=4e5, deuterium=2e5)
 
-    def __init__(self, sun_data_cb=None):
-        self.resources = Resources()
+    def __init__(self, sun_brightness=None, sun_distance=None):
         self.name = self.__get_new_name()
         self.emperor = None
+        self.resources = Resources()
         self.last_update = time()
-        self.sun_data_cb = sun_data_cb
+        self.sun_brightness = sun_brightness
+        self.sun_distance = sun_distance
 
         # keys will be the building classname
         self.buildings = AttrDict()
+
+    def __getstate__(self):
+        return (self.name, self.emperor, self.resources, self.last_update,
+                self.buildings, self.sun_brightness, self.sun_distance)
+
+    def __setstate__(self, state):
+        (self.name, self.emperor, self.resources, self.last_update,
+         self.buildings, self.sun_brightness, self.sun_distance) = state
 
     @property
     def rates(self):

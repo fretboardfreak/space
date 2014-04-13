@@ -47,3 +47,9 @@ class Coord(object):
 
     def __str__(self):
         return str((self.x, self.y, self.planet))
+
+    def __getstate__(self):
+        return (self.x, self.y, self.planet)
+
+    def __setstate__(self, state):
+        (self.x, self.y, self.planet) = state

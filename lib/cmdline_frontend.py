@@ -47,30 +47,11 @@ class SpaceEngine(object):
         name = NameGen('lib/namegen_lang.txt').gen_word()
         home_coords = Coord(float('%d.%d' % (randint(0, 100), randint(0, 100))),
                             float('%d.%d' % (randint(0, 100), randint(0, 100))),
-                            randint(0, 4))
-        system = self.state.galaxy.get_system(home_coords)
+                            randint(0, 2))
+        system = self.state.galaxy.system(home_coords)
         home_planet = system.planets[home_coords.planet]
         self.state.user = User(name, home_coords, home_planet)
-
-        # TODO: implement optional randomized range of rates
-        if self.ui.input_bool('do you want some randomized rates?'):
-            interactive = self.ui.input_bool(
-                    'do you want to specify the rates yourself?')
-            if interactive:
-                def get_rate():
-                    return randint(self.ui.input_int('  10*min rate='),
-                                   self.ui.input_int('  10*max rate='))/10.0
-            else:
-                def get_rate():
-                    return randint(0, 10)/10.0
-
-            for planet in self.state.user.planets.values():
-                for res in [METAL, THORIUM]:
-                    if interactive: print planet.name, res,
-                    planet._modify_rate(res, get_rate())
-
         self.save()
-
 
 class SpaceUI(object):
     @staticmethod
