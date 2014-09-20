@@ -121,7 +121,7 @@ class SpaceUI(object):
         planet_num_qry = ('That system has %s planets. Which one did you say '
                           'was yours?\n%s\nplanet=' %
                           (len(system.planets),
-                           '\n'.join([' %s. %s' % (i, p.name) for i,p in
+                           '\n'.join([' %s. %s' % (i, p.name) for i, p in
                                       enumerate(system.planets)])))
         planet_num = SpaceUI.input_int(planet_num_qry, min=0,
                                        max=len(system.planets)-1)
@@ -129,6 +129,11 @@ class SpaceUI(object):
         home_planet = system.planets[planet_num]
 
         return (name, home_coords, home_planet)
+
+    @staticmethod
+    def show_user(engine, *args, **kwargs):
+        print engine.state.user.show()
+
 
 class SpaceCmd(Cmd):
     def __init__(self, engine):
@@ -149,11 +154,14 @@ class SpaceCmd(Cmd):
 
     def do_show(self, line):
         show_planets = partial(self.ui.show_planets, self.engine)
+        show_user = partial(self.ui.show_user, self.engine)
         try:
             parser = ArgumentParser(prog='show',
                                     description=self.help_show(True))
             parser.add_argument('-p', '--planets', action='store_const',
                                 dest='subject', const=show_planets)
+            parser.add_argument('-u', '--user', action='store_const',
+                                dest='subject', const=show_user)
 
             (args, params) = parser.parse_known_args(line.split(' '))
             if not args.subject: # no arguments
