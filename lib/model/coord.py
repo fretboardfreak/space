@@ -53,3 +53,9 @@ class Coord(object):
 
     def __setstate__(self, state):
         (self.x, self.y, self.planet) = state
+
+
+class SystemCoord(Coord):
+    def __init__(self, x=None, y=None):
+        super(SystemCoord, self).__init__(x, y, None)
+        self.planet = None

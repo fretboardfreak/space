@@ -3,15 +3,14 @@ from collections import defaultdict
 from lib.rst import indent
 
 from system import System
-from coord import Coord
+from coord import Coord, SystemCoord
 
 class Galaxy(object):
     def __init__(self):
         self.__systems = defaultdict(System)
 
     def system(self, coord):
-        system_coord = Coord(coord.x, coord.y)
-        system_coord.planet = None
+        system_coord = SystemCoord(coord.x, coord.y)
         return self.__systems[system_coord]
 
     def planet(self, coord):
