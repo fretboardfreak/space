@@ -99,7 +99,8 @@ class SpaceUI(object):
 
     @staticmethod
     def show_planets(engine, *args, **kwargs):
-        print engine.state.user.show_planets()
+        verbose = kwargs['verbose'] if kwargs.has_key('verbose') else False
+        print engine.state.user.show_planets(verbose)
 
     @staticmethod
     def newgame_get_user_info(system_query_cb):
@@ -162,15 +163,16 @@ class SpaceCmd(Cmd):
                                 dest='subject', const=show_planets)
             parser.add_argument('-u', '--user', action='store_const',
                                 dest='subject', const=show_user)
+            parser.add_argument('-v', '--verbose', action='store_true',
+                                dest='verbose', default=False)
 
             (args, params) = parser.parse_known_args(line.split(' '))
             if not args.subject: # no arguments
                 args.subject = show_planets
-            args.subject(params)
+            args.subject(params, verbose=args.verbose)
         except SystemExit:
             pass
         return False
-    do_sh = do_show
 
     def help_show(self, no_print=None):
         msg = "Show various things. Use 'show --help' for more."
@@ -181,7 +183,6 @@ class SpaceCmd(Cmd):
     def do_quit(self, line):
         self.engine.save()
         return True
-    do_q = do_quit
 
     def help_quit(self):
         help = "Quit the program"
@@ -218,7 +219,29 @@ class SpaceCmd(Cmd):
         print "Access to user admin tasks"
 
     def do_planet(self, line):
-        print 'Not implemented yet'
+        show_planets = partial(self.ui.show_planets, self.engine)
+        try:
+            parser = ArgumentParser(prog='planet',
+                                    description=self.help_show(True))
+            parser.add_argument('-v', '--verbose', action='store_true',
+                                dest='verbose', default=False)
+
+            (args, params) = parser.parse_known_args(line.split(' '))
+            if not args.action: # no arguments
+                args.action = show_planets
+            args.action(params, verbose=args.verbose)
+        except SystemExit:
+            pass
+        return False
 
     def help_planet(self):
         print "Access to things on planets"
+
+
+    # shortcuts
+    do_sh = do_show
+    do_q = do_quit
+    do_EOF = do_quit
+    #help_sh = help_show
+    #help_q = help_quit
+    #help_EOF = help_quit

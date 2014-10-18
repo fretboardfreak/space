@@ -10,15 +10,18 @@ class User(object):
         return ("User(name=%s, planets=%s)" %
                 (self.name, self.planets))
 
-    def show_planets(self):
-        planets = []
+    def show_planets(self, verbose=None):
+        planets = ['Planets:']
         for coord, planet in self.planets.iteritems():
-            planets.append('%s: %s' % (coord, planet.show()))
+            if verbose:
+                planets.append(' %s: %s' % (coord, planet.show()))
+            else:
+                planets.append(' %s: %s' % (coord, planet.name))
         return '\n'.join(planets)
 
     def show(self):
         planets = indent(self.show_planets(), '    ')
-        return ("User: %s\n  planets:\n%s" %
+        return ("User: %s\n%s" %
                 (self.name, planets))
 
     def __getstate__(self):
