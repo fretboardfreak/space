@@ -167,7 +167,7 @@ class SpaceCmd(Cmd):
                                 dest='verbose', default=False)
 
             (args, params) = parser.parse_known_args(line.split(' '))
-            if not args.subject: # no arguments
+            if args.subject is None: # no arguments
                 args.subject = show_planets
             args.subject(params, verbose=args.verbose)
         except SystemExit:
@@ -198,9 +198,10 @@ class SpaceCmd(Cmd):
                     dest='action', const=print_state,
                     help='print full game state')
             (args, unrecognized) = parser.parse_known_args(line.split(' '))
-            if not args.action:
-                args.action = print_state
-            args.action()
+            if args.action is None:
+                print_state()
+            else:
+                args.action()
         except SystemExit:
             pass
         return False
@@ -227,9 +228,11 @@ class SpaceCmd(Cmd):
                                 dest='verbose', default=False)
 
             (args, params) = parser.parse_known_args(line.split(' '))
-            if not args.action: # no arguments
-                args.action = show_planets
-            args.action(params, verbose=args.verbose)
+            if not hasattr(args, 'action'): # no arguments
+                #args.action = show_planets
+                show_planets(params, verbose=args.verbose)
+            else:
+                args.action(params, verbose=args.verbose)
         except SystemExit:
             pass
         return False
