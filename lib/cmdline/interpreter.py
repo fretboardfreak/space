@@ -4,22 +4,21 @@ from functools import partial
 
 import ui
 
-class SpaceCmdInterpreter(Cmd):
+class CommandMixin(object):
     def __init__(self, engine):
         self.engine = engine
-        Cmd.__init__(self)
-        self.prompt = 'space> '
-        self.doc_header='Space Commands'
-        self.undoc_header='Alias Commands'
 
-    def start(self):
-        try:
-            self.engine.load()
-        except IOError:
-            self.engine.start_new_game()
+class Quit(CommandMixin):
+    def do_quit(self, line):
+        self.engine.save()
+        return True
 
-        self.cmdloop()
+    def help_quit(self):
+        print "Quit the program"
+    do_q = do_quit
+    do_EOF = do_quit
 
+class Show(CommandMixin):
     def do_show(self, line):
         show_planets = partial(ui.show_planets, self.engine)
         show_user = partial(ui.show_user, self.engine)
@@ -46,15 +45,9 @@ class SpaceCmdInterpreter(Cmd):
         if no_print:
             return msg
         print msg
+    do_sh = do_show
 
-    def do_quit(self, line):
-        self.engine.save()
-        return True
-
-    def help_quit(self):
-        help = "Quit the program"
-        print help
-
+class Debug(CommandMixin):
     def do_dbg(self, line):
         print_state = partial(ui.dbg_print_state, self.engine)
         try:
@@ -79,13 +72,7 @@ class SpaceCmdInterpreter(Cmd):
             return hlp
         print hlp
 
-    def do_user(self, line):
-        #TODO: implement change name
-        print 'Not implemented yet'
-
-    def help_user(self):
-        print "Access to user admin tasks"
-
+class Planet(CommandMixin):
     def do_planet(self, line):
         show_planets = partial(ui.show_planets, self.engine)
         try:
@@ -107,11 +94,25 @@ class SpaceCmdInterpreter(Cmd):
     def help_planet(self):
         print "Access to things on planets"
 
+class User(CommandMixin):
+    def do_user(self, line):
+        #TODO: implement change name
+        print 'Not implemented yet'
 
-    # shortcuts
-    do_sh = do_show
-    do_q = do_quit
-    do_EOF = do_quit
-    #help_sh = help_show
-    #help_q = help_quit
-    #help_EOF = help_quit
+    def help_user(self):
+        print "Access to user admin tasks"
+
+class SpaceCmdInterpreter(Cmd, Quit, Debug, Show, Planet, User):
+    def __init__(self, engine):
+        super(SpaceCmdInterpreter, self).__init__()
+        self.engine = engine
+        self.prompt = 'space> '
+        self.doc_header='Space Commands'
+        self.undoc_header='Alias Commands'
+
+    def start(self):
+        try:
+            self.engine.load()
+        except IOError:
+            self.engine.start_new_game()
+        self.cmdloop()
