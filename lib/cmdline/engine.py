@@ -34,7 +34,7 @@ class SpaceEngine(object):
             self.state.galaxy = Galaxy()
 
             # create new user
-            system_callback = lambda coords: self.state.galaxy.get_system(coords)
+            system_callback = lambda coords: self.state.galaxy.system(coords)
             user_info = ui.newgame_get_user_info(system_callback)
             self.state.user = User(*user_info)
         finally:
