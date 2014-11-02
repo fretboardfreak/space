@@ -8,12 +8,13 @@ battles various challenges in growing their empire.
 import sys
 from argparse import ArgumentParser
 
-from lib.cmdline_frontend import SpaceEngine, SpaceCmd, SpaceUI
+from lib.cmdline.engine import SpaceEngine
+from lib.cmdline.interpreter import SpaceCmdInterpreter
 
 def main():
     args = parse_args()
-    engine = SpaceEngine(args.save_file, SpaceUI)
-    SpaceCmd(engine).start()
+    engine = SpaceEngine(args.save_file)
+    SpaceCmdInterpreter(engine).start()
 
 def parse_args():
     epilog = 'Stay awesome, spacelings!'
