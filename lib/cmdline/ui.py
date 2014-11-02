@@ -44,7 +44,7 @@ def show_planets(engine, *args, **kwargs):
     print engine.state.user.show_planets(verbose)
 
 def show_user(engine, *args, **kwargs):
-    print engine.state.user.show()
+    print engine.state.user.show(kwargs.get('verbose', False))
 
 def newgame_get_user_info(system_query_cb):
     name = input_text("Great another wanna be space emperor! "

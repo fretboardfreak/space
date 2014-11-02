@@ -13,14 +13,11 @@ class User(object):
     def show_planets(self, verbose=None):
         planets = ['Planets:']
         for coord, planet in self.planets.iteritems():
-            if verbose:
-                planets.append(' %s: %s' % (coord, planet.show()))
-            else:
-                planets.append(' %s: %s' % (coord, planet.name))
+                planets.append(' %s: %s' % (coord, planet.show(verbose)))
         return '\n'.join(planets)
 
-    def show(self):
-        planets = indent(self.show_planets(), '    ')
+    def show(self, verbose=None):
+        planets = indent(self.show_planets(verbose), '    ')
         return ("User: %s\n%s" %
                 (self.name, planets))
 
