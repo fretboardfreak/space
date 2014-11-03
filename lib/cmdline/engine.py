@@ -1,4 +1,5 @@
 import sys, pickle
+from logging import debug
 from random import randint
 
 from lib.model import GameState, User, Galaxy, Coord
@@ -14,16 +15,19 @@ class SpaceEngine(object):
 
     def load(self):
         '''Load game state directly. Useful when used on the interpreter'''
+        debug('Loading saved game')
         with open(self.state.save_file, 'r') as sf:
             self.state = pickle.load(sf)
 
     def save(self):
+        debug('Saving game')
         with open(self.state.save_file, 'w') as fd:
             pickle.dump(self.state, fd)
 
     def start_new_game(self):
         msg = 'Do you want to start a new game?'
         ui.input_bool(msg) or sys.exit(0)
+        debug('Creating a new game')
 
         if DEBUG and ui.input_bool('create test state?'):
             self.create_test_state()
@@ -41,6 +45,7 @@ class SpaceEngine(object):
             self.save()
 
     def create_test_state(self):
+        debug('Creating a canned state for testing...')
         self.state.galaxy = Galaxy()
         name = NameGen('lib/namegen_lang.txt').gen_word()
         home_coords = Coord(float('%d.%d' % (randint(0, 100), randint(0, 100))),

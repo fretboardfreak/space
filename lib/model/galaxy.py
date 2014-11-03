@@ -1,4 +1,5 @@
 from collections import defaultdict
+from logging import debug
 
 from lib.rst import indent
 
@@ -11,10 +12,12 @@ class Galaxy(object):
 
     def system(self, coord):
         system_coord = SystemCoord(coord.x, coord.y)
+        debug('looking up system: %s' % system_coord)
         return self.__systems[system_coord]
 
     def planet(self, coord):
         system = self.system(coord)
+        debug('looking up planet: %s' % coord)
         return system.planets[coord.planet]
 
     def __repr__(self):
@@ -24,6 +27,7 @@ class Galaxy(object):
 
     def show(self):
         systems = []
+        debug('showing the galaxy...')
         for c, s in self.__systems.iteritems():
             sys = indent(s.show(), '  ')[2:]
             systems.append('%s %s' % (c, sys))

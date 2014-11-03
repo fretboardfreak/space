@@ -1,7 +1,10 @@
+from logging import debug
+
 from lib.rst import indent
 
 class User(object):
     def __init__(self, name, home_planet_coords, home_planet):
+        debug('Creating new user object %s' % name)
         self.name = name
         self.planets = {home_planet_coords: home_planet}
         home_planet.emperor = self.name
@@ -11,12 +14,15 @@ class User(object):
                 (self.name, self.planets))
 
     def show_planets(self, verbose=None):
+        debug("showing user %s's planets: verbose=%s" %
+              (self.name, verbose))
         planets = ['Planets:']
         for coord, planet in self.planets.iteritems():
-                planets.append(' %s: %s' % (coord, planet.show(verbose)))
+                planets.append(' %s: %s' % (coord, planet.show()))
         return '\n'.join(planets)
 
     def show(self, verbose=None):
+        debug('showing user %s: verbose %s' % (self.name, verbose))
         planets = indent(self.show_planets(verbose), '    ')
         return ("User: %s\n%s" %
                 (self.name, planets))

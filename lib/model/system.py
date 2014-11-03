@@ -1,17 +1,19 @@
-import random
+from random import randint
 from functools import partial
+from logging import debug
 
 from planet import Planet
 
 class System(object):
     _size_range = (2, 15)
     def __init__(self):
-        self.size = random.randint(*self._size_range)
+        self.size = randint(*self._size_range)
         _brightness_upper_bound = 1000 if self.size > 7 else 500
         _brightness_lower_bound = 10 if self.size <= 7 else 400
-        self.sun_brightness = random.randint(_brightness_lower_bound,
-                                             _brightness_upper_bound)
-        cb = lambda distance: (self.sun_brightness, distance)
+        self.sun_brightness = randint(_brightness_lower_bound,
+                                      _brightness_upper_bound)
+        debug('Constructing new system of size %s with sun brightness %s' %
+              (self.size, self.sun_brightness))
         self.planets = [Planet(sun_brightness=self.sun_brightness,
                                sun_distance=i)
                         for i in range(self.size)]

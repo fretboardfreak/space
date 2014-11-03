@@ -1,7 +1,7 @@
-from lib.util import AttrDict
-from resources import Resources
 from math import log10
 
+from lib.util import AttrDict
+from resources import Resources
 
 class Building(object):
     def __init__(self, level=None):

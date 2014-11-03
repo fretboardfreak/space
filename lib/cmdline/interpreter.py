@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 from cmd import Cmd
 from functools import partial
+from logging import debug
 
 import ui
 
@@ -112,7 +113,10 @@ class SpaceCmdInterpreter(Cmd, Quit, Debug, Show, Planet, User):
 
     def start(self):
         try:
+            debug('Trying to load the saved game...')
             self.engine.load()
         except IOError:
+            debug('No save game, starting new game...')
             self.engine.start_new_game()
+        debug('Starting interpreter...')
         self.cmdloop()

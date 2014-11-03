@@ -1,6 +1,9 @@
+from logging import debug
+
 from lib.model import Coord
 
 def input_bool(msg):
+    debug('getting a boolean from the user')
     msg = str(msg) + ' (y|n) '
     for attempt in range(3):
         x = raw_input(msg).strip().lower()
@@ -14,12 +17,14 @@ def input_bool(msg):
     return False
 
 def input_text(msg):
+    debug('getting some text from the user')
     while True:
         name = raw_input(msg)
         if name.isalpha():
             return name
 
 def input_int(msg, min=None, max=None):
+    debug('getting an int from the user')
     while True:
         while True:
             num = raw_input(msg)
@@ -37,16 +42,20 @@ def input_int(msg, min=None, max=None):
         return num
 
 def dbg_print_state(engine):
+    debug('dbg: printing the game state')
     print engine.state
 
 def show_planets(engine, *args, **kwargs):
     verbose = kwargs['verbose'] if kwargs.has_key('verbose') else False
+    debug('showing planets')
     print engine.state.user.show_planets(verbose)
 
 def show_user(engine, *args, **kwargs):
+    debug('showing user')
     print engine.state.user.show(kwargs.get('verbose', False))
 
 def newgame_get_user_info(system_query_cb):
+    debug('Querying user for new game info...')
     name = input_text("Great another wanna be space emperor! "
                               "What's your name then? ")
 

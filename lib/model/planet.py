@@ -1,5 +1,6 @@
 from time import time
 from math import pi
+from logging import debug
 
 from lib.util import AttrDict
 from lib.namegen import NameGen
@@ -22,6 +23,9 @@ class Planet(object):
 
         # keys will be the building classname
         self.buildings = AttrDict()
+        debug('Constructing new Planet: sun_dist=%s, sun_brightness=%s,'
+              'resources=%s' % (self.sun_distance, self.sun_brightness,
+              self.resources))
 
     def __getstate__(self):
         return (self.name, self.emperor, self.resources, self.last_update,
@@ -41,6 +45,7 @@ class Planet(object):
     def update(self):
         new_t = time()
         num_secs = new_t - self.last_update
+        debug('Updating planet %s by %s' % (self.name, num_secs))
         for res, val in self.rates:
             difference = val * num_secs
             self.resources[res] = min(self.resources[res] + difference,
@@ -50,6 +55,8 @@ class Planet(object):
     def _build_building(self, building, level=None):
         self.update()
         if building.are_requirements_met(self, level):
+            debug('Constructing %s level %s on planet %s' %
+                  (building, level, self.name))
             new_blding = building(level)
             self.resources -= new_blding.requirements.resources
             self.modify_rate(reason=str((type(building).__name__, level)),
@@ -57,6 +64,8 @@ class Planet(object):
             self.buildings[building] = new_blding
             return True
         else:
+            debug('Construction attempt failed on planet %s, not enough'
+                  'resources.' % self.name)
             return False
 
     def build(self, building):
@@ -65,6 +74,8 @@ class Planet(object):
         return self._build_building(building, level)
 
     def get_available_buildings(self):
+        debug('Retrieving buildings available for construction on planet '
+              '%s' % self.name)
         avail = []
         for building in ALL_BUILDINGS:
             existing = self.buildings.get(building, None)
@@ -79,10 +90,11 @@ class Planet(object):
         return NameGen(lang_file).gen_word()
 
     def __repr__(self):
-        return ("%s(name=%s, emperor=%s, buildings=%s, electricity=%s, "
-                "resources=%s, rates=%s)" % (self.__class__.__name__,
-                self.name, self.emperor, self.buildings, self.electricity,
-                self.resources, self.rates))
+        return ("%s(name=%s, emperor=%s, sun_dist=%s, sun_brightness=%s, "
+                "buildings=%s, electricity=%s, resources=%s, rates=%s)" %
+                (self.__class__.__name__, self.name, self.emperor,
+                 self.sun_distance, self.sun_brightness, self.buildings,
+                 self.electricity, self.resources, self.rates))
 
     def show(self, rates=None, verbose=None):
         if rates is None:
