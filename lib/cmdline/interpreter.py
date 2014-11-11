@@ -47,6 +47,7 @@ class Show(CommandMixin):
             return msg
         print msg
     do_sh = do_show
+    do_s = do_show
 
 class Debug(CommandMixin):
     def do_dbg(self, line):
@@ -111,6 +112,8 @@ class Planet(CommandMixin):
 
     def help_planet(self):
         print "Access to things on planets"
+    do_p = do_planet
+    do_pl = do_planet
 
 class User(CommandMixin):
     def do_user(self, line):
@@ -119,6 +122,7 @@ class User(CommandMixin):
 
     def help_user(self):
         print "Access to user admin tasks"
+    do_u = do_user
 
 class SpaceCmdInterpreter(Cmd, Quit, Debug, Show, Planet, User):
     def __init__(self, engine):
