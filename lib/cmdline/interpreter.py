@@ -135,10 +135,10 @@ class SpaceCmdInterpreter(Cmd, Quit, Debug, Show, Planet, User):
                 self.engine.load()
             except IOError:
                 debug('No save game, starting new game...')
-                self.engine.start_new_game()
+                ui.start_new_game(self.engine)
             debug('Starting interpreter...')
             self.cmdloop()
         except KeyboardInterrupt, SystemExit:
             debug('Recieved Interrupt.')
+        finally:
             self.engine.save()
-            return

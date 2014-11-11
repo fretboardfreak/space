@@ -1,7 +1,7 @@
 from logging import debug
 
+from lib.model import User, Galaxy, Coord
 from lib.error import ObjectNotFound
-from lib.model import Coord
 from lib.rst import indent
 
 def input_bool(msg):
@@ -80,6 +80,22 @@ def show_available_buildings(engine, planet, verbose=None):
         print msg
         return
     print _show_available_buildings(engine, planet, verbose)
+
+def start_new_game(engine):
+    msg = 'Do you want to start a new game?'
+    input_bool(msg) or sys.exit(0)
+    debug('Creating a new game')
+
+    try:
+        # create new galaxy
+        engine.state.galaxy = Galaxy()
+
+        # create new user
+        system_callback = lambda coords: engine.state.galaxy.system(coords)
+        user_info = newgame_get_user_info(system_callback)
+        engine.state.user = User(*user_info)
+    finally:
+        engine.save()
 
 def newgame_get_user_info(system_query_cb):
     debug('Querying user for new game info...')
