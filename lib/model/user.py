@@ -1,5 +1,6 @@
 from logging import debug
 
+from lib.error import ObjectNotFound
 from lib.rst import indent
 
 class User(object):
@@ -32,3 +33,10 @@ class User(object):
 
     def __setstate__(self, state):
         (self.name, self.planets) = state
+
+    def get_planet(self, name):
+        debug('retrieving planet %s' % name)
+        for coord, planet in self.planets.iteritems():
+            if planet.name.lower() == name.lower():
+                return (coord, planet)
+        raise ObjectNotFound(name)
