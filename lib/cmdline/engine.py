@@ -7,8 +7,6 @@ from lib.namegen import NameGen
 
 import ui
 
-DEBUG = True
-
 class SpaceEngine(object):
     def __init__(self, save_file):
         self.state = GameState(save_file)
@@ -29,10 +27,6 @@ class SpaceEngine(object):
         ui.input_bool(msg) or sys.exit(0)
         debug('Creating a new game')
 
-        if DEBUG and ui.input_bool('create test state?'):
-            self.create_test_state()
-            return
-
         try:
             # create new galaxy
             self.state.galaxy = Galaxy()
@@ -43,15 +37,3 @@ class SpaceEngine(object):
             self.state.user = User(*user_info)
         finally:
             self.save()
-
-    def create_test_state(self):
-        debug('Creating a canned state for testing...')
-        self.state.galaxy = Galaxy()
-        name = NameGen('lib/namegen_lang.txt').gen_word()
-        home_coords = Coord(float('%d.%d' % (randint(0, 100), randint(0, 100))),
-                            float('%d.%d' % (randint(0, 100), randint(0, 100))),
-                            randint(0, 2))
-        system = self.state.galaxy.system(home_coords)
-        home_planet = system.planets[home_coords.planet]
-        self.state.user = User(name, home_coords, home_planet)
-        self.save()

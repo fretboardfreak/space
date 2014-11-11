@@ -80,5 +80,9 @@ def newgame_get_user_info(system_query_cb):
                                    max=len(system.planets)-1)
     home_coords.planet = planet_num
     home_planet = system.planets[planet_num]
+    home_planet.resources.ore = 25
+    home_planet.resources.metal = 60
+    print ("We've given you some building materials to get you started. "
+           "Use them wisely, that's all the new recruits get from us!")
 
     return (name, home_coords, home_planet)
