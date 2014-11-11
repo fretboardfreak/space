@@ -1,6 +1,8 @@
 from logging import debug
 
+from lib.error import ObjectNotFound
 from lib.model import Coord
+from lib.rst import indent
 
 def input_bool(msg):
     debug('getting a boolean from the user')
@@ -53,6 +55,31 @@ def show_planets(engine, *args, **kwargs):
 def show_user(engine, *args, **kwargs):
     debug('showing user')
     print engine.state.user.show(kwargs.get('verbose', False))
+
+def _show_available_buildings(engine, planet, verbose=None):
+    try:
+        coord, planet = engine.state.user.get_planet(planet)
+    except ObjectNotFound, e:
+        print "Could not find that planet"
+        if verbose:
+            print e
+        return
+    avail = planet.get_available_buildings()
+    msg = "%s: %s\n" % (coord, planet.name)
+    msg += ''.join(['\n  - %s: %s\n%s' %
+                    (bld.name, lvl,
+                     indent(str(bld(lvl).requirements.resources), '    - '))
+                    for bld, lvl in avail])
+    return msg
+
+def show_available_buildings(engine, planet, verbose=None):
+    if planet is None:
+        msg = '\n'.join([_show_available_buildings(engine, plnt.name,
+                                                   verbose)
+                         for plnt in engine.state.user.planets.itervalues()])
+        print msg
+        return
+    print _show_available_buildings(engine, planet, verbose)
 
 def newgame_get_user_info(system_query_cb):
     debug('Querying user for new game info...')
