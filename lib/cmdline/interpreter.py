@@ -4,6 +4,7 @@ from functools import partial
 from logging import debug
 
 import ui
+from lib.model.building import get_building, get_all_abbr
 
 class CommandMixin(object):
     def __init__(self, engine):
@@ -82,7 +83,12 @@ class Planet(CommandMixin):
                                         planet=args.planet,
                                         verbose=args.verbose)
             return
-        print "not implemented yet :("
+        coord, planet = self.engine.state.user.get_planet(args.planet)
+        if planet.build(args.building):
+            print "Congrats, you just built a %s" % args.building
+        else:
+            print ("Construction Failed! Make sure you have enough "
+                   "resources and try again.")
 
     def do_planet(self, line):
         show_planets = partial(ui.show_planets, self.engine)
@@ -97,8 +103,9 @@ class Planet(CommandMixin):
                                 'command to this planet (if supported)',
                                 default=None, nargs='?')
             parser.add_argument('building', help='Name of building type to '
-                                'pass to the command (if supported, '
-                                'PLANET must be supplied first)',
+                                'pass to the command %s (if supported, '
+                                'PLANET must be supplied first)'
+                                % str(get_all_abbr()),
                                 default=None, nargs='?')
 
             (args, params) = parser.parse_known_args(line.split(' '))
