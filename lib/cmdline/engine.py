@@ -3,7 +3,6 @@ from logging import debug
 from random import randint
 
 from lib.model import GameState, User, Galaxy, Coord
-from lib.namegen import NameGen
 
 import ui
 

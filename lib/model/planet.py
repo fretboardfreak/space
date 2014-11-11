@@ -84,10 +84,8 @@ class Planet(object):
                 avail.append((building, level))
         return avail
 
-    def __get_new_name(self, lang_file=None):
-        if not lang_file:
-            lang_file = 'lib/namegen_lang.txt'
-        return NameGen(lang_file).gen_word()
+    def __get_new_name(self):
+        return NameGen().gen_word()
 
     def __repr__(self):
         return ("%s(name=%s, emperor=%s, sun_dist=%s, sun_brightness=%s, "
