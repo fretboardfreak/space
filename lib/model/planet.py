@@ -99,25 +99,25 @@ class Planet(object):
     def show(self, rates=None, verbose=None):
         if rates is None:
             rates = True
-        else:
-            rates = rates
+        details = []
+        self.update()
         if verbose:
             rates = True
-        self.update()
-        sun = ''
-        if verbose:
             sun = ('Sun: dist: %s  brightness: %s' %
                    (self.sun_distance, self.sun_brightness))
+            details.append(sun)
         if rates:
             res = '\n'.join(['- %s: %d (%s)' % (name, amt, self.rates[name])
                              for name, amt in self.resources])
         else:
             res = indent(str(self.resources), '- ')
-        res = indent(res, '  ')
+        details.append(indent(res, '  '))
+
         bldngs = '\n'.join(['- %s' % str(bld)
                             for bld in self.buildings.itervalues()])
-        return ("%s, owner %s\n%s\n%s\n%s" %
-                (self.name, self.emperor, sun, bldngs, res))
+        details.append(bldngs)
+        return ("%s, owner %s\n%s" %
+                (self.name, self.emperor, '\n'.join(details)))
 
     @property
     def ore(self):

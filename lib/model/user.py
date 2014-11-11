@@ -19,7 +19,7 @@ class User(object):
               (self.name, verbose))
         planets = ['Planets:']
         for coord, planet in self.planets.iteritems():
-                planets.append(' %s: %s' % (coord, planet.show()))
+                planets.append(' %s: %s' % (coord, planet.show(verbose)))
         return '\n'.join(planets)
 
     def show(self, verbose=None):
