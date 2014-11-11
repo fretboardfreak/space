@@ -79,7 +79,7 @@ class Planet(object):
         avail = []
         for building in ALL_BUILDINGS:
             existing = self.buildings.get(building, None)
-            level = None if not existing else existing.level + 1
+            level = 1 if not existing else existing.level + 1
             if building.are_requirements_met(self, level):
                 avail.append((building, level))
         return avail
@@ -151,4 +151,4 @@ class Planet(object):
 
     @property
     def research(self):
-        return set()
+        return AttrDict()

@@ -1,6 +1,6 @@
 from math import log10
 
-from lib.util import AttrDict
+from lib.util import AttrDict, DefaultAttrDict
 from resources import Resources
 
 class Building(object):
@@ -50,14 +50,18 @@ class Building(object):
     @classmethod
     def are_requirements_met(cls, build_site, level=None):
         reqs = cls(level).requirements
-        return ((reqs.resources == build_site.resources) and
-                (len(reqs.research) == \
-                    len(reqs.research.intersection(build_site.research))) and
-                (len(reqs.buildings) == \
-                    len(reqs.buildings.intersection(build_site.buildings))))
-
+        if reqs.resources > build_site.resources:
+            return False
+        for bldng in reqs.buildings:
+            if bldng not in build_site.buildings:
+                return False
+            elif reqs.buildings[bldng] > build_site.buildings[bldng]:
+                return False
+        #TODO: implement research requirements here
+        return True
 
 class Mine(Building):
+    name = 'Mine'
     def __init__(self, level=None):
         super(Mine, self).__init__(level)
 
@@ -77,12 +81,13 @@ class Mine(Building):
                 ore=10+(2*(-1+self.level)),
                 metal=-10+(5*(1+self.level)),
                 electricity=3)),
-            ('research', set()),
-            ('buildings', set()),
+            ('research', DefaultAttrDict(lambda: 0)),
+            ('buildings', DefaultAttrDict(lambda: 0)),
             ])
 
 
 class SolarPowerPlant(Building):
+    name = 'Solar Power Plant'
     def __init__(self, level=None, sun_cb=None):
         self.sun_cb = sun_cb
         super(SolarPowerPlant, self).__init__(level)
@@ -102,8 +107,8 @@ class SolarPowerPlant(Building):
             ('resources', Resources(
                 ore=10+(5*self.level),
                 metal=50+(6*self.level))),
-            ('research', set()),
-            ('buildings', set()),
+            ('research', DefaultAttrDict(lambda: 0)),
+            ('buildings', DefaultAttrDict(lambda: 0)),
             ])
 
 ALL_BUILDINGS = [Mine, SolarPowerPlant]
