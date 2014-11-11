@@ -74,10 +74,9 @@ def _show_available_buildings(engine, planet, verbose=None):
 
 def show_available_buildings(engine, planet, verbose=None):
     if planet is None:
-        msg = '\n'.join([_show_available_buildings(engine, plnt.name,
-                                                   verbose)
-                         for plnt in engine.state.user.planets.itervalues()])
-        print msg
+        msg = [_show_available_buildings(engine, plnt.name, verbose)
+               for plnt in engine.state.user.planets.itervalues()]
+        print '\n'.join(msg)
         return
     print _show_available_buildings(engine, planet, verbose)
 
