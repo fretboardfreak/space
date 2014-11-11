@@ -1,4 +1,5 @@
 from math import log10
+from logging import debug
 
 from lib.util import AttrDict, DefaultAttrDict
 from resources import Resources
@@ -62,6 +63,7 @@ class Building(object):
 
 class Mine(Building):
     name = 'Mine'
+    abbr = 'Mn'
     def __init__(self, level=None):
         super(Mine, self).__init__(level)
 
@@ -88,6 +90,7 @@ class Mine(Building):
 
 class SolarPowerPlant(Building):
     name = 'Solar Power Plant'
+    abbr = 'SPP'
     def __init__(self, level=None, sun_cb=None):
         self.sun_cb = sun_cb
         super(SolarPowerPlant, self).__init__(level)
@@ -112,3 +115,23 @@ class SolarPowerPlant(Building):
             ])
 
 ALL_BUILDINGS = [Mine, SolarPowerPlant]
+
+def get_all_buildings():
+    return [cls.name for cls in ALL_BUILDINGS]
+
+def get_all_abbr():
+    return [cls.abbr for cls in ALL_BUILDINGS]
+
+def get_building(building_name, level=None):
+    debug('getting building type %s, lvl %s' % (building_name, level))
+    bld = None
+    for building in ALL_BUILDINGS:
+        if (building.name.lower() == building_name.lower() or
+                building.abbr.lower() == building_name.lower()):
+            bld = building
+    else:
+        debug('')
+    if level is None:
+        return bld
+    else:
+        return bld(level)

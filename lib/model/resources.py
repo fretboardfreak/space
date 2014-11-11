@@ -13,7 +13,7 @@ SUN = 'sun'
 ELECTRICITY = 'electricity'
 
 ALL_RESOURCES = [ORE, METAL, THORIUM, HYDROCARBON,
-                 DEUTERIUM, ELECTRICITY]
+                 DEUTERIUM]
 
 # Trade Value: defined in terms of 1 ORE as unit value
 TRADE_MODIFIER = DefaultAttrDict(lambda: 0.0,

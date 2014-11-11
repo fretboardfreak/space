@@ -6,7 +6,7 @@ from lib.util import AttrDict
 from lib.namegen import NameGen
 from lib.rst import indent
 from resources import Resources
-from building import ALL_BUILDINGS
+from building import ALL_BUILDINGS, get_building
 
 class Planet(object):
     #TODO: make max_resources a range per planet instance
@@ -54,13 +54,14 @@ class Planet(object):
 
     def _build_building(self, building, level=None):
         self.update()
+        building = get_building(building)
         if building.are_requirements_met(self, level):
             debug('Constructing %s level %s on planet %s' %
                   (building, level, self.name))
             new_blding = building(level)
             self.resources -= new_blding.requirements.resources
-            self.modify_rate(reason=str((type(building).__name__, level)),
-                             modifier=new_blding.modifier)
+            #self.modify_rate(reason=str((type(building).__name__, level)),
+            #                 modifier=new_blding.modifier)
             self.buildings[building] = new_blding
             return True
         else:
@@ -70,7 +71,7 @@ class Planet(object):
 
     def build(self, building):
         existing = self.buildings.get(building, None)
-        level = None if not existing else existing.level + 1
+        level = 1 if not existing else existing.level + 1
         return self._build_building(building, level)
 
     def get_available_buildings(self):
