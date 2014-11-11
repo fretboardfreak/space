@@ -74,6 +74,15 @@ class Debug(CommandMixin):
         print hlp
 
 class Planet(CommandMixin):
+    def _building(self, *args, **kwargs):
+        args = kwargs['args']
+        if args.building is None:
+            ui.show_available_buildings(engine=self.engine,
+                                        planet=args.planet,
+                                        verbose=args.verbose)
+            return
+        print "not implemented yet :("
+
     def do_planet(self, line):
         show_planets = partial(ui.show_planets, self.engine)
         try:
@@ -81,13 +90,21 @@ class Planet(CommandMixin):
                                     description=self.help_show(True))
             parser.add_argument('-v', '--verbose', action='store_true',
                                 dest='verbose', default=False)
+            parser.add_argument('-b', '--building', action='store_const',
+                                dest='action', const=self._building)
+            parser.add_argument('planet', help='Limit the effect of the '
+                                'command to this planet (if supported)',
+                                default=None, nargs='?')
+            parser.add_argument('building', help='Name of building type to '
+                                'pass to the command (if supported, '
+                                'PLANET must be supplied first)',
+                                default=None, nargs='?')
 
             (args, params) = parser.parse_known_args(line.split(' '))
-            if not hasattr(args, 'action'): # no arguments
-                #args.action = show_planets
-                show_planets(params, verbose=args.verbose)
-            else:
-                args.action(params, verbose=args.verbose)
+            setattr(args, 'params', params)
+            if args.action is None:
+                args.action = show_planets
+            args.action(args=args, verbose=args.verbose)
         except SystemExit:
             pass
         return False
