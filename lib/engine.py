@@ -2,9 +2,8 @@ import sys, pickle
 from logging import debug
 from random import randint
 
-from lib.model import GameState
-
-import ui
+from model import GameState
+from cmdline import ui
 
 class SpaceEngine(object):
     def __init__(self, save_file):

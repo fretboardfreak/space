@@ -8,7 +8,7 @@ battles various challenges in growing their empire.
 import sys, logging
 from argparse import ArgumentParser
 
-from lib.cmdline.engine import SpaceEngine
+from lib.engine import SpaceEngine
 from lib.cmdline.interpreter import SpaceCmdInterpreter
 
 def main():
