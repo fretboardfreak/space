@@ -28,8 +28,8 @@ class Building(object):
     @property
     def requirements(self):
         return AttrDict([('resources', Resources()),
-                         ('research', set()),
-                         ('buildings', set()),
+                         ('research', DefaultAttrDict(lambda: 0)),
+                         ('buildings', DefaultAttrDict(lambda: 0)),
                         ])
 
     def __repr__(self):
@@ -81,8 +81,7 @@ class Mine(Building):
         return AttrDict([
             ('resources', Resources(
                 ore=10+(2*(-1+self.level)),
-                metal=-10+(5*(1+self.level)),
-                electricity=3)),
+                metal=-10+(5*(1+self.level)),)),
             ('research', DefaultAttrDict(lambda: 0)),
             ('buildings', DefaultAttrDict(lambda: 0)),
             ])
