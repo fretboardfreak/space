@@ -35,9 +35,10 @@ class Show(CommandMixin):
                                 dest='verbose', default=False)
 
             (args, params) = parser.parse_known_args(line.split(' '))
+            setattr(args, 'params', params)
             if args.subject is None: # no arguments
                 args.subject = show_planets
-            args.subject(params, verbose=args.verbose)
+            args.subject(verbose=args.verbose)
         except SystemExit:
             pass
         return False
@@ -76,8 +77,7 @@ class Debug(CommandMixin):
         print hlp
 
 class Planet(CommandMixin):
-    def _building(self, *args, **kwargs):
-        args = kwargs['args']
+    def __build(self, args):
         if args.building is None:
             ui.show_available_buildings(engine=self.engine,
                                         planet=args.planet,
@@ -90,15 +90,21 @@ class Planet(CommandMixin):
             print ("Construction Failed! Make sure you have enough "
                    "resources and try again.")
 
+    def __show_planets(self, args):
+        if args.planet in [None, '']:
+            ui.show_planets(self.engine, args.verbose)
+            return
+        coord, planet = self.engine.state.user.get_planet(args.planet)
+        print planet.show(verbose=args.verbose)
+
     def do_planet(self, line):
-        show_planets = partial(ui.show_planets, self.engine)
         try:
             parser = ArgumentParser(prog='planet',
                                     description=self.help_show(True))
             parser.add_argument('-v', '--verbose', action='store_true',
                                 dest='verbose', default=False)
-            parser.add_argument('-b', '--building', action='store_const',
-                                dest='action', const=self._building)
+            parser.add_argument('-b', '--build', action='store_const',
+                                dest='action', const=self.__build)
             parser.add_argument('planet', help='Limit the effect of the '
                                 'command to this planet (if supported)',
                                 default=None, nargs='?')
@@ -111,8 +117,8 @@ class Planet(CommandMixin):
             (args, params) = parser.parse_known_args(line.split(' '))
             setattr(args, 'params', params)
             if args.action is None:
-                args.action = show_planets
-            args.action(args=args, verbose=args.verbose)
+                args.action = self.__show_planets
+            args.action(args=args)
         except SystemExit:
             pass
         return False

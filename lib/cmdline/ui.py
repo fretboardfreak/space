@@ -47,14 +47,13 @@ def dbg_print_state(engine):
     debug('dbg: printing the game state')
     print engine.state
 
-def show_planets(engine, *args, **kwargs):
-    verbose = kwargs['verbose'] if kwargs.has_key('verbose') else False
+def show_planets(engine, verbose=None):
     debug('showing planets')
     print engine.state.user.show_planets(verbose)
 
-def show_user(engine, *args, **kwargs):
+def show_user(engine, verbose=None):
     debug('showing user')
-    print engine.state.user.show(kwargs.get('verbose', False))
+    print engine.state.user.show(verbose)
 
 def _show_available_buildings(engine, planet, verbose=None):
     try:

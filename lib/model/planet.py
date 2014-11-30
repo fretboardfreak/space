@@ -95,7 +95,7 @@ class Planet(object):
                  self.sun_distance, self.sun_brightness, self.buildings,
                  self.electricity, self.resources, self.rates))
 
-    def show(self, rates=None, verbose=None):
+    def show(self, verbose=None, rates=None):
         if rates is None:
             rates = True
         details = []
