@@ -22,7 +22,12 @@ Namegen.py - A basic name generator script.
 
 import sys, random, locale
 from argparse import ArgumentParser
-from StringIO import StringIO
+
+try:
+    from StringIO import StringIO
+except ImportError: # python 3
+    from io import StringIO
+
 
 class NameGen:
     """
@@ -155,7 +160,7 @@ def main():
     sep = ', '
     if args.newline:
         sep = '\n'
-    print sep.join([generator.gen_word() for _ in range(args.count)])
+    print(sep.join([generator.gen_word() for _ in range(args.count)]))
     return 0
 
 def parse_args():
