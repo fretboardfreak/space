@@ -1,3 +1,6 @@
+__all__ = ['Coord', 'SystemCoord']
+
+
 class Coord(object):
     def __init__(self, x=None, y=None, planet=None):
         if x is None: x = 0

@@ -4,6 +4,9 @@ from logging import debug
 
 from lib.util import AttrDict, DefaultAttrDict
 
+__all__ = ['Resources', 'ALL_RESOURCES', 'ORE', 'METAL', 'THORIUM',
+           'HYDROCARBON', 'DEUTERIUM', 'SUN', 'ELECTRICITY']
+
 ORE = 'ore'
 METAL = 'metal'
 THORIUM = 'thorium'
@@ -25,13 +28,13 @@ TRADE_MODIFIER = DefaultAttrDict(lambda: 0.0,
 
 class Resources(AttrDict):
     def __init__(self, *args, **kwargs):
-        for res, amt in kwargs.iteritems():
+        for res in kwargs:
             if res not in ALL_RESOURCES:
                 msg = ('Resource %s is invalid. Resources must be one of %s'
                        % (res, ALL_RESOURCES))
                 debug(msg)
                 raise KeyError(msg)
-            kwargs[res] = float(amt)
+            kwargs[res] = float(kwargs[res])
         super(Resources, self).__init__(*args, **kwargs)
         for res in set(ALL_RESOURCES).difference(set(kwargs.keys())):
             self.setdefault(res, 0)

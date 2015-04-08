@@ -2,7 +2,11 @@ from random import randint
 from functools import partial
 from logging import debug
 
-from planet import Planet
+from .planet import Planet
+
+
+__all__ = ['System']
+
 
 class System(object):
     _size_range = (2, 15)

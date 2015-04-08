@@ -2,7 +2,10 @@ from math import log10
 from logging import debug
 
 from lib.util import AttrDict, DefaultAttrDict
-from resources import Resources
+from .resources import Resources
+
+__all__ = ['Mine', 'SolarPowerPlant', 'get_all_buildings', 'get_all_abbr',
+           'get_building']
 
 class Building(object):
     def __init__(self, level=None):

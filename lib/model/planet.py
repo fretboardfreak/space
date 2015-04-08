@@ -5,8 +5,11 @@ from logging import debug
 from lib.util import AttrDict
 from lib.namegen import NameGen
 from lib.rst import indent
-from resources import Resources
-from building import ALL_BUILDINGS, get_building
+
+from .resources import Resources
+from .building import ALL_BUILDINGS, get_building
+
+__all__ = ['Planet']
 
 class Planet(object):
     #TODO: make max_resources a range per planet instance

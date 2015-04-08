@@ -1,3 +1,6 @@
+__all__ = ['GameState']
+
+
 class GameState(object):
     def __init__(self, save_file=None):
         self.save_file = save_file

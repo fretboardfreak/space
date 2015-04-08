@@ -3,6 +3,10 @@ from logging import debug
 from lib.error import ObjectNotFound
 from lib.rst import indent
 
+
+__all__ = ['User']
+
+
 class User(object):
     def __init__(self, name, home_planet_coords, home_planet):
         debug('Creating new user object %s' % name)
