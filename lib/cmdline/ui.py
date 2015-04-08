@@ -14,8 +14,8 @@ def input_bool(msg):
         elif x.startswith('n'):
             break
         if attempt == 1:
-            print "(>'-')>"
-    print "<('-'<)"
+            print("(>'-')>")
+    print("<('-'<)")
     return False
 
 def input_text(msg):
@@ -36,32 +36,32 @@ def input_int(msg, min=None, max=None):
             except:
                 pass
         if min is not None and num < min:
-            print "too small (minimum=%s)" % min
+            print("too small (minimum=%s)" % min)
             continue
         if max is not None and num > max:
-            print "too large (maximum=%s)" % max
+            print("too large (maximum=%s)" % max)
             continue
         return num
 
 def dbg_print_state(engine):
     debug('dbg: printing the game state')
-    print engine.state
+    print(engine.state)
 
 def show_planets(engine, verbose=None):
     debug('showing planets')
-    print engine.state.user.show_planets(verbose)
+    print(engine.state.user.show_planets(verbose))
 
 def show_user(engine, verbose=None):
     debug('showing user')
-    print engine.state.user.show(verbose)
+    print(engine.state.user.show(verbose))
 
 def _show_available_buildings(engine, planet, verbose=None):
     try:
         coord, planet = engine.state.user.get_planet(planet)
-    except ObjectNotFound, e:
-        print "Could not find that planet"
+    except ObjectNotFound as e:
+        print("Could not find that planet")
         if verbose:
-            print e
+            print(e)
         return
     avail = planet.get_available_buildings()
     msg = "%s: %s\n" % (coord, planet.name)
@@ -75,9 +75,9 @@ def show_available_buildings(engine, planet, verbose=None):
     if planet is None:
         msg = [_show_available_buildings(engine, plnt.name, verbose)
                for plnt in engine.state.user.planets.itervalues()]
-        print '\n'.join(msg)
+        print('\n'.join(msg))
         return
-    print _show_available_buildings(engine, planet, verbose)
+    print(_show_available_buildings(engine, planet, verbose))
 
 def start_new_game(engine):
     msg = 'Do you want to start a new game?'
@@ -123,7 +123,7 @@ def newgame_get_user_info(system_query_cb):
     home_planet = system.planets[planet_num]
     home_planet.resources.ore = 25
     home_planet.resources.metal = 60
-    print ("We've given you some building materials to get you started. "
-           "Use them wisely, that's all the new recruits get from us!")
+    print("We've given you some building materials to get you started. "
+          "Use them wisely, that's all the new recruits get from us!")
 
     return (name, home_coords, home_planet)
