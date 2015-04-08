@@ -3,11 +3,6 @@
 import sys, os, unittest, pickle
 from mock import patch, Mock, mock_open
 
-# Add space root directory to import path
-script_dir, _ = os.path.split(sys.argv[0])
-space_dir = os.path.abspath(os.path.join(script_dir, '../..'))
-sys.path.insert(1, space_dir)
-
 import lib.engine as engine
 
 class TestEngine(unittest.TestCase):
