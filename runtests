@@ -1,9 +1,3 @@
 #!/bin/bash
 
-TESTS_DIR='./tests/'
-
-for test_script in $(find $TESTS_DIR -type f -iname "test_*.py"); do
-    echo Running ${test_script};
-    PYTHONPATH=. python $test_script;
-    echo
-done;
+python -m unittest discover
