@@ -3,12 +3,14 @@ from cmd import Cmd
 from functools import partial
 from logging import debug
 
-import ui
-from lib.model.building import get_building, get_all_abbr
+from . import ui
+from lib.model.building import get_all_abbr
+
 
 class CommandMixin(object):
     def __init__(self, engine):
         self.engine = engine
+
 
 class Quit(CommandMixin):
     def do_quit(self, line):
@@ -16,9 +18,10 @@ class Quit(CommandMixin):
         return True
 
     def help_quit(self):
-        print "Quit the program"
+        print("Quit the program")
     do_q = do_quit
     do_EOF = do_quit
+
 
 class Show(CommandMixin):
     def do_show(self, line):
@@ -36,7 +39,7 @@ class Show(CommandMixin):
 
             (args, params) = parser.parse_known_args(line.split(' '))
             setattr(args, 'params', params)
-            if args.subject is None: # no arguments
+            if args.subject is None:  # no arguments
                 args.subject = show_planets
             args.subject(verbose=args.verbose)
         except SystemExit:
@@ -47,9 +50,10 @@ class Show(CommandMixin):
         msg = "Show various things. Use 'show --help' for more."
         if no_print:
             return msg
-        print msg
+        print(msg)
     do_sh = do_show
     do_s = do_show
+
 
 class Debug(CommandMixin):
     def do_dbg(self, line):
@@ -74,7 +78,8 @@ class Debug(CommandMixin):
         hlp = "Provides access to some debugging commands."
         if no_print:
             return hlp
-        print hlp
+        print(hlp)
+
 
 class Planet(CommandMixin):
     def __build(self, args):
@@ -85,17 +90,17 @@ class Planet(CommandMixin):
             return
         coord, planet = self.engine.state.user.get_planet(args.planet)
         if planet.build(args.building):
-            print "Congrats, you just built a %s" % args.building
+            print("Congrats, you just built a %s" % args.building)
         else:
-            print ("Construction Failed! Make sure you have enough "
-                   "resources and try again.")
+            print("Construction Failed! Make sure you have enough "
+                  "resources and try again.")
 
     def __show_planets(self, args):
         if args.planet in [None, '']:
             ui.show_planets(self.engine, args.verbose)
             return
         coord, planet = self.engine.state.user.get_planet(args.planet)
-        print planet.show(verbose=args.verbose)
+        print(planet.show(verbose=args.verbose))
 
     def do_planet(self, line):
         try:
@@ -124,26 +129,28 @@ class Planet(CommandMixin):
         return False
 
     def help_planet(self):
-        print "Access to things on planets"
+        print("Access to things on planets")
     do_p = do_planet
     do_pl = do_planet
 
+
 class User(CommandMixin):
     def do_user(self, line):
-        #TODO: implement change name
-        print 'Not implemented yet'
+        # TODO: implement change name
+        print('Not implemented yet')
 
     def help_user(self):
-        print "Access to user admin tasks"
+        print("Access to user admin tasks")
     do_u = do_user
+
 
 class SpaceCmdInterpreter(Cmd, Quit, Debug, Show, Planet, User):
     def __init__(self, engine):
         super(SpaceCmdInterpreter, self).__init__()
         self.engine = engine
         self.prompt = 'space> '
-        self.doc_header='Space Commands'
-        self.undoc_header='Alias Commands'
+        self.doc_header = 'Space Commands'
+        self.undoc_header = 'Alias Commands'
 
     def start(self):
         try:
@@ -155,7 +162,7 @@ class SpaceCmdInterpreter(Cmd, Quit, Debug, Show, Planet, User):
                 ui.start_new_game(self.engine)
             debug('Starting interpreter...')
             self.cmdloop()
-        except KeyboardInterrupt, SystemExit:
+        except (KeyboardInterrupt, SystemExit):
             debug('Recieved Interrupt.')
         finally:
             self.engine.save()
