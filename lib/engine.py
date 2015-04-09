@@ -12,10 +12,10 @@ class SpaceEngine(object):
     def load(self):
         '''Load game state directly. Useful when used on the interpreter'''
         debug('Loading saved game')
-        with open(self.state.save_file, 'r') as sf:
+        with open(self.state.save_file, 'rb') as sf:
             self.state = pickle.load(sf)
 
     def save(self):
         debug('Saving game')
-        with open(self.state.save_file, 'w') as fd:
+        with open(self.state.save_file, 'wb') as fd:
             pickle.dump(self.state, fd)

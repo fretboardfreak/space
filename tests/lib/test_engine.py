@@ -1,33 +1,36 @@
 #!/usr/bin/env python
 
-import sys, os, unittest, pickle
-from mock import patch, Mock, mock_open
+import sys
+import os
+import unittest
+import pickle
+import tempfile
+from mock import Mock
 
 import lib.engine as engine
 
+
+class MockGameState(object):
+    def __init__(self, *args, **kwargs):
+        self.save_file = None
+
+
 class TestEngine(unittest.TestCase):
 
-    save_file = 'blah'
-
     def setUp(self):
-        engine.GameState = Mock()
+        self.save_file = tempfile.NamedTemporaryFile()
+        engine.GameState = MockGameState
         self.engine = engine.SpaceEngine(self.save_file)
-        self.engine.state.save_file = self.save_file
+        self.engine.state.save_file = self.save_file.name
 
     def test_load(self):
-        #mopen = mock_open()
+        orig_state = hash(self.engine.state)
+        pickle.dump(self.engine.state, self.save_file.file)
+        self.save_file.file.seek(0)
 
-        string = 'foo'
-        read_data = pickle.dumps(string)
-        with patch('__main__.open',
-                   mock_open(read_data=read_data),
-                   create=True) as mopen:
-            self.engine.load()
+        self.engine.load()
 
-        self.assertTrue(engine.pickle.load.called)
-
-        #open_args, _ = mopen.call_args
-        #self.assertTrue(open_args[0], self.save_file)
+        self.assertTrue(orig_state, hash(self.engine.state))
 
 
 if __name__ == "__main__":
