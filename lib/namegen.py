@@ -20,6 +20,8 @@ Namegen.py - A basic name generator script.
 #License along with name-gen.  If not, see
 #<http://www.gnu.org/licenses/>.
 
+# Updated by Curtis Sand for use in Space, 2015
+
 import sys, random, locale
 from argparse import ArgumentParser
 
@@ -63,22 +65,22 @@ class NameGen:
 
             starts_ids = [int(n) for n in lines[1].split(',')]  #next 2 lines, start syllable indexes and counts
             starts_counts = [int(n) for n in lines[2].split(',')]
-            self.starts = zip(starts_ids, starts_counts)  #zip into a list of tuples
+            self.starts = list(zip(starts_ids, starts_counts))  #zip into a list of tuples
 
             ends_ids = [int(n) for n in lines[3].split(',')]  #next 2, same for syllable ends
             ends_counts = [int(n) for n in lines[4].split(',')]
-            self.ends = zip(ends_ids, ends_counts)
+            self.ends = list(zip(ends_ids, ends_counts))
 
             #starting with the 6th and 7th lines, each pair of lines holds ids and counts
             #of the "next syllables" for a previous syllable.
             self.combinations = []
-            for (ids_str, counts_str) in zip(lines[5:None:2], lines[6:None:2]):
+            for (ids_str, counts_str) in list(zip(lines[5:None:2], lines[6:None:2])):
                 if len(ids_str) == 0 or len(counts_str) == 0:  #empty lines
                     self.combinations.append([])
                 else:
                     line_ids = [int(n) for n in ids_str.split(',')]
                     line_counts = [int(n) for n in counts_str.split(',')]
-                    self.combinations.append(zip(line_ids, line_counts))
+                    self.combinations.append(list(zip(line_ids, line_counts)))
         finally:
             f.close()
 
