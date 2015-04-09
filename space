@@ -3,7 +3,7 @@
 A space game where the player manages a space fairing civilization and
 battles various challenges in growing their empire.
 """
-# requires python 2.7
+# requires python 3
 
 import sys, logging
 from argparse import ArgumentParser
@@ -16,7 +16,7 @@ def main():
     logging.basicConfig(
             filename=args.log_file, level=logging.DEBUG, filemode='a',
             format='%(levelname)s [%(module)s|%(funcName)s] %(message)s')
-    print 'logging to %s started' % args.log_file
+    print('logging to %s started' % args.log_file)
     logging.debug('logging to %s started' % args.log_file)
     engine = SpaceEngine(args.save_file)
     SpaceCmdInterpreter(engine).start()
