@@ -4,7 +4,7 @@ from logging import debug
 from lib.rst import indent
 
 from .system import System
-from .coord import Coord, SystemCoord
+from .coord import SystemCoord
 
 __all__ = ['Galaxy']
 

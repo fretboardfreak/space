@@ -1,5 +1,4 @@
 from random import randint
-from functools import partial
 from logging import debug
 
 from .planet import Planet
