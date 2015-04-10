@@ -1,6 +1,6 @@
-from collections import defaultdict
+from collections import defaultdict, UserDict
 
-class AttrDict(dict):
+class AttrDict(UserDict):
     """ Dictionary who's keys become attributes.
 
         Causes memory leak on python < 2.7.3 and python < 3.2.3
