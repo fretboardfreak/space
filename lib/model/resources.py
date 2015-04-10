@@ -26,7 +26,7 @@ TRADE_MODIFIER = DefaultAttrDict(lambda: 0.0,
                                   HYDROCARBON: 3.0,
                                   DEUTERIUM: 5.0, })
 
-class Resources(AttrDict):
+class Resources(DefaultAttrDict):
     def __init__(self, *args, **kwargs):
         for res in kwargs:
             if res not in ALL_RESOURCES:
@@ -35,12 +35,26 @@ class Resources(AttrDict):
                 debug(msg)
                 raise KeyError(msg)
             kwargs[res] = float(kwargs[res])
-        super(Resources, self).__init__(*args, **kwargs)
-        for res in set(ALL_RESOURCES).difference(set(kwargs.keys())):
-            self.setdefault(res, 0)
+        super(Resources, self).__init__(lambda: 0.0, *args, **kwargs)
 
-    def __setitem__(self, item, value):
-        setattr(self, item, abs(value))
+    def __getattribute__(self, item):
+        try:
+            val = super(Resources, self).__getattribute__(item)
+        except AttributeError:
+            val = self[val]
+        if item in ALL_RESOURCES:
+            if val < 0:
+                val = abs(val)
+                print('stored {} is negative'.format(item))
+        return val
+
+    def __getitem__(self, item):
+        val = super(Resources, self).__getitem__(item)
+        if item in ALL_RESOURCES:
+            if val < 0:
+                val = abs(val)
+                print('stored {} is negative'.format(item))
+        return val
 
     def __repr__(self):
         res_list = deepcopy(ALL_RESOURCES)
