@@ -18,8 +18,7 @@ ELECTRICITY = 'electricity'
 ALL_RESOURCES = [ORE, METAL, THORIUM, HYDROCARBON,
                  DEUTERIUM]
 
-# Trade Value: defined in terms of 1 ORE as unit value
-TRADE_MODIFIER = DefaultAttrDict(lambda: 0.0,
+TRADE_RATIO = DefaultAttrDict(lambda: 0.0,
                                  {ORE: 1.0,
                                   METAL: 2.0,
                                   THORIUM: 4.0,
@@ -70,7 +69,7 @@ class Resources(DefaultAttrDict):
         tally = 0
         for res in ALL_RESOURCES:
             diff = float(self[res]) - float(other[res])
-            tally += float(TRADE_MODIFIER[res]) * diff
+            tally += float(TRADE_RATIO[res]) * diff
         if tally > 0:
             return ceil(tally)
         else:
