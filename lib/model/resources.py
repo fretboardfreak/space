@@ -45,7 +45,7 @@ class Resources(DefaultAttrDict):
         if item in ALL_RESOURCES:
             if val < 0:
                 val = abs(val)
-                print('stored {} is negative'.format(item))
+                self.__setattr__(item, val)
         return val
 
     def __getitem__(self, item):
@@ -53,7 +53,7 @@ class Resources(DefaultAttrDict):
         if item in ALL_RESOURCES:
             if val < 0:
                 val = abs(val)
-                print('stored {} is negative'.format(item))
+                self.__setitem__(item, val)
         return val
 
     def __repr__(self):
