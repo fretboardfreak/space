@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-"""
-Namegen.py - A basic name generator script.
-"""
+#!/usr/bin/env python3
+
 #Copyright 2010 Joao Henriques <jotaf (no spam) at hotmail dot com>.
 #
 #This file is part of name-gen.
@@ -21,6 +19,10 @@ Namegen.py - A basic name generator script.
 #<http://www.gnu.org/licenses/>.
 
 # Updated by Curtis Sand for use in Space, 2015
+
+"""
+Namegen.py - A basic name generator script.
+"""
 
 import sys, random, locale
 from argparse import ArgumentParser
