@@ -1,6 +1,3 @@
-__all__ = ['Coord', 'SystemCoord']
-
-
 class BaseCoord(object):
     def __init__(self, x=None, y=None):
         if x is None:

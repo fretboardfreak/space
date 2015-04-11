@@ -3,9 +3,6 @@ from logging import debug
 from functools import partial
 from collections import UserDict
 
-__all__ = ['Resources', 'ALL_RESOURCES', 'ORE', 'METAL', 'THORIUM',
-           'HYDROCARBON', 'DEUTERIUM', 'SUN', 'ELECTRICITY']
-
 ORE = 'ore'
 METAL = 'metal'
 THORIUM = 'thorium'

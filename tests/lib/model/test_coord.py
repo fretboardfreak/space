@@ -5,6 +5,14 @@ import re
 from lib.model import coord
 
 
+class TestModel(unittest.TestCase):
+    def test_model(self):
+        expected_exports = ['Coord', 'SystemCoord']
+        import lib.model
+        for export in expected_exports:
+            self.assertIn(export, lib.model.__all__)
+
+
 class BaseCoordTest(unittest.TestCase):
     def setUp(self):
         self.coord = coord.Coord(0, 0, 0)

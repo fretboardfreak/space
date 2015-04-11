@@ -3,13 +3,14 @@ import re
 
 from lib.model import resources
 
-
-class TestModule(unittest.TestCase):
-    def test_model_all_resources_exported(self):
-        err = 'Resource {} is missing from __all__'
+class TestModel(unittest.TestCase):
+    def test_model(self):
+        expected_exports = ['ORE', 'METAL', 'THORIUM', 'HYDROCARBON',
+                            'DEUTERIUM', 'SUN', 'ELECTRICITY', 'ALL_RESOURCES',
+                            'TRADE_RATIO', 'Resources']
         import lib.model
-        for res in resources.ALL_RESOURCES:
-            self.assertTrue(hasattr(lib.model, res.upper()), err.format(res))
+        for export in expected_exports:
+            self.assertIn(export, lib.model.__all__)
 
 
 class TestResources(unittest.TestCase):

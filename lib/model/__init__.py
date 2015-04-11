@@ -1,11 +1,11 @@
-""" Space Object Model
-"""
+"""Space Object Model"""
 
-from .gamestate import *
-from .user import *
-from .galaxy import *
-from .system import *
-from .planet import *
-from .coord import *
-from .building import *
-from .resources import *
+from .coord import Coord, SystemCoord
+__all__ = ['Coord', 'SystemCoord', ]
+
+
+from .resources import (Resources, ALL_RESOURCES, ORE, METAL, THORIUM,
+                        HYDROCARBON, DEUTERIUM, SUN, ELECTRICITY, TRADE_RATIO)
+__all__.extend(['Resources', 'ALL_RESOURCES', 'ORE', 'METAL', 'THORIUM',
+                'HYDROCARBON', 'DEUTERIUM', 'SUN', 'ELECTRICITY',
+                'TRADE_RATIO'])
