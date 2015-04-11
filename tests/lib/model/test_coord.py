@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import unittest
 import random
 import re
@@ -111,7 +109,3 @@ class TestSystemCoord(BaseCoordTest):
         test_obj.__setstate__((self.coord.x, self.coord.y))
         self.assertEqual((self.coord.x, self.coord.y),
                          (test_obj.x, test_obj.y))
-
-
-if __name__ == "__main__":
-    unittest.main()

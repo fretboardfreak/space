@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import sys
 import os
 import unittest
@@ -31,7 +29,3 @@ class TestEngine(unittest.TestCase):
         self.engine.load()
 
         self.assertTrue(orig_state, hash(self.engine.state))
-
-
-if __name__ == "__main__":
-    unittest.main()

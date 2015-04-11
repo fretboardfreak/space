@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import unittest
 import re
 
@@ -119,7 +117,3 @@ class TestResources(unittest.TestCase):
         new_val = value - non_zero
         self.assertNotEqual(self.resources, new_val)
         self.assertTrue(self.resources > new_val)
-
-
-if __name__ == "__main__":
-    unittest.main()
