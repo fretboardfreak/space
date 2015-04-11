@@ -1,8 +1,7 @@
-from math import ceil, floor
 from copy import deepcopy
 from logging import debug
-
-from lib.util import AttrDict, DefaultAttrDict
+from functools import partial
+from collections import UserDict
 
 __all__ = ['Resources', 'ALL_RESOURCES', 'ORE', 'METAL', 'THORIUM',
            'HYDROCARBON', 'DEUTERIUM', 'SUN', 'ELECTRICITY']
@@ -18,29 +17,28 @@ ELECTRICITY = 'electricity'
 ALL_RESOURCES = [ORE, METAL, THORIUM, HYDROCARBON,
                  DEUTERIUM]
 
-TRADE_RATIO = DefaultAttrDict(lambda: 0.0,
-                                 {ORE: 1.0,
-                                  METAL: 2.0,
-                                  THORIUM: 4.0,
-                                  HYDROCARBON: 3.0,
-                                  DEUTERIUM: 5.0, })
+TRADE_RATIO = {ORE: 1.0, METAL: 2.0, THORIUM: 4.0, HYDROCARBON: 3.0,
+               DEUTERIUM: 5.0, }
 
-class Resources(DefaultAttrDict):
+
+class Resources(UserDict):
     def __init__(self, *args, **kwargs):
+        items = dict(zip(ALL_RESOURCES, [0] * len(ALL_RESOURCES)))
         for res in kwargs:
             if res not in ALL_RESOURCES:
                 msg = ('Resource %s is invalid. Resources must be one of %s'
                        % (res, ALL_RESOURCES))
                 debug(msg)
                 raise KeyError(msg)
-            kwargs[res] = float(kwargs[res])
-        super(Resources, self).__init__(lambda: 0.0, *args, **kwargs)
+            items[res] = float(kwargs[res])
+        super(Resources, self).__init__(items)
 
     def __getattribute__(self, item):
+        val = None
         try:
             val = super(Resources, self).__getattribute__(item)
         except AttributeError:
-            val = self[val]
+            val = self[item]
         if item in ALL_RESOURCES:
             if val < 0:
                 val = abs(val)
@@ -58,25 +56,40 @@ class Resources(DefaultAttrDict):
     def __repr__(self):
         res_list = deepcopy(ALL_RESOURCES)
         return '(%s)' % ', '.join(["%s: %s" % (res, self[res])
-                                     for res in res_list])
+                                   for res in res_list])
 
     def __str__(self):
         s = self.__repr__().replace('(', '').replace(')', '')
         s = s.replace(', ', '\n')
         return s
 
-    def __cmp__(self, other):
+    def _tally_value_difference(self, other):
+        '''Use the trade ratio to tally the relative values of each resource'''
         tally = 0
         for res in ALL_RESOURCES:
             diff = float(self[res]) - float(other[res])
             tally += float(TRADE_RATIO[res]) * diff
-        if tally > 0:
-            return ceil(tally)
-        else:
-            return floor(tally)
+        return tally
 
     def __eq__(self, other):
-        return self.__cmp__(other) == 0
+        return self._tally_value_difference(other) == 0
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __lt__(self, other):
+        return self._tally_value_difference(other) < 0
+
+    def __ge__(self, other):
+        '''De Morgan's law'''
+        return not self.__lt__(other)
+
+    def __gt__(self, other):
+        return self._tally_value_difference(other) > 0
+
+    def __le__(self, other):
+        '''De Morgan's law'''
+        return not self.__gt__(other)
 
     def __add__(self, other):
         result = Resources()
@@ -90,6 +103,14 @@ class Resources(DefaultAttrDict):
             result[res] = self[res] - other[res]
         return result
 
-    def __iter__(self):
-        for res in ALL_RESOURCES:
-            yield (res, self[res])
+# Add properties to the Resources class for each resource in ALL_RESOURCES
+for res in ALL_RESOURCES:
+
+    def getter(resource, self):
+        return self[resource]
+
+    def setter(resource, self, value):
+        self.__setitem__(resource, value)
+
+    setattr(Resources, res, property(fget=partial(getter, res),
+                                     fset=partial(setter, res)))
