@@ -146,11 +146,11 @@ class SolarPowerPlant(Building):
 ALL_BUILDINGS = [Mine, SolarPowerPlant]
 
 
-def get_all_buildings():
+def get_all_building_names():
     return [cls.name for cls in ALL_BUILDINGS]
 
 
-def get_all_abbr():
+def get_all_building_abbr():
     return [cls.abbr for cls in ALL_BUILDINGS]
 
 

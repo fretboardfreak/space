@@ -19,12 +19,11 @@ from lib.model import resources
 from lib.model import building
 
 
-@unittest.skip('not implemented yet')
 class TestModel(unittest.TestCase):
     def test_model(self):
-        expected_exports = ['ORE', 'METAL', 'THORIUM', 'HYDROCARBON',
-                            'DEUTERIUM', 'SUN', 'ELECTRICITY', 'ALL_RESOURCES',
-                            'TRADE_RATIO', 'Resources']
+        expected_exports = ['Mine', 'SolarPowerPlant', 'ALL_BUILDINGS',
+                            'get_building', 'get_all_building_names',
+                            'get_all_building_abbr']
         import lib.model
         for export in expected_exports:
             self.assertIn(export, lib.model.__all__)
