@@ -15,7 +15,7 @@
 import unittest
 import random
 
-from .base import LibModelTest, ModelObjectTest
+from .base import LibModelTest, ModelObjectTest, ModelObjectStateMixin
 
 from lib.error import ObjectNotFound
 from lib.model import resources
@@ -106,9 +106,12 @@ class TestBuildingModule(unittest.TestCase):
             self.assertIsInstance(test_val, building_type)
 
 
-class TestBuildingRequirements(ModelObjectTest):
+class TestBuildingRequirements(ModelObjectTest, ModelObjectStateMixin):
     def get_new_instance(self):
         return building.BuildingRequirements()
+
+    def get_test_state(self):
+        return (resources.Resources(ore=3, metal=11), {'Mine', 3}, {})
 
     def setUp(self):
         self.object = self.get_new_instance()
@@ -116,6 +119,7 @@ class TestBuildingRequirements(ModelObjectTest):
                                'research': dict,
                                'buildings': dict}
         self.classname_in_repr = True
+        self.expected_state = (resources.Resources, dict, dict)
 
     def test_repr(self):
         super().test_repr()

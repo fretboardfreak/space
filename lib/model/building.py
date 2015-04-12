@@ -26,10 +26,12 @@ class BuildingRequirements(object):
         if not self.resources:
             self.resources = Resources()
 
+        # research dict: not defined yet
         self.research = research
         if self.research is None:
             self.research = dict()
 
+        # buildings dict: key=str, building name; value=int, building level
         self.buildings = buildings
         if self.buildings is None:
             self.buildings = dict()
@@ -43,6 +45,12 @@ class BuildingRequirements(object):
         return "Resources: {}\nResearch: {}\nBuildings: {}".format(
                 str(self.resources).replace('\n', ', '), self.research,
                 self.buildings)
+
+    def __getstate__(self):
+        return (self.resources, self.research, self.buildings)
+
+    def __setstate__(self, state):
+        (self.resources, self.research, self.buildings) = state
 
 
 class Building(object):
