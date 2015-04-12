@@ -54,6 +54,10 @@ class ModelObjectStateMixin(object):
 
 class ModelObjectEqualityMixin(object):
 
+    def get_test_values(self):
+        """Subclasses should redefine this method. """
+        return self.get_new_instance()
+
     def test_equal(self):
         test_obj = self.get_test_values()
         self.assertTrue(test_obj == self.object)
@@ -121,9 +125,6 @@ class ModelObjectTest(unittest.TestCase):
         inst.__getstate__ = lambda self: tuple()
         inst.__setstate__ = lambda self, state: None
         return inst
-
-    def get_test_values(self):
-        return self.get_new_instance()
 
     def setUp(self):
         self.object = self.get_new_instance()
