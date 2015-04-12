@@ -15,7 +15,8 @@
 import unittest
 import random
 
-from .base import LibModelTest, ModelObjectTest, ModelObjectStateMixin
+from .base import (LibModelTest, ModelObjectTest, ModelObjectStateMixin,
+                   ModelObjectEqualityMixin)
 
 from lib.error import ObjectNotFound
 from lib.model import resources
@@ -135,8 +136,54 @@ class TestBuildingRequirements(ModelObjectTest, ModelObjectStateMixin):
         self.assertEqual(2, string.count('\n'))
 
 
-class TestBuildingBaseClass(unittest.TestCase):
-    pass
+class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
+                            ModelObjectEqualityMixin):
+    def get_new_instance(self, level=None):
+        return building.Building(level=level)
+
+    def get_test_state(self):
+        return (self.level,)
+
+    def setUp(self):
+        self.max_level = 1000  # max level to consider for these tests
+        self.level = random.randint(0, self.max_level)
+        self.expected_state = (int,)
+        self.expected_attrs = {'level': int, 'modifier': resources.Resources,
+                               'electricity': int,
+                               'requirements': building.BuildingRequirements}
+        self.expected_modifier_type = resources.Resources
+        self.expected_electricity_type = int
+        self.expected_requirements_type = building.BuildingRequirements
+        self.object = self.get_new_instance()
+        self.classname_in_repr = True
+
+    def get_non_equal_test_values(self):
+        return self.get_new_instance(self.level+1)
+
+    def test_constructor(self):
+        no_arg = self.get_new_instance()
+        self.assertEqual(1, no_arg.level)
+        arg = self.get_new_instance(level=self.level)
+        self.assertEqual(self.level, arg.level)
+
+    def test_modifier(self):
+        self.assertIsInstance(self.object.modifier,
+                              self.expected_modifier_type)
+
+    def test_electricity(self):
+        self.assertIsInstance(self.object.electricity,
+                              self.expected_electricity_type)
+        self.assertGreaterEqual(self.object.electricity, 0)
+
+    def test_requirements(self):
+        self.assertIsInstance(self.object.requirements,
+                              self.expected_requirements_type)
+
+    def test_compare(self):
+        self.object.level = self.level + 1
+        test_obj = self.object._compare(self.get_new_instance(self.level))
+        average = (1 + 0 + 0) / 3.0  # 0.333
+        self.assertEqual(average, test_obj)
 
 
 class BaseBuildingTest(unittest.TestCase):
