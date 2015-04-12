@@ -66,37 +66,55 @@ class ModelObjectEqualityMixin(object):
         """
         return self.get_new_instance()
 
-    def test_equal(self):
+    def test_equal_eq_ne(self):
         test_obj = self.get_equal_test_values()
         self.assertTrue(test_obj == self.object)
         self.assertFalse(test_obj != self.object)
 
-    def test_equal_comparison(self):
+    def test_equal_gt(self):
         test_obj = self.get_equal_test_values()
-        self.assertTrue(test_obj <= self.object)
-        self.assertTrue(test_obj >= self.object)
         self.assertFalse(test_obj > self.object)
-        self.assertFalse(test_obj < self.object)
-        self.assertTrue(self.object <= test_obj)
-        self.assertTrue(self.object >= test_obj)
         self.assertFalse(self.object > test_obj)
+
+    def test_equal_lt(self):
+        test_obj = self.get_equal_test_values()
+        self.assertFalse(test_obj < self.object)
         self.assertFalse(self.object < test_obj)
 
-    def test_not_equal(self):
+    def test_equal_le(self):
+        test_obj = self.get_equal_test_values()
+        self.assertTrue(test_obj <= self.object)
+        self.assertTrue(self.object <= test_obj)
+
+    def test_equal_ge(self):
+        test_obj = self.get_equal_test_values()
+        self.assertTrue(test_obj >= self.object)
+        self.assertTrue(self.object >= test_obj)
+
+    def test_not_equal_eq_ne(self):
         test_obj = self.get_non_equal_test_values()
         self.assertFalse(test_obj == self.object)
         self.assertTrue(test_obj != self.object)
 
-    def test_not_equal_comparison(self):
+    def test_not_equal_gt(self):
+        test_obj = self.get_non_equal_test_values()
+        self.assertTrue(test_obj > self.object)
+        self.assertFalse(self.object > test_obj)
+
+    def test_not_equal_lt(self):
+        test_obj = self.get_non_equal_test_values()
+        self.assertFalse(test_obj < self.object)
+        self.assertTrue(self.object < test_obj)
+
+    def test_not_equal_ge(self):
+        test_obj = self.get_non_equal_test_values()
+        self.assertTrue(test_obj >= self.object)
+        self.assertFalse(self.object >= test_obj)
+
+    def test_not_equal_le(self):
         test_obj = self.get_non_equal_test_values()
         self.assertFalse(test_obj <= self.object)
-        self.assertTrue(test_obj >= self.object)
-        self.assertTrue(test_obj > self.object)
-        self.assertFalse(test_obj < self.object)
         self.assertTrue(self.object <= test_obj)
-        self.assertFalse(self.object >= test_obj)
-        self.assertFalse(self.object > test_obj)
-        self.assertTrue(self.object < test_obj)
 
 
 class ModelObjectTest(unittest.TestCase):
