@@ -13,21 +13,20 @@
 # limitations under the License.
 
 import unittest
-import re
+import random
+
+from .base import LibModelTest, ModelObjectTest
 
 from lib.error import ObjectNotFound
 from lib.model import resources
 from lib.model import building
 
 
-class TestModel(unittest.TestCase):
-    def test_model(self):
-        expected_exports = ['Mine', 'SolarPowerPlant', 'ALL_BUILDINGS',
-                            'get_building', 'get_all_building_names',
-                            'get_all_building_abbr']
-        import lib.model
-        for export in expected_exports:
-            self.assertIn(export, lib.model.__all__)
+class TestLibModelBuilding(LibModelTest):
+    def setUp(self):
+        self.expected_exports = ['Mine', 'SolarPowerPlant', 'ALL_BUILDINGS',
+                                 'get_building', 'get_all_building_names',
+                                 'get_all_building_abbr']
 
 
 class TestBuildingModule(unittest.TestCase):
@@ -107,36 +106,29 @@ class TestBuildingModule(unittest.TestCase):
             self.assertIsInstance(test_val, building_type)
 
 
-class TestBuildingRequirements(unittest.TestCase):
+class TestBuildingRequirements(ModelObjectTest):
+    def get_new_instance(self):
+        return building.BuildingRequirements()
+
     def setUp(self):
+        self.object = self.get_new_instance()
         self.expected_attrs = {'resources': resources.Resources,
                                'research': dict,
                                'buildings': dict}
-        self.reqs = building.BuildingRequirements()
-
-    def assert_attrs_in_string(self, string):
-        lower = string.lower()
-        for attr in self.expected_attrs:
-            pattern = '{}: '.format(attr)
-            self.assertIn(pattern, lower)
+        self.classname_in_repr = True
 
     def test_repr(self):
-        rep = repr(self.reqs)
+        super().test_repr()
+        rep = repr(self.object)
         self.assertTrue(rep.startswith('BuildingRequirements('))
         self.assertTrue(rep.endswith(')'))
         self.assertEqual(0, rep.count('\n'))
         self.assert_attrs_in_string(rep)
 
     def test_str(self):
-        string = str(self.reqs)
+        super().test_str()
+        string = str(self.object)
         self.assertEqual(2, string.count('\n'))
-        self.assert_attrs_in_string(string)
-
-    def test_attrs(self):
-        for attr in self.expected_attrs:
-            self.assertIn(attr, dir(self.reqs))
-            self.assertIsInstance(getattr(self.reqs, attr),
-                                  self.expected_attrs[attr])
 
 
 class TestBuildingBaseClass(unittest.TestCase):
