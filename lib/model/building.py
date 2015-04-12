@@ -15,11 +15,33 @@
 from math import log10
 from logging import debug
 
-from lib.util import AttrDict, DefaultAttrDict
 from .resources import Resources
 
-__all__ = ['Mine', 'SolarPowerPlant', 'get_all_buildings', 'get_all_abbr',
-           'get_building']
+
+class BuildingRequirements(object):
+    def __init__(self, resources=None, research=None, buildings=None):
+        self.resources = resources
+        if not self.resources:
+            self.resources = Resources()
+
+        self.research = research
+        if self.research is None:
+            self.research = dict()
+
+        self.buildings = buildings
+        if self.buildings is None:
+            self.buildings = dict()
+
+    def __repr__(self):
+        return ("{}(Resources: {}, Research: {}, Buildings: {})".format(
+            self.__class__.__name__, repr(self.resources), repr(self.research),
+            repr(self.buildings)))
+
+    def __str__(self):
+        return "Resources: {}\nResearch: {}\nBuildings: {}".format(
+                str(self.resources).replace('\n', ', '), self.research,
+                self.buildings)
+
 
 class Building(object):
     def __init__(self, level=None):
@@ -44,14 +66,11 @@ class Building(object):
 
     @property
     def requirements(self):
-        return AttrDict([('resources', Resources()),
-                         ('research', DefaultAttrDict(lambda: 0)),
-                         ('buildings', DefaultAttrDict(lambda: 0)),
-                        ])
+        return BuildingRequirements()
 
     def __repr__(self):
         return ("%s(level=%s, mod=%s, reqs=%s)" %
-               ((self.__class__.__name__, self.level, repr(self.modifier),
+                ((self.__class__.__name__, self.level, repr(self.modifier),
                  repr(self.requirements))))
 
     def __str__(self):
@@ -71,16 +90,17 @@ class Building(object):
         if reqs.resources > build_site.resources:
             return False
         for bldng in reqs.buildings:
-            if bldng not in build_site.buildings:
+            if (bldng not in build_site.buildings or
+                    reqs.buildings[bldng] > build_site.buildings[bldng]):
                 return False
-            elif reqs.buildings[bldng] > build_site.buildings[bldng]:
-                return False
-        #TODO: implement research requirements here
+        # TODO: implement research requirements here
         return True
+
 
 class Mine(Building):
     name = 'Mine'
     abbr = 'Mn'
+
     def __init__(self, level=None):
         super(Mine, self).__init__(level)
 
@@ -95,18 +115,14 @@ class Mine(Building):
 
     @property
     def requirements(self):
-        return AttrDict([
-            ('resources', Resources(
-                ore=10+(2*(-1+self.level)),
-                metal=-10+(5*(1+self.level)),)),
-            ('research', DefaultAttrDict(lambda: 0)),
-            ('buildings', DefaultAttrDict(lambda: 0)),
-            ])
+        return BuildingRequirements(resources=Resources(
+            ore=10+(2*(-1+self.level)), metal=-10+(5*(1+self.level)),))
 
 
 class SolarPowerPlant(Building):
     name = 'Solar Power Plant'
     abbr = 'SPP'
+
     def __init__(self, level=None, sun_cb=None):
         self.sun_cb = sun_cb
         super(SolarPowerPlant, self).__init__(level)
@@ -117,26 +133,26 @@ class SolarPowerPlant(Building):
 
     @property
     def electricity(self):
-        if not self.sun_cb: return 0
+        if not self.sun_cb:
+            return 0
         return 10 * abs(log10(self.sun_cb())) * self.level
 
     @property
     def requirements(self):
-        return AttrDict([
-            ('resources', Resources(
-                ore=10+(5*self.level),
-                metal=50+(6*self.level))),
-            ('research', DefaultAttrDict(lambda: 0)),
-            ('buildings', DefaultAttrDict(lambda: 0)),
-            ])
+        return BuildingRequirements(resources=Resources(
+            ore=10+(5*self.level), metal=50+(6*self.level)))
+
 
 ALL_BUILDINGS = [Mine, SolarPowerPlant]
+
 
 def get_all_buildings():
     return [cls.name for cls in ALL_BUILDINGS]
 
+
 def get_all_abbr():
     return [cls.abbr for cls in ALL_BUILDINGS]
+
 
 def get_building(building_name, level=None):
     debug('getting building type %s, lvl %s' % (building_name, level))
