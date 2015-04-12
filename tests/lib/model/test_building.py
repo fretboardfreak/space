@@ -15,6 +15,7 @@
 import unittest
 import re
 
+from lib.error import ObjectNotFound
 from lib.model import resources
 from lib.model import building
 
@@ -29,28 +30,62 @@ class TestModel(unittest.TestCase):
             self.assertIn(export, lib.model.__all__)
 
 
-@unittest.skip('not implemented yet')
 class TestBuildingModule(unittest.TestCase):
+    def setUp(self):
+        self.expected_building_list = ['Mine', 'SolarPowerPlant']
+
     def test_all_buildings_list(self):
-        pass
+        self.assertEqual(len(self.expected_building_list),
+                         len(building.ALL_BUILDINGS))
+        all_building_names = [bld.__name__ for bld in building.ALL_BUILDINGS]
+        for bldng in self.expected_building_list:
+            self.assertIn(bldng, all_building_names)
 
     def test_get_all_buildings(self):
-        pass
+        all_building_names = [bld.__name__ for bld in building.ALL_BUILDINGS]
+        self.assertEqual(set(all_building_names),
+                         set(self.expected_building_list))
 
     def test_get_all_abbr(self):
-        pass
+        all_building_abbr = [bld.abbr for bld in building.ALL_BUILDINGS]
+        self.assertEqual(len(self.expected_building_list),
+                         len(building.ALL_BUILDINGS))
 
-    def test_get_building(self):
-        pass
+    def test_get_building_not_found(self):
+        self.assertRaises(ObjectNotFound, building.get_building, 'flabber')
 
+    def test_get_building_type_no_level(self):
+        for building_type in building.ALL_BUILDINGS:
+            test_val = building.get_building(building_type)
+            self.assertEqual(building_type, test_val)
 
-@unittest.skip('not implemented yet')
-class TestBuildingSubclasses(unittest.TestCase):
-    def building_subclasses_have_names(self):
-        pass
+    def test_get_building_name_no_level(self):
+        for building_type in building.ALL_BUILDINGS:
+            test_val = building.get_building(building_type.name)
+            self.assertEqual(building_type, test_val)
 
-    def building_subclasses_have_abbr(self):
-        pass
+    def test_get_building_abbr_no_level(self):
+        for building_type in building.ALL_BUILDINGS:
+            test_val = building.get_building(building_type.abbr)
+            self.assertEqual(building_type, test_val)
+
+    def test_get_building_type(self):
+        level = 1
+        for building_type in building.ALL_BUILDINGS:
+            test_val = building.get_building(building_type, level=level)
+            self.assertIsInstance(test_val, building_type)
+
+    def test_get_building_name(self):
+        level = 1
+        for building_type in building.ALL_BUILDINGS:
+            test_val = building.get_building(building_type.name, level=level)
+            self.assertIsInstance(test_val, building_type)
+
+    def test_get_building_abbr(self):
+        level = 1
+        for building_type in building.ALL_BUILDINGS:
+            test_val = building.get_building(building_type.abbr, level=level)
+            self.assertIsInstance(test_val, building_type)
 
 
 class TestBuildingRequirements(unittest.TestCase):
@@ -85,10 +120,17 @@ class TestBuildingRequirements(unittest.TestCase):
                                   self.expected_attrs[attr])
 
 
-@unittest.skip('not implemented yet')
 class TestBuildingBaseClass(unittest.TestCase):
     pass
 
 
 class BaseBuildingTest(unittest.TestCase):
+    pass
+
+
+class TestMine(BaseBuildingTest):
+    pass
+
+
+class TestSolarPowerPlant(BaseBuildingTest):
     pass

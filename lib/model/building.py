@@ -15,6 +15,8 @@
 from math import log10
 from logging import debug
 
+from lib.error import ObjectNotFound
+
 from .resources import Resources
 
 
@@ -155,15 +157,16 @@ def get_all_building_abbr():
 
 
 def get_building(building_name, level=None):
+    if isinstance(building_name, type):
+        building_name = building_name.__name__
     debug('getting building type %s, lvl %s' % (building_name, level))
-    bld = None
     for building in ALL_BUILDINGS:
-        if (building.name.lower() == building_name.lower() or
+        if (building.__name__.lower() == building_name.lower() or
+                building.name.lower() == building_name.lower() or
                 building.abbr.lower() == building_name.lower()):
-            bld = building
+            if level is None:
+                return building
+            else:
+                return building(level)
     else:
-        debug('')
-    if level is None:
-        return bld
-    else:
-        return bld(level)
+        raise ObjectNotFound(name=building_name)
