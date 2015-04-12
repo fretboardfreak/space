@@ -36,6 +36,23 @@ class TestBuildingModule(unittest.TestCase):
         self.expected_building_names = ['Mine', 'Solar Power Plant']
         self.expected_building_abbrs = ['Mn', 'SPP']
 
+    def _get_building_subclass_count(self):
+        building_subclass_count = 0
+        for attr in dir(building):
+            obj = getattr(building, attr, None)
+            if not isinstance(obj, type):
+                continue
+            if obj and obj.__base__ is building.Building:
+                building_subclass_count += 1
+        return building_subclass_count
+
+    def test_expected_vars(self):
+        """Try to catch developer ommissions"""
+        subclass_count = self._get_building_subclass_count()
+        self.assertEqual(subclass_count, len(self.expected_building_classes))
+        self.assertEqual(subclass_count, len(self.expected_building_names))
+        self.assertEqual(subclass_count, len(self.expected_building_abbrs))
+
     def test_all_buildings_list(self):
         self.assertEqual(len(self.expected_building_classes),
                          len(building.ALL_BUILDINGS))
