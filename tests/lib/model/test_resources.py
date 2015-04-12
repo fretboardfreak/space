@@ -58,7 +58,7 @@ class TestResources(ModelObjectTest, ModelObjectEqualityMixin):
         self.object.deuterium = -3
         self.assertEqual(self.object['deuterium'], 3)
 
-    def get_test_values(self):
+    def get_equal_test_values(self):
         for res in resources.ALL_RESOURCES:
             self.object[res] = 1
         test_res = self.get_new_instance()
@@ -66,8 +66,13 @@ class TestResources(ModelObjectTest, ModelObjectEqualityMixin):
             test_res.ore += resources.TRADE_RATIO[res]
         return test_res
 
+    def get_non_equal_test_values(self):
+        obj = self.get_equal_test_values()
+        obj.ore += 1
+        return obj
+
     def test_tally_value_difference(self):
-        test_res = self.get_test_values()
+        test_res = self.get_equal_test_values()
         self.assertEqual(
                 0, self.object._tally_value_difference(self.object))
         self.assertEqual(0, test_res._tally_value_difference(self.object))
@@ -87,7 +92,7 @@ class TestResources(ModelObjectTest, ModelObjectEqualityMixin):
                          len(re.findall(': \d+\n?', string, re.MULTILINE)))
 
     def test_add(self):
-        value = self.get_test_values()
+        value = self.get_equal_test_values()
         zero = self.get_new_instance()
         self.assertEqual(self.object, value + zero)
         non_zero = self.get_new_instance(ore=1)
@@ -96,7 +101,7 @@ class TestResources(ModelObjectTest, ModelObjectEqualityMixin):
         self.assertTrue(self.object < new_val)
 
     def test_sub(self):
-        value = self.get_test_values()
+        value = self.get_equal_test_values()
         zero = self.get_new_instance()
         self.assertEqual(self.object, value + zero)
         non_zero = self.get_new_instance(ore=1)

@@ -54,17 +54,21 @@ class ModelObjectStateMixin(object):
 
 class ModelObjectEqualityMixin(object):
 
-    def get_test_values(self):
+    def get_equal_test_values(self):
+        """Subclasses should redefine this method. """
+        return self.get_new_instance()
+
+    def get_non_equal_test_values(self):
         """Subclasses should redefine this method. """
         return self.get_new_instance()
 
     def test_equal(self):
-        test_obj = self.get_test_values()
+        test_obj = self.get_equal_test_values()
         self.assertTrue(test_obj == self.object)
         self.assertFalse(test_obj != self.object)
 
     def test_equal_comparison(self):
-        test_obj = self.get_test_values()
+        test_obj = self.get_equal_test_values()
         self.assertTrue(test_obj <= self.object)
         self.assertTrue(test_obj >= self.object)
         self.assertFalse(test_obj > self.object)
@@ -75,14 +79,12 @@ class ModelObjectEqualityMixin(object):
         self.assertFalse(self.object < test_obj)
 
     def test_not_equal(self):
-        test_obj = self.get_test_values()
-        test_obj.ore += 1
+        test_obj = self.get_non_equal_test_values()
         self.assertFalse(test_obj == self.object)
         self.assertTrue(test_obj != self.object)
 
     def test_not_equal_comparison(self):
-        test_obj = self.get_test_values()
-        test_obj.ore += 1
+        test_obj = self.get_non_equal_test_values()
         self.assertFalse(test_obj <= self.object)
         self.assertTrue(test_obj >= self.object)
         self.assertTrue(test_obj > self.object)
