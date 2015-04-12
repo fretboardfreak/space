@@ -14,121 +14,92 @@
 
 import unittest
 import re
+from itertools import repeat
+
+from .base import LibModelTest, ModelObjectTest, ModelObjectEqualityMixin
 
 from lib.model import resources
 
-class TestModel(unittest.TestCase):
-    def test_model(self):
-        expected_exports = ['ORE', 'METAL', 'THORIUM', 'HYDROCARBON',
-                            'DEUTERIUM', 'SUN', 'ELECTRICITY', 'ALL_RESOURCES',
-                            'TRADE_RATIO', 'Resources']
-        import lib.model
-        for export in expected_exports:
-            self.assertIn(export, lib.model.__all__)
 
-
-class TestResources(unittest.TestCase):
+class TestLibModelResources(LibModelTest):
     def setUp(self):
-        self.resources = resources.Resources()
+        self.expected_exports = ['ORE', 'METAL', 'THORIUM', 'HYDROCARBON',
+                                 'DEUTERIUM', 'SUN', 'ELECTRICITY',
+                                 'ALL_RESOURCES', 'TRADE_RATIO', 'Resources']
 
-    def test_all_resources_attrs(self):
-        err = "Resource {} is missing from class Resources attribute list"
-        for res in resources.ALL_RESOURCES:
-            self.assertTrue(hasattr(self.resources, res.lower()),
-                            err.format(res))
+
+class TestResources(ModelObjectTest, ModelObjectEqualityMixin):
+    def get_new_instance(self, *args, **kwargs):
+        return resources.Resources(*args, **kwargs)
+
+    def setUp(self):
+        self.object = self.get_new_instance()
+        self.classname_in_repr = False
+        self.expected_attrs = dict(zip(['ore', 'metal', 'thorium',
+                                        'hydrocarbon',
+                                        'deuterium'], repeat(int)))
 
     def test_constructor_invalid_resource(self):
-        self.assertRaises(KeyError, resources.Resources, flabber=3)
+        self.assertRaises(KeyError, self.get_new_instance, flabber=3)
 
     def test_default_values(self):
         err = "Resource {} was not set to 0 as expected"
         for res in resources.ALL_RESOURCES:
-            self.assertTrue(getattr(self.resources, res.lower()) == 0,
+            self.assertTrue(getattr(self.object, res.lower()) == 0,
                             err.format(res))
 
     def test_negative_values(self):
-        self.resources.ore = 3
-        self.assertEqual(self.resources.ore, 3)
-        self.resources['thorium'] = -3
-        self.assertEqual(self.resources.thorium, 3)
-        self.resources.metal = -3
-        self.assertEqual(self.resources.metal, 3)
-        self.resources.deuterium = -3
-        self.assertEqual(self.resources['deuterium'], 3)
+        self.object.ore = 3
+        self.assertEqual(self.object.ore, 3)
+        self.object['thorium'] = -3
+        self.assertEqual(self.object.thorium, 3)
+        self.object.metal = -3
+        self.assertEqual(self.object.metal, 3)
+        self.object.deuterium = -3
+        self.assertEqual(self.object['deuterium'], 3)
 
-    def _get_test_values(self):
+    def get_test_values(self):
         for res in resources.ALL_RESOURCES:
-            self.resources[res] = 1
-        test_res = resources.Resources()
+            self.object[res] = 1
+        test_res = self.get_new_instance()
         for res in resources.TRADE_RATIO:
             test_res.ore += resources.TRADE_RATIO[res]
         return test_res
 
     def test_tally_value_difference(self):
-        test_res = self._get_test_values()
+        test_res = self.get_test_values()
         self.assertEqual(
-                0, self.resources._tally_value_difference(self.resources))
-        self.assertEqual(0, test_res._tally_value_difference(self.resources))
-
-    def test_equal(self):
-        test_res = self._get_test_values()
-        self.assertTrue(test_res == self.resources)
-        self.assertFalse(test_res != self.resources)
-        self.assertTrue(test_res <= self.resources)
-        self.assertTrue(test_res >= self.resources)
-        self.assertFalse(test_res > self.resources)
-        self.assertFalse(test_res < self.resources)
-        self.assertTrue(self.resources <= test_res)
-        self.assertTrue(self.resources >= test_res)
-        self.assertFalse(self.resources > test_res)
-        self.assertFalse(self.resources < test_res)
-
-    def test_not_equal(self):
-        test_res = self._get_test_values()
-        test_res.ore += 1
-        self.assertFalse(test_res == self.resources)
-        self.assertTrue(test_res != self.resources)
-        self.assertFalse(test_res <= self.resources)
-        self.assertTrue(test_res >= self.resources)
-        self.assertTrue(test_res > self.resources)
-        self.assertFalse(test_res < self.resources)
-        self.assertTrue(self.resources <= test_res)
-        self.assertFalse(self.resources >= test_res)
-        self.assertFalse(self.resources > test_res)
-        self.assertTrue(self.resources < test_res)
+                0, self.object._tally_value_difference(self.object))
+        self.assertEqual(0, test_res._tally_value_difference(self.object))
 
     def test_repr(self):
-        rep = repr(self.resources)
-        self.assertTrue(rep.startswith('('))
-        self.assertTrue(rep.endswith(')'))
-        for resource in resources.ALL_RESOURCES:
-            self.assertIn(resource, rep)
+        super().test_repr()
+        rep = repr(self.object)
         self.assertEqual(len(resources.ALL_RESOURCES),
                          len(re.findall(': \d+[,\)]', rep)))
 
     def test_str(self):
-        string = str(self.resources)
+        super().test_str()
+        string = str(self.object)
         self.assertFalse(string.startswith('('))
         self.assertFalse(string.endswith('('))
-        for resource in resources.ALL_RESOURCES:
-            self.assertIn(resource, string)
         self.assertEqual(len(resources.ALL_RESOURCES),
                          len(re.findall(': \d+\n?', string, re.MULTILINE)))
 
     def test_add(self):
-        value = self._get_test_values()
-        zero = resources.Resources()
-        self.assertEqual(self.resources, value + zero)
-        non_zero = resources.Resources(ore=1)
+        value = self.get_test_values()
+        zero = self.get_new_instance()
+        self.assertEqual(self.object, value + zero)
+        non_zero = self.get_new_instance(ore=1)
         new_val = value + non_zero
-        self.assertNotEqual(self.resources, new_val)
-        self.assertTrue(self.resources < new_val)
+        self.assertNotEqual(self.object, new_val)
+        self.assertTrue(self.object < new_val)
 
     def test_sub(self):
-        value = self._get_test_values()
-        zero = resources.Resources()
-        self.assertEqual(self.resources, value + zero)
-        non_zero = resources.Resources(ore=1)
+        value = self.get_test_values()
+        zero = self.get_new_instance()
+        self.assertEqual(self.object, value + zero)
+        non_zero = self.get_new_instance(ore=1)
         new_val = value - non_zero
-        self.assertNotEqual(self.resources, new_val)
-        self.assertTrue(self.resources > new_val)
+        self.assertNotEqual(self.object, new_val)
+        self.assertTrue(self.object > new_val)
