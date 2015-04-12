@@ -81,15 +81,15 @@ class Building(object):
     def __repr__(self):
         return ("{}(level: {}, modifier: {}, electricity: {}, "
                 "requirements: {})".format(
-                self.__class__.__name__, self.level, repr(self.modifier),
-                self.electricity, repr(self.requirements)))
+                    self.__class__.__name__, self.level, repr(self.modifier),
+                    self.electricity, repr(self.requirements)))
 
     def __str__(self):
         return ("{}: level: {}\n  - electricity: {}\n  - modifier: {}\n"
                 "  - requirements: {})".format(
-                self.__class__.__name__, self.level, self.electricity,
-                repr(self.modifier),
-                str(self.requirements).replace('\n', '\n' + ' ' * 8)))
+                    self.__class__.__name__, self.level, self.electricity,
+                    repr(self.modifier),
+                    str(self.requirements).replace('\n', '\n' + ' ' * 8)))
 
     def __eq__(self, other):
         return (self.modifier == other.modifier and
