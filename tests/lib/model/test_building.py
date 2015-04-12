@@ -32,24 +32,26 @@ class TestModel(unittest.TestCase):
 
 class TestBuildingModule(unittest.TestCase):
     def setUp(self):
-        self.expected_building_list = ['Mine', 'SolarPowerPlant']
+        self.expected_building_classes = ['Mine', 'SolarPowerPlant']
+        self.expected_building_names = ['Mine', 'Solar Power Plant']
+        self.expected_building_abbrs = ['Mn', 'SPP']
 
     def test_all_buildings_list(self):
-        self.assertEqual(len(self.expected_building_list),
+        self.assertEqual(len(self.expected_building_classes),
                          len(building.ALL_BUILDINGS))
         all_building_names = [bld.__name__ for bld in building.ALL_BUILDINGS]
-        for bldng in self.expected_building_list:
+        for bldng in self.expected_building_classes:
             self.assertIn(bldng, all_building_names)
 
-    def test_get_all_buildings(self):
-        all_building_names = [bld.__name__ for bld in building.ALL_BUILDINGS]
+    def test_get_all_building_names(self):
+        all_building_names = building.get_all_building_names()
         self.assertEqual(set(all_building_names),
-                         set(self.expected_building_list))
+                         set(self.expected_building_names))
 
-    def test_get_all_abbr(self):
-        all_building_abbr = [bld.abbr for bld in building.ALL_BUILDINGS]
-        self.assertEqual(len(self.expected_building_list),
-                         len(building.ALL_BUILDINGS))
+    def test_get_all_building_abbr(self):
+        all_building_abbr = building.get_all_building_abbr()
+        self.assertEqual(set(all_building_abbr),
+                         set(self.expected_building_abbrs))
 
     def test_get_building_not_found(self):
         self.assertRaises(ObjectNotFound, building.get_building, 'flabber')
