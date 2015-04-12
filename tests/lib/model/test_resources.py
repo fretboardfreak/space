@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
 import re
 from itertools import repeat
 
@@ -70,12 +69,6 @@ class TestResources(ModelObjectTest, ModelObjectEqualityMixin):
         obj = self.get_equal_test_values()
         obj.ore += 1
         return obj
-
-    def test_tally_value_difference(self):
-        test_res = self.get_equal_test_values()
-        self.assertEqual(
-                0, self.object._tally_value_difference(self.object))
-        self.assertEqual(0, test_res._tally_value_difference(self.object))
 
     def test_repr(self):
         super().test_repr()

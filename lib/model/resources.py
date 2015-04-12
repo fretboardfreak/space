@@ -44,6 +44,13 @@ class Resources(UserDict):
             items[res] = float(kwargs[res])
         super(Resources, self).__init__(items)
 
+    @property
+    def trade_value(self):
+        value = 0
+        for res in ALL_RESOURCES:
+            value += float(TRADE_RATIO[res]) * self[res]
+        return value
+
     def __getattribute__(self, item):
         val = None
         try:
@@ -74,29 +81,21 @@ class Resources(UserDict):
         s = s.replace(', ', '\n')
         return s
 
-    def _tally_value_difference(self, other):
-        '''Use the trade ratio to tally the relative values of each resource'''
-        tally = 0
-        for res in ALL_RESOURCES:
-            diff = float(self[res]) - float(other[res])
-            tally += float(TRADE_RATIO[res]) * diff
-        return tally
-
     def __eq__(self, other):
-        return self._tally_value_difference(other) == 0
+        return self.trade_value == other.trade_value
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def __lt__(self, other):
-        return self._tally_value_difference(other) < 0
+        return self.trade_value < other.trade_value
 
     def __ge__(self, other):
         '''De Morgan's law'''
         return not self.__lt__(other)
 
     def __gt__(self, other):
-        return self._tally_value_difference(other) > 0
+        return self.trade_value > other.trade_value
 
     def __le__(self, other):
         '''De Morgan's law'''
@@ -113,6 +112,7 @@ class Resources(UserDict):
         for res in ALL_RESOURCES:
             result[res] = self[res] - other[res]
         return result
+
 
 # Add properties to the Resources class for each resource in ALL_RESOURCES
 for res in ALL_RESOURCES:
