@@ -55,11 +55,15 @@ class ModelObjectStateMixin(object):
 class ModelObjectEqualityMixin(object):
 
     def get_equal_test_values(self):
-        """Subclasses should redefine this method. """
+        """Subclasses should redefine this method."""
         return self.get_new_instance()
 
     def get_non_equal_test_values(self):
-        """Subclasses should redefine this method. """
+        """Subclasses should redefine this method.
+
+        Return Value should be greater than that returned by
+        self.get_equal_test_values()
+        """
         return self.get_new_instance()
 
     def test_equal(self):
