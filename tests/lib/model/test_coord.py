@@ -16,15 +16,14 @@ import unittest
 import random
 import re
 
+from .base import LibModelTest
+
 from lib.model import coord
 
 
-class TestModel(unittest.TestCase):
-    def test_model(self):
-        expected_exports = ['Coord', 'SystemCoord']
-        import lib.model
-        for export in expected_exports:
-            self.assertIn(export, lib.model.__all__)
+class TestLibModelCoord(unittest.TestCase):
+    def setUp(self):
+        self.expected_exports = ['Coord', 'SystemCoord']
 
 
 class BaseCoordTest(unittest.TestCase):
