@@ -153,7 +153,7 @@ class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
                                'electricity': [float, int],
                                'requirements': building.BuildingRequirements}
         self.expected_modifier_type = resources.Resources
-        self.expected_electricity_type = int
+        self.expected_electricity_type = [int, float]
         self.expected_requirements_type = building.BuildingRequirements
         self.object = self.get_new_instance()
         self.classname_in_repr = True
@@ -172,8 +172,8 @@ class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
                               self.expected_modifier_type)
 
     def test_electricity(self):
-        self.assertIsInstance(self.object.electricity,
-                              self.expected_electricity_type)
+        self.assertTrue(any([isinstance(self.object.electricity, _typ)
+                             for _typ in self.expected_electricity_type]))
         self.assertGreaterEqual(self.object.electricity, 0)
 
     def test_requirements(self):
