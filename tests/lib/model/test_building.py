@@ -200,5 +200,12 @@ class TestMine(BaseBuildingTest):
     pass
 
 
+@unittest.skip('not implemented yet')
 class TestSolarPowerPlant(BaseBuildingTest):
     pass
+
+    def test_getstate(self):
+        pass
+
+    def test_setstate(self):
+        pass
