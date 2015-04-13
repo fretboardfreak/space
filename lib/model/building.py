@@ -180,7 +180,11 @@ class SolarPowerPlant(Building):
         return BuildingRequirements(resources=Resources(
             ore=10+(5*self.level), metal=50+(6*self.level)))
 
-    # TODO: add self.sun_cb to the state handler for this subclass
+    def __getstate__(self):
+        return (self.level, self.sun_cb)
+
+    def __setstate__(self, state):
+        (self.level, self.sun_cb) = state
 
 
 ALL_BUILDINGS = [Mine, SolarPowerPlant]
