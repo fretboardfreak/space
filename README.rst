@@ -16,16 +16,16 @@ Development
 -----------
 
 The main repository is hosted on Github while a public mirror is maintained at
-Bitbucket. ::
+Bitbucket.
 
-    https://github.com/fretboardfreak/space
-    https://bitbucket.org/fret/space
+- https://github.com/fretboardfreak/space
+- https://bitbucket.org/fret/space
 
 For planning and issue tracking I am using a public Trello board. I chose
 Trello over either of the issue tracker offerings of Github or Bitbucket
-because it gives me more freedom to fit the workflow I like to use. ::
+because it gives me more freedom to fit the workflow I like to use.
 
-    https://trello.com/b/Oi1ucOMB/space
+- https://trello.com/b/Oi1ucOMB/space
 
 The code is predominantly written in python 3.
 
