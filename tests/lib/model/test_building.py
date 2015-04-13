@@ -14,6 +14,7 @@
 
 import unittest
 import random
+from collections import Callable
 
 from .base import (LibModelTest, ModelObjectTest, ModelObjectStateMixin,
                    ModelObjectEqualityMixin)
@@ -149,7 +150,7 @@ class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
         self.level = random.randint(0, self.max_level)
         self.expected_state = (int,)
         self.expected_attrs = {'level': int, 'modifier': resources.Resources,
-                               'electricity': int,
+                               'electricity': [float, int],
                                'requirements': building.BuildingRequirements}
         self.expected_modifier_type = resources.Resources
         self.expected_electricity_type = int
@@ -192,20 +193,35 @@ class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
         self.assertLess(test_val, 0)
 
 
-class BaseBuildingTest(unittest.TestCase):
-    pass
+class TestMine(TestBuildingBaseClass):
+    def get_new_instance(self, level=None):
+        return building.Mine(level=level)
+
+    def setUp(self):
+        super().setUp()
 
 
-class TestMine(BaseBuildingTest):
-    pass
+class TestSolarPowerPlant(TestBuildingBaseClass):
+    def get_new_instance(self, level=None):
+        return building.SolarPowerPlant(level=level, sun_cb=self.sun_cb)
 
+    def setUp(self):
+        self.sun_cb = lambda: 1  # must return int > 0
+        super().setUp()
+        self.expected_attrs['sun_cb'] = Callable
+        self.expected_state = (int, Callable)
 
-@unittest.skip('not implemented yet')
-class TestSolarPowerPlant(BaseBuildingTest):
-    pass
+    def get_test_state(self):
+        return (self.level, self.sun_cb)
 
-    def test_getstate(self):
-        pass
+    def test_repr(self):
+        self.expected_attrs.pop('sun_cb')
+        super().test_repr()
 
-    def test_setstate(self):
+    def test_str(self):
+        self.expected_attrs.pop('sun_cb')
+        super().test_str()
+
+    @unittest.skip('test not implemented')
+    def test_sun_cb(self):
         pass
