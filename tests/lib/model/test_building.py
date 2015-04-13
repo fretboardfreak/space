@@ -180,10 +180,16 @@ class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
                               self.expected_requirements_type)
 
     def test_compare(self):
+        """
+        Although value is based on level, modifier and electricity values
+        the modifier and electricity values are calculated based on level.
+        """
         self.object.level = self.level + 1
-        test_obj = self.object._compare(self.get_new_instance(self.level))
-        average = (1 + 0 + 0) / 3.0  # 0.333
-        self.assertEqual(average, test_obj)
+        test_obj = self.get_new_instance(self.level)
+        test_val = self.object._compare(test_obj)
+        self.assertGreater(test_val, 0)
+        test_val = test_obj._compare(self.object)
+        self.assertLess(test_val, 0)
 
 
 class BaseBuildingTest(unittest.TestCase):
