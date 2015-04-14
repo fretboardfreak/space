@@ -56,6 +56,7 @@ class ModelObjectEqualityMixin(object):
 
     def get_equal_test_values(self):
         """Subclasses should redefine this method."""
+        self.object = self.get_new_instance()
         return self.get_new_instance()
 
     def get_non_equal_test_values(self):
@@ -64,57 +65,74 @@ class ModelObjectEqualityMixin(object):
         Return Value should be greater than that returned by
         self.get_equal_test_values()
         """
+        self.object = self.get_new_instance()
         return self.get_new_instance()
+
+    def get_equality_assert_methods(self):
+        if (hasattr(self, 'negative_equality_logic') and
+                getattr(self, 'negative_equality_logic')):
+            return self.assertFalse, self.assertTrue
+        return self.assertTrue, self.assertFalse
 
     def test_equal_eq_ne(self):
         test_obj = self.get_equal_test_values()
-        self.assertTrue(test_obj == self.object)
-        self.assertFalse(test_obj != self.object)
+        assert_a, assert_b = self.get_equality_assert_methods()
+        assert_a(test_obj == self.object)
+        assert_b(test_obj != self.object)
 
     def test_equal_gt(self):
         test_obj = self.get_equal_test_values()
-        self.assertFalse(test_obj > self.object)
-        self.assertFalse(self.object > test_obj)
+        assert_a, assert_b = self.get_equality_assert_methods()
+        assert_b(test_obj > self.object)
+        assert_b(self.object > test_obj)
 
     def test_equal_lt(self):
         test_obj = self.get_equal_test_values()
-        self.assertFalse(test_obj < self.object)
-        self.assertFalse(self.object < test_obj)
+        assert_a, assert_b = self.get_equality_assert_methods()
+        assert_b(test_obj < self.object)
+        assert_b(self.object < test_obj)
 
     def test_equal_le(self):
         test_obj = self.get_equal_test_values()
-        self.assertTrue(test_obj <= self.object)
-        self.assertTrue(self.object <= test_obj)
+        assert_a, assert_b = self.get_equality_assert_methods()
+        assert_a(test_obj <= self.object)
+        assert_a(self.object <= test_obj)
 
     def test_equal_ge(self):
         test_obj = self.get_equal_test_values()
-        self.assertTrue(test_obj >= self.object)
-        self.assertTrue(self.object >= test_obj)
+        assert_a, assert_b = self.get_equality_assert_methods()
+        assert_a(test_obj >= self.object)
+        assert_a(self.object >= test_obj)
 
     def test_not_equal_eq_ne(self):
         test_obj = self.get_non_equal_test_values()
-        self.assertFalse(test_obj == self.object)
-        self.assertTrue(test_obj != self.object)
+        assert_a, assert_b = self.get_equality_assert_methods()
+        assert_b(test_obj == self.object)
+        assert_a(test_obj != self.object)
 
     def test_not_equal_gt(self):
         test_obj = self.get_non_equal_test_values()
-        self.assertTrue(test_obj > self.object)
-        self.assertFalse(self.object > test_obj)
+        assert_a, assert_b = self.get_equality_assert_methods()
+        assert_a(test_obj > self.object)
+        assert_b(self.object > test_obj)
 
     def test_not_equal_lt(self):
         test_obj = self.get_non_equal_test_values()
-        self.assertFalse(test_obj < self.object)
-        self.assertTrue(self.object < test_obj)
+        assert_a, assert_b = self.get_equality_assert_methods()
+        assert_b(test_obj < self.object)
+        assert_a(self.object < test_obj)
 
     def test_not_equal_ge(self):
         test_obj = self.get_non_equal_test_values()
-        self.assertTrue(test_obj >= self.object)
-        self.assertFalse(self.object >= test_obj)
+        assert_a, assert_b = self.get_equality_assert_methods()
+        assert_a(test_obj >= self.object)
+        assert_b(self.object >= test_obj)
 
     def test_not_equal_le(self):
         test_obj = self.get_non_equal_test_values()
-        self.assertFalse(test_obj <= self.object)
-        self.assertTrue(self.object <= test_obj)
+        assert_a, assert_b = self.get_equality_assert_methods()
+        assert_b(test_obj <= self.object)
+        assert_a(self.object <= test_obj)
 
 
 class ModelObjectTest(unittest.TestCase):
