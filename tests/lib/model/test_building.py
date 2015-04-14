@@ -158,7 +158,12 @@ class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
         self.object = self.get_new_instance()
         self.classname_in_repr = True
 
+    def get_equal_test_values(self):
+        self.object = self.get_new_instance(self.level)
+        return self.get_new_instance(self.level)
+
     def get_non_equal_test_values(self):
+        self.object = self.get_new_instance(self.level)
         return self.get_new_instance(self.level+1)
 
     def test_constructor(self):
@@ -185,12 +190,12 @@ class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
         Although value is based on level, modifier and electricity values
         the modifier and electricity values are calculated based on level.
         """
-        self.object.level = self.level + 1
-        test_obj = self.get_new_instance(self.level)
+        test_obj = self.get_non_equal_test_values()
         test_val = self.object._compare(test_obj)
-        self.assertGreater(test_val, 0)
+        assert_a, _ = self.get_equality_assert_methods()
+        assert_a(test_val < 0)
         test_val = test_obj._compare(self.object)
-        self.assertLess(test_val, 0)
+        assert_a(test_val > 0)
 
 
 class TestMine(TestBuildingBaseClass):
