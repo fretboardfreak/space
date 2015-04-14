@@ -16,3 +16,7 @@ from .building import (Mine, SolarPowerPlant, ALL_BUILDINGS, get_building,
                        get_all_building_names, get_all_building_abbr)
 __all__.extend(['Mine', 'SolarPowerPlant', 'ALL_BUILDINGS', 'get_building',
                 'get_all_building_names', 'get_all_building_abbr'])
+
+
+from .planet import Planet
+__all__.extend(['Planet'])
