@@ -16,17 +16,16 @@ from time import time
 from math import pi
 from logging import debug
 
-from lib.util import AttrDict
 from lib.namegen import NameGen
 from lib.rst import indent
 
 from .resources import Resources
 from .building import ALL_BUILDINGS, get_building
 
-__all__ = ['Planet']
 
 class Planet(object):
-    #TODO: make max_resources a range per planet instance
+
+    # TODO: make max_resources a range per planet instance
     max_resources = Resources(ore=15e6, metal=10e6, thorium=1e6,
                               hydrocarbon=4e5, deuterium=2e5)
 
@@ -39,10 +38,10 @@ class Planet(object):
         self.sun_distance = sun_distance
 
         # keys will be the building classname
-        self.buildings = AttrDict()
+        self.buildings = dict()
         debug('Constructing new Planet: sun_dist=%s, sun_brightness=%s,'
               'resources=%s' % (self.sun_distance, self.sun_brightness,
-              self.resources))
+                                self.resources))
 
     def __getstate__(self):
         return (self.name, self.emperor, self.resources, self.last_update,
@@ -77,8 +76,8 @@ class Planet(object):
                   (building, level, self.name))
             new_blding = building(level)
             self.resources -= new_blding.requirements.resources
-            #self.modify_rate(reason=str((type(building).__name__, level)),
-            #                 modifier=new_blding.modifier)
+            # self.modify_rate(reason=str((type(building).__name__, level)),
+            #                  modifier=new_blding.modifier)
             self.buildings[building] = new_blding
             return True
         else:
@@ -157,7 +156,8 @@ class Planet(object):
 
     @property
     def sun(self):
-        if not self.sun_data_cb: return 0
+        if not self.sun_data_cb:
+            return 0
         sun_brightness, sun_distance = self.sun_data_cb()
         return 1 + (sun_brightness / (4 * pi * pow(sun_distance, 2)))
 
@@ -167,4 +167,4 @@ class Planet(object):
 
     @property
     def research(self):
-        return AttrDict()
+        return dict()
