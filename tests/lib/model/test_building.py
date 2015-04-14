@@ -150,7 +150,7 @@ class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
         self.level = random.randint(0, self.max_level)
         self.expected_state = (int,)
         self.expected_attrs = {'level': int, 'modifier': resources.Resources,
-                               'electricity': [float, int],
+                               'electricity': (float, int),
                                'requirements': building.BuildingRequirements}
         self.expected_modifier_type = resources.Resources
         self.expected_electricity_type = [int, float]

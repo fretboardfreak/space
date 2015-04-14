@@ -192,10 +192,5 @@ class ModelObjectTest(unittest.TestCase):
     def test_attrs(self):
         for attr in self.expected_attrs:
             self.assertIn(attr, dir(self.object))
-            if isinstance(self.expected_attrs[attr], list):
-                results = [isinstance(getattr(self.object, attr), _typ)
-                           for _typ in self.expected_attrs[attr]]
-                self.assertTrue(any(results))
-            else:
-                self.assertIsInstance(getattr(self.object, attr),
-                                      self.expected_attrs[attr])
+            self.assertIsInstance(getattr(self.object, attr),
+                                  self.expected_attrs[attr])
