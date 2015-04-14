@@ -204,6 +204,34 @@ class TestMine(TestBuildingBaseClass):
 
     def setUp(self):
         super().setUp()
+        self.disable_prediction = False
+        self.negative_equality_logic = False
+
+    def test_electricity(self):
+        self.assertLessEqual(self.object.electricity, 0)
+
+    def predict_avg(self):
+        low = self.get_new_instance(self.level)
+        high = self.get_new_instance(self.level+1)
+        retval=((high.level - low.level) +
+                (high.electricity - low.electricity) +
+                (high.modifier.trade_value - low.modifier.trade_value)) / 3.0
+        return retval
+
+    def get_non_equal_test_values(self):
+        if not self.disable_prediction:
+            avg = self.predict_avg()
+            self.negative_equality_logic = ((avg < 0) is True)
+        return super().get_non_equal_test_values()
+
+    def test_not_equal_eq_ne(self):
+        self.disable_prediction = True
+        super().test_not_equal_eq_ne()
+
+    def test_compare(self):
+        self.disable_prediction = False
+        super().test_compare()
+
 
 
 class TestSolarPowerPlant(TestBuildingBaseClass):
