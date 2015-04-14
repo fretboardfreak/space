@@ -21,7 +21,7 @@ from .base import LibModelTest
 from lib.model import coord
 
 
-class TestLibModelCoord(unittest.TestCase):
+class TestLibModelCoord(LibModelTest):
     def setUp(self):
         self.expected_exports = ['Coord', 'SystemCoord']
 
