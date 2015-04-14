@@ -105,11 +105,13 @@ class Planet(object):
         return NameGen().gen_word()
 
     def __repr__(self):
-        return ("%s(name=%s, emperor=%s, sun_dist=%s, sun_brightness=%s, "
-                "buildings=%s, electricity=%s, resources=%s, rates=%s)" %
-                (self.__class__.__name__, self.name, self.emperor,
-                 self.sun_distance, self.sun_brightness, self.buildings,
-                 self.electricity, self.resources, self.rates))
+        return ("{}(name: {}, emperor: {}, sun: {}, buildings: {}, "
+                "electricity: {}, resources: {}, rates: {}, research: {}, "
+                "last_update: {})".format(
+                    self.__class__.__name__, self.name, self.emperor,
+                    self.sun, self.buildings, self.electricity,
+                    repr(self.resources), repr(self.rates), self.research,
+                    self.last_update))
 
     def show(self, verbose=None, rates=None):
         if rates is None:

@@ -40,7 +40,7 @@ class TestPlanet(ModelObjectTest, ModelObjectStateMixin):
             'sun_distance': int, 'rates': model.Resources,
             'ore': int, 'thorium': int, 'metal': int, 'hydrocarbon': int,
             'deuterium': int, 'sun': float, 'electricity': int,
-            'research': dict}
+            'research': dict, 'buildings': dict}
 
     def get_new_instance(self):
         return planet.Planet(self.sun_brightness, self.sun_distance)
@@ -48,9 +48,16 @@ class TestPlanet(ModelObjectTest, ModelObjectStateMixin):
     def get_test_state(self):
         return ('name', 'emperor', model.Resources(), 123456, {}, 555, 3)
 
-    @unittest.skip('Planet.__repr__ needs refactoring')
+    def set_expected_attrs_for_representation(self):
+        self.expected_attrs = {
+            'name': str, 'emperor': (type(None), str),
+            'resources': model.Resources, 'last_update': float,
+            'rates': model.Resources, 'sun': float, 'electricity': int,
+            'research': dict, 'buildings': dict}
+
     def test_repr(self):
-        pass
+        self.set_expected_attrs_for_representation()
+        super().test_repr()
 
     @unittest.skip('Planet.__str__ needs refactoring/implementing')
     def test_str(self):
