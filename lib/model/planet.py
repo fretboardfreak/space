@@ -54,7 +54,7 @@ class Planet(object):
     @property
     def rates(self):
         rates = Resources()
-        for bld in self.buildings.itervalues():
+        for bld in self.buildings.values():
             rates += bld.modifier
         return rates
 
@@ -129,7 +129,7 @@ class Planet(object):
         details.append(indent(res, '  '))
 
         bldngs = '\n'.join(['- %s' % str(bld)
-                            for bld in self.buildings.itervalues()])
+                            for bld in self.buildings.values()])
         details.append(bldngs)
         return ("%s, owner %s\n%s" %
                 (self.name, self.emperor, '\n'.join(details)))
@@ -156,14 +156,11 @@ class Planet(object):
 
     @property
     def sun(self):
-        if not self.sun_data_cb:
-            return 0
-        sun_brightness, sun_distance = self.sun_data_cb()
-        return 1 + (sun_brightness / (4 * pi * pow(sun_distance, 2)))
+        return 1 + (self.sun_brightness / (4 * pi * pow(self.sun_distance, 2)))
 
     @property
     def electricity(self):
-        return sum([bld.electricity for bld in self.buildings.itervalues()])
+        return sum([bld.electricity for bld in self.buildings.values()])
 
     @property
     def research(self):
