@@ -68,10 +68,12 @@ class Building(object):
 
     @property
     def modifier(self):
+        """The building's per time unit resource production."""
         return Resources()
 
     @property
     def electricity(self):
+        """The building's per time unit electricity production/consumption."""
         return 0
 
     @property
@@ -104,7 +106,7 @@ class Building(object):
         mod = self.modifier.trade_value - other.modifier.trade_value
         lev = self.level - other.level
         elec = self.electricity - other.electricity
-        avg = (mod + lev + elec) / 3.0
+        avg = (lev + elec + mod) / 3.0
         return avg
 
     def __lt__(self, other):
