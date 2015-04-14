@@ -255,6 +255,8 @@ class TestSolarPowerPlant(TestBuildingBaseClass):
         self.expected_attrs.pop('sun_cb')
         super().test_str()
 
-    @unittest.skip('test not implemented')
     def test_sun_cb(self):
-        pass
+        for level in range(1000):
+            self.level = level
+            test_spp = self.get_non_equal_test_values()
+            self.assertLessEqual(self.object.electricity, test_spp.electricity)
