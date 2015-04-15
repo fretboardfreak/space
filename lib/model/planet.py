@@ -107,7 +107,7 @@ class Planet(object):
     def __repr__(self):
         return ("{}(name: {}, emperor: {}, sun: {}, buildings: {}, "
                 "electricity: {}, resources: {}, rates: {}, research: {}, "
-                "last_update: {})".format(
+                "last update: {})".format(
                     self.__class__.__name__, self.name, self.emperor,
                     self.sun, self.buildings, self.electricity,
                     repr(self.resources), repr(self.rates), self.research,
