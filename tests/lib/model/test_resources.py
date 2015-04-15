@@ -97,7 +97,7 @@ class TestResources(ModelObjectTest, ModelObjectEqualityMixin):
     def test_sub(self):
         value = self.get_equal_test_values()
         zero = self.get_new_instance()
-        self.assertEqual(self.object, value + zero)
+        self.assertEqual(self.object, value - zero)
         non_zero = self.get_new_instance(ore=1)
         new_val = value - non_zero
         self.assertNotEqual(self.object, new_val)
