@@ -64,3 +64,40 @@ class TestPlanet(ModelObjectTest, ModelObjectStateMixin):
         self.expected_attrs.pop('name')
         self.expected_attrs.pop('rates')
         super().test_str()
+
+    def test_max_resources(self):
+        self.skipTest('Not Implemented Yet')
+
+    def test_rates(self):
+        self.skipTest('Not Implemented Yet')
+
+    def test_update(self):
+        self.skipTest('Not Implemented Yet')
+
+    def test_update_max_resources(self):
+        self.skipTest('Not Implemented Yet')
+
+    def test_update_no_available_resources(self):
+        """
+        Test behaviour of the planet when consumtion is higher than
+        production and the resources stockpile runs out.
+        """
+        self.skipTest('Not Implemented Yet')
+
+    def test__build_building(self):
+        self.skipTest('Not Implemented Yet')
+
+    def test_build(self):
+        self.skipTest('Not Implemented Yet')
+
+    def test_get_available_buildings(self):
+        self.skipTest('Not Implemented Yet')
+
+    def test_name_generation(self):
+        self.skipTest('Not Implemented Yet')
+
+    def test_sun(self):
+        self.skipTest('Not Implemented Yet')
+
+    def test_electricity(self):
+        self.skipTest('Not Implemented Yet')

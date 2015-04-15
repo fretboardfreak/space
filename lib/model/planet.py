@@ -30,7 +30,7 @@ class Planet(object):
                               hydrocarbon=4e5, deuterium=2e5)
 
     def __init__(self, sun_brightness=None, sun_distance=None):
-        self.name = self.__get_new_name()
+        self.name = NameGen().gen_word()
         self.emperor = None
         self.resources = Resources()
         self.last_update = time()
@@ -100,9 +100,6 @@ class Planet(object):
             if building.are_requirements_met(self, level):
                 avail.append((building, level))
         return avail
-
-    def __get_new_name(self):
-        return NameGen().gen_word()
 
     def __repr__(self):
         return ("{}(name: {}, emperor: {}, sun: {}, buildings: {}, "

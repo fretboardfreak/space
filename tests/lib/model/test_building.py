@@ -233,7 +233,6 @@ class TestMine(TestBuildingBaseClass):
         super().test_compare()
 
 
-
 class TestSolarPowerPlant(TestBuildingBaseClass):
     def get_new_instance(self, level=None):
         return building.SolarPowerPlant(level=level, sun_cb=self.sun_cb)
