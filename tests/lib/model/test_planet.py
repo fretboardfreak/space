@@ -63,9 +63,4 @@ class TestPlanet(ModelObjectTest, ModelObjectStateMixin):
         # name and rates are shown, the actual attr strings are not
         self.expected_attrs.pop('name')
         self.expected_attrs.pop('rates')
-
-        # Planet.__str__ contains "Last Update" but is sent through str.lower
-        # for the attr test
-        self.expected_attrs.pop('last_update')
-        self.expected_attrs['last update'] = None
         super().test_str()

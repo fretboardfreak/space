@@ -37,6 +37,7 @@ class TestResources(ModelObjectTest, ModelObjectEqualityMixin):
         self.expected_attrs = dict(zip(['ore', 'metal', 'thorium',
                                         'hydrocarbon',
                                         'deuterium'], repeat(int)))
+        self.expected_attrs['trade_value'] = float
 
     def test_constructor_invalid_resource(self):
         self.assertRaises(KeyError, self.get_new_instance, flabber=3)
@@ -81,7 +82,7 @@ class TestResources(ModelObjectTest, ModelObjectEqualityMixin):
         string = str(self.object)
         self.assertFalse(string.startswith('('))
         self.assertFalse(string.endswith('('))
-        self.assertEqual(len(resources.ALL_RESOURCES),
+        self.assertEqual(len(resources.ALL_RESOURCES + ['trade_value']),
                          len(re.findall(': \d+\n?', string, re.MULTILINE)))
 
     def test_add(self):
