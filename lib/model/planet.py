@@ -113,6 +113,18 @@ class Planet(object):
                     repr(self.resources), repr(self.rates), self.research,
                     self.last_update))
 
+    def __str__(self):
+        resources = ['  {}: {} ({})'.format(name, self.resources[name],
+                                            self.rates[name])
+                     for name in self.resources]
+        buildings = ['  {}'.format(bld) for bld in self.buildings.values()]
+        return ("{}: {}, Emperor: {},\nSun: {}, Electricity: {}\n"
+                "Resources:\n{}\nBuildings:\n{}\nResearch: {}\n"
+                "Last Update: {}".format(
+                    self.__class__.__name__, self.name, self.emperor, self.sun,
+                    self.electricity, '\n'.join(resources),
+                    '\n'.join(buildings), self.research, self.last_update))
+
     def show(self, verbose=None, rates=None):
         if rates is None:
             rates = True

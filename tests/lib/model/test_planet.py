@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
-
 from .base import LibModelTest, ModelObjectTest, ModelObjectStateMixin
 
 from lib import model
@@ -59,6 +57,15 @@ class TestPlanet(ModelObjectTest, ModelObjectStateMixin):
         self.set_expected_attrs_for_representation()
         super().test_repr()
 
-    @unittest.skip('Planet.__str__ needs refactoring/implementing')
     def test_str(self):
-        pass
+        self.set_expected_attrs_for_representation()
+
+        # name and rates are shown, the actual attr strings are not
+        self.expected_attrs.pop('name')
+        self.expected_attrs.pop('rates')
+
+        # Planet.__str__ contains "Last Update" but is sent through str.lower
+        # for the attr test
+        self.expected_attrs.pop('last_update')
+        self.expected_attrs['last update'] = None
+        super().test_str()
