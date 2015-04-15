@@ -174,8 +174,11 @@ class ModelObjectTest(unittest.TestCase):
     def assert_attrs_in_string(self, string):
         lower = string.lower()
         for attr in self.expected_attrs:
+            attr = attr.replace('_', ' ')
             patterns = ['{}:{}'.format(attr, sep) for sep in (' ', '\n')]
-            self.assertTrue(any([pat in lower for pat in patterns]))
+            self.assertTrue(any([pat in lower for pat in patterns]),
+                            "Expected Attr {} is missing from model "
+                            "{}".format(attr, type(self.object)))
 
     def test_repr(self):
         rep = repr(self.object)
