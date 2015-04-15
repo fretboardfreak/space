@@ -102,3 +102,11 @@ class TestResources(ModelObjectTest, ModelObjectEqualityMixin):
         new_val = value - non_zero
         self.assertNotEqual(self.object, new_val)
         self.assertTrue(self.object > new_val)
+
+    def test_trade_value(self):
+        # expected value: sum of relative values of resources in order: ore,
+        # metal, hydrocarbon, thorium, deuterium
+        expected_value = 1 + 2 + 3 + 4 + 5
+        self.object = self.get_new_instance(ore=1, metal=1, thorium=1,
+                                            hydrocarbon=1, deuterium=1)
+        self.assertEqual(self.object.trade_value, expected_value)
