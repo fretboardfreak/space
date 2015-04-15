@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import unittest
-from mock import Mock
+from unittest.mock import Mock
 
 
 class LibModelTest(unittest.TestCase):

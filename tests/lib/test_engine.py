@@ -17,7 +17,7 @@ import os
 import unittest
 import pickle
 import tempfile
-from mock import Mock
+from unittest.mock import Mock
 
 #import lib.engine as engine
 
