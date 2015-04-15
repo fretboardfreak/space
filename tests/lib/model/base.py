@@ -174,8 +174,8 @@ class ModelObjectTest(unittest.TestCase):
     def assert_attrs_in_string(self, string):
         lower = string.lower()
         for attr in self.expected_attrs:
-            pattern = '{}: '.format(attr)
-            self.assertIn(pattern, lower)
+            patterns = ['{}:{}'.format(attr, sep) for sep in (' ', '\n')]
+            self.assertTrue(any([pat in lower for pat in patterns]))
 
     def test_repr(self):
         rep = repr(self.object)
