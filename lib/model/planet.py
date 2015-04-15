@@ -39,9 +39,9 @@ class Planet(object):
 
         # keys will be the building classname
         self.buildings = dict()
-        debug('Constructing new Planet: sun_dist=%s, sun_brightness=%s,'
-              'resources=%s' % (self.sun_distance, self.sun_brightness,
-                                self.resources))
+        debug('Constructing new Planet: sun_dist={}, sun_brightness={},'
+              'resources={}'.format(self.sun_distance, self.sun_brightness,
+                                    self.resources))
 
     def __getstate__(self):
         return (self.name, self.emperor, self.resources, self.last_update,
@@ -61,9 +61,9 @@ class Planet(object):
     def update(self):
         new_t = time()
         num_secs = new_t - self.last_update
-        debug('Updating planet %s by %s' % (self.name, num_secs))
-        for res, val in self.rates:
-            difference = val * num_secs
+        debug('Updating planet {} by {}'.format(self.name, num_secs))
+        for res in self.rates:
+            difference = self.rates[res] * num_secs
             self.resources[res] = min(self.resources[res] + difference,
                                       self.max_resources[res])
         self.last_update = new_t
@@ -72,8 +72,8 @@ class Planet(object):
         self.update()
         building = get_building(building)
         if building.are_requirements_met(self, level):
-            debug('Constructing %s level %s on planet %s' %
-                  (building, level, self.name))
+            debug('Constructing {} level {} on planet {}'.format(
+                building, level, self.name))
             new_blding = building(level)
             self.resources -= new_blding.requirements.resources
             # self.modify_rate(reason=str((type(building).__name__, level)),
@@ -81,8 +81,8 @@ class Planet(object):
             self.buildings[building] = new_blding
             return True
         else:
-            debug('Construction attempt failed on planet %s, not enough'
-                  'resources.' % self.name)
+            debug('Construction attempt failed on planet {}, not enough'
+                  'resources.'.format(self.name))
             return False
 
     def build(self, building):
@@ -92,7 +92,7 @@ class Planet(object):
 
     def get_available_buildings(self):
         debug('Retrieving buildings available for construction on planet '
-              '%s' % self.name)
+              '{}'.format(self.name))
         avail = []
         for building in ALL_BUILDINGS:
             existing = self.buildings.get(building, None)
@@ -120,21 +120,22 @@ class Planet(object):
         self.update()
         if verbose:
             rates = True
-            sun = ('Sun: dist: %s  brightness: %s' %
-                   (self.sun_distance, self.sun_brightness))
+            sun = 'Sun: dist: {}  brightness: {}'.format(self.sun_distance,
+                                                         self.sun_brightness)
             details.append(sun)
         if rates:
-            res = '\n'.join(['- %s: %d (%s)' % (name, amt, self.rates[name])
-                             for name, amt in self.resources])
+            res = '\n'.join(['- {}: {} ({})'.format(
+                                name, self.resources[name], self.rates[name])
+                             for name in self.resources])
         else:
             res = indent(str(self.resources), '- ')
         details.append(indent(res, '  '))
 
-        bldngs = '\n'.join(['- %s' % str(bld)
+        bldngs = '\n'.join(['- {}'.format(str(bld))
                             for bld in self.buildings.values()])
         details.append(bldngs)
-        return ("%s, owner %s\n%s" %
-                (self.name, self.emperor, '\n'.join(details)))
+        return "Planet {}, owner {}\n{}".format(self.name, self.emperor,
+                                                '\n'.join(details))
 
     @property
     def ore(self):
