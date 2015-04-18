@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from unittest.mock import Mock
 from .base import LibModelTest, ModelObjectTest, ModelObjectStateMixin
 
 from lib import model
+from lib.model.building import Building
 from lib.model import planet
 
 
@@ -26,7 +28,7 @@ class TestLibModelCoord(LibModelTest):
 class TestPlanet(ModelObjectTest, ModelObjectStateMixin):
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
-        self.sun_brightness = 5555
+        self.sun_brightness = 555
         self.sun_distance = 3
         self.expected_state = (str, (str, type(None)), model.Resources,
                                (int, float), dict, int, int)
@@ -65,30 +67,52 @@ class TestPlanet(ModelObjectTest, ModelObjectStateMixin):
         self.expected_attrs.pop('rates')
         super().test_str()
 
-    def test_max_resources(self):
-        self.skipTest('Not Implemented Yet')
-
     def test_rates(self):
-        self.skipTest('Not Implemented Yet')
+        for lvl in range(10):
+           self.object.buildings[lvl] = Building(lvl)
+           self.object.buildings[lvl].level = lvl
+        self.assertEqual(self.object.rates,
+                         model.Resources(ore=sum(range(10))))
+
+    def prep_update_tst(self):
+        planet.time = Mock(return_value=110)
+        self.object.last_update = 100
+        time_diff = 10
+        self.object.buildings['bld'] = Building(1)
+        expected_rate = 1  # Building defaults to 1 ore per time unit
+        return time_diff, expected_rate
 
     def test_update(self):
-        self.skipTest('Not Implemented Yet')
+        time_diff, expected_rate = self.prep_update_tst()
+        start_res = self.object.resources.copy()
+        self.object.update()
+        end_res = self.object.resources.copy()
+        res_diff = end_res - start_res
+        self.assertEqual(res_diff.trade_value,
+                         time_diff * expected_rate)
 
     def test_update_max_resources(self):
-        self.skipTest('Not Implemented Yet')
+        time_diff, expected_rate = self.prep_update_tst()
+        max_res = self.object.max_resources.copy()
+        max_res.ore -= time_diff * expected_rate
+        self.object.resources = max_res.copy()
+        self.object.update()
+        self.assertEqual(self.object.resources,
+                         self.object.max_resources)
 
     def test_update_no_available_resources(self):
         """
         Test behaviour of the planet when consumtion is higher than
         production and the resources stockpile runs out.
         """
-        self.skipTest('Not Implemented Yet')
-
-    def test__build_building(self):
-        self.skipTest('Not Implemented Yet')
+        self.skipTest('Not Implemented Yet: Need to determine desired '
+                      'behaviour here. Deferring tests for now.')
 
     def test_build(self):
         self.skipTest('Not Implemented Yet')
+        # no-blding -> lvl 1 vs lvl x -> lvl x+1
+        # building reqs met vs not met (resources, bldings, research)
+        # costs removed from planet
 
     def test_get_available_buildings(self):
         self.skipTest('Not Implemented Yet')

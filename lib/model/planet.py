@@ -76,8 +76,6 @@ class Planet(object):
                 building, level, self.name))
             new_blding = building(level)
             self.resources -= new_blding.requirements.resources
-            # self.modify_rate(reason=str((type(building).__name__, level)),
-            #                  modifier=new_blding.modifier)
             self.buildings[building] = new_blding
             return True
         else:
