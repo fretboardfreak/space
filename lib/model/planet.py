@@ -166,6 +166,10 @@ class Planet(object):
 
     @property
     def sun(self):
+        """
+        Sun energy is calculated by the planet so that different effects
+        like polution/atmosphere blocking transmission can be implemented.
+        """
         return 1 + (self.sun_brightness / (4 * pi * pow(self.sun_distance, 2)))
 
     @property

@@ -18,17 +18,11 @@ from logging import debug
 from .planet import Planet
 
 
-__all__ = ['System']
-
-
 class System(object):
-    _size_range = (2, 15)
+    size_range = (2, 15)
     def __init__(self):
-        self.size = randint(*self._size_range)
-        _brightness_upper_bound = 1000 if self.size > 7 else 500
-        _brightness_lower_bound = 10 if self.size <= 7 else 400
-        self.sun_brightness = randint(_brightness_lower_bound,
-                                      _brightness_upper_bound)
+        self.size = randint(*self.size_range)
+        self.sun_brightness = randint(*self.get_brightness_bounds(self.size))
         debug('Constructing new system of size %s with sun brightness %s' %
               (self.size, self.sun_brightness))
         self.planets = [Planet(sun_brightness=self.sun_brightness,
@@ -51,3 +45,10 @@ class System(object):
 
     def __setstate__(self, state):
         (self.size, self.sun_brightness, self.planets) = state
+
+    @classmethod
+    def get_brightness_bounds(cls, size):
+        size_scale = 7
+        _brightness_upper_bound = 1000 if size > size_scale else 500
+        _brightness_lower_bound = 10 if size <= size_scale else 400
+        return (_brightness_lower_bound, _brightness_upper_bound)
