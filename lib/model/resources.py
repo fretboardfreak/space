@@ -114,6 +114,12 @@ class Resources(UserDict):
             result[res] = self[res] - other[res]
         return result
 
+    def copy(self):
+        copy = self.__class__()
+        for attr in self:
+            copy[attr] = self[attr]
+        return copy
+
 
 # Add properties to the Resources class for each resource in ALL_RESOURCES
 for res in ALL_RESOURCES:

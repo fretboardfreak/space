@@ -110,3 +110,10 @@ class TestResources(ModelObjectTest, ModelObjectEqualityMixin):
         self.object = self.get_new_instance(ore=1, metal=1, thorium=1,
                                             hydrocarbon=1, deuterium=1)
         self.assertEqual(self.object.trade_value, expected_value)
+
+    def test_copy(self):
+        foo = self.object
+        copy = self.object.copy()
+        self.object.ore += 10
+        self.assertEqual(foo, self.object)
+        self.assertNotEqual(copy, self.object)
