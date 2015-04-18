@@ -59,6 +59,12 @@ class Building(object):
             self.level = 1
         else:
             self.level = level
+        # requirements for construction
+        self._requirements = BuildingRequirements()
+
+        # per time unit production values
+        self._modifier = Resources(ore=self.level)
+        self._electricity = 0
 
     def __getstate__(self):
         return (self.level,)
@@ -69,16 +75,16 @@ class Building(object):
     @property
     def modifier(self):
         """The building's per time unit resource production."""
-        return Resources()
+        return self._modifier
 
     @property
     def electricity(self):
         """The building's per time unit electricity production/consumption."""
-        return 0
+        return self._electricity
 
     @property
     def requirements(self):
-        return BuildingRequirements()
+        return self._requirements
 
     def __repr__(self):
         return ("{}(level: {}, modifier: {}, electricity: {}, "
