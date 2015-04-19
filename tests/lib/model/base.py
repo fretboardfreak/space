@@ -31,6 +31,70 @@ class LibModelTest(SpaceTest):
             self.assertIn(export, lib.model.__all__)
 
 
+class ModelObjectTest(SpaceTest):
+
+    """A minimal set of tests for the game model objects.
+
+    All game model objects should pass this set of tests.
+
+    Mixin base classes can provide additional tests for greater flexibility.
+    """
+
+    def __init__(self, methodName='runTest'):
+        super().__init__(methodName)
+
+        # These attributes need to be set by the subclass in setUp
+        self.object = None
+        self.classname_in_repr = False
+        self.expected_attrs = dict()  # Key: str, attr name, Value: type
+
+    def get_new_instance(self):
+        """Subclasses should redefine this initialization code."""
+        inst = Mock()
+
+        def _repr(self):
+            return '{}()'.format(self.object.__class__.__name__)
+
+        def _str(self):
+            return ''
+
+        inst.__str__ = _str
+        inst.__repr__ = _repr
+        inst.__getstate__ = lambda self: tuple()
+        inst.__setstate__ = lambda self, state: None
+        return inst
+
+    def setUp(self):
+        self.object = self.get_new_instance()
+
+    def assert_attrs_in_string(self, string):
+        lower = string.lower()
+        for attr in self.expected_attrs:
+            attr = attr.replace('_', ' ')
+            patterns = ['{}:{}'.format(attr, sep) for sep in (' ', '\n')]
+            self.assertTrue(any([pat in lower for pat in patterns]),
+                            "Expected Attr {} is missing from model "
+                            "{}".format(attr, type(self.object)))
+
+    def test_repr(self):
+        rep = repr(self.object)
+        if self.classname_in_repr:
+            self.assertTrue(
+                rep.startswith('{}('.format(self.object.__class__.__name__)))
+        self.assertTrue(rep.endswith(')'))
+        self.assert_attrs_in_string(rep)
+
+    def test_str(self):
+        string = str(self.object)
+        self.assert_attrs_in_string(string)
+
+    def test_attrs(self):
+        for attr in self.expected_attrs:
+            self.assertIn(attr, dir(self.object))
+            self.assertIsInstance(getattr(self.object, attr),
+                                  self.expected_attrs[attr])
+
+
 class ModelObjectStateMixin(object):
 
     """Test state getting/setting of objects.
@@ -133,67 +197,3 @@ class ModelObjectEqualityMixin(object):
         assert_a, assert_b = self.get_equality_assert_methods()
         assert_b(test_obj <= self.object)
         assert_a(self.object <= test_obj)
-
-
-class ModelObjectTest(SpaceTest):
-
-    """A minimal set of tests for the game model objects.
-
-    All game model objects should pass this set of tests.
-
-    Mixin base classes can provide additional tests for greater flexibility.
-    """
-
-    def __init__(self, methodName='runTest'):
-        super().__init__(methodName)
-
-        # These attributes need to be set by the subclass in setUp
-        self.object = None
-        self.classname_in_repr = False
-        self.expected_attrs = dict()  # Key: str, attr name, Value: type
-
-    def get_new_instance(self):
-        """Subclasses should redefine this initialization code."""
-        inst = Mock()
-
-        def _repr(self):
-            return '{}()'.format(self.object.__class__.__name__)
-
-        def _str(self):
-            return ''
-
-        inst.__str__ = _str
-        inst.__repr__ = _repr
-        inst.__getstate__ = lambda self: tuple()
-        inst.__setstate__ = lambda self, state: None
-        return inst
-
-    def setUp(self):
-        self.object = self.get_new_instance()
-
-    def assert_attrs_in_string(self, string):
-        lower = string.lower()
-        for attr in self.expected_attrs:
-            attr = attr.replace('_', ' ')
-            patterns = ['{}:{}'.format(attr, sep) for sep in (' ', '\n')]
-            self.assertTrue(any([pat in lower for pat in patterns]),
-                            "Expected Attr {} is missing from model "
-                            "{}".format(attr, type(self.object)))
-
-    def test_repr(self):
-        rep = repr(self.object)
-        if self.classname_in_repr:
-            self.assertTrue(
-                rep.startswith('{}('.format(self.object.__class__.__name__)))
-        self.assertTrue(rep.endswith(')'))
-        self.assert_attrs_in_string(rep)
-
-    def test_str(self):
-        string = str(self.object)
-        self.assert_attrs_in_string(string)
-
-    def test_attrs(self):
-        for attr in self.expected_attrs:
-            self.assertIn(attr, dir(self.object))
-            self.assertIsInstance(getattr(self.object, attr),
-                                  self.expected_attrs[attr])
