@@ -5,3 +5,6 @@
 
 save.space
 runlog
+
+.noseids
+.coverage

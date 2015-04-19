@@ -2,3 +2,5 @@ flake8
 mccabe
 pep8
 pyflakes
+nose
+coverage
