@@ -140,23 +140,33 @@ class TestBuildingRequirements(ModelObjectTest, ModelObjectStateMixin):
 class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
                             ModelObjectEqualityMixin):
     def get_new_instance(self, level=None):
-        return building.Building(level=level)
+        return building.Building(level=level, sun_cb=self.sun_cb)
 
     def get_test_state(self):
-        return (self.level,)
+        return (self.level, self.sun_cb)
 
     def setUp(self):
         self.max_level = 1000  # max level to consider for these tests
+        self.sun_cb = lambda: 1  # must return int > 0
         self.level = random.randint(0, self.max_level)
-        self.expected_state = (int,)
+        self.expected_state = (int, Callable)
         self.expected_attrs = {'level': int, 'modifier': resources.Resources,
                                'electricity': (float, int),
-                               'requirements': building.BuildingRequirements}
+                               'requirements': building.BuildingRequirements,
+                               'sun_cb': Callable}
         self.expected_modifier_type = resources.Resources
         self.expected_electricity_type = [int, float]
         self.expected_requirements_type = building.BuildingRequirements
         self.object = self.get_new_instance()
         self.classname_in_repr = True
+
+    def test_repr(self):
+        self.expected_attrs.pop('sun_cb')
+        super().test_repr()
+
+    def test_str(self):
+        self.expected_attrs.pop('sun_cb')
+        super().test_str()
 
     def get_equal_test_values(self):
         self.object = self.get_new_instance(self.level)
@@ -200,7 +210,7 @@ class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
 
 class TestMine(TestBuildingBaseClass):
     def get_new_instance(self, level=None):
-        return building.Mine(level=level)
+        return building.Mine(level=level, sun_cb=self.sun_cb)
 
     def setUp(self):
         super().setUp()
@@ -237,24 +247,7 @@ class TestSolarPowerPlant(TestBuildingBaseClass):
     def get_new_instance(self, level=None):
         return building.SolarPowerPlant(level=level, sun_cb=self.sun_cb)
 
-    def setUp(self):
-        self.sun_cb = lambda: 1  # must return int > 0
-        super().setUp()
-        self.expected_attrs['sun_cb'] = Callable
-        self.expected_state = (int, Callable)
-
-    def get_test_state(self):
-        return (self.level, self.sun_cb)
-
-    def test_repr(self):
-        self.expected_attrs.pop('sun_cb')
-        super().test_repr()
-
-    def test_str(self):
-        self.expected_attrs.pop('sun_cb')
-        super().test_str()
-
-    def test_sun_cb(self):
+    def test_electricity(self):
         for level in range(1000):
             self.level = level
             test_spp = self.get_non_equal_test_values()

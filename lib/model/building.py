@@ -54,11 +54,12 @@ class BuildingRequirements(object):
 
 
 class Building(object):
-    def __init__(self, level=None):
+    def __init__(self, level=None, sun_cb=None):
         if level is None:
             self.level = 1
         else:
             self.level = level
+        self.sun_cb = sun_cb
         # requirements for construction
         self._requirements = BuildingRequirements()
 
@@ -67,10 +68,10 @@ class Building(object):
         self._electricity = 0
 
     def __getstate__(self):
-        return (self.level,)
+        return (self.level, self.sun_cb)
 
     def __setstate__(self, state):
-        (self.level,) = state
+        (self.level, self.sun_cb) = state
 
     @property
     def modifier(self):
@@ -147,9 +148,6 @@ class Mine(Building):
     name = 'Mine'
     abbr = 'Mn'
 
-    def __init__(self, level=None):
-        super(Mine, self).__init__(level)
-
     @property
     def modifier(self):
         return Resources(ore=2*self.level,
@@ -169,10 +167,6 @@ class SolarPowerPlant(Building):
     name = 'Solar Power Plant'
     abbr = 'SPP'
 
-    def __init__(self, level=None, sun_cb=None):
-        self.sun_cb = sun_cb
-        super(SolarPowerPlant, self).__init__(level)
-
     @property
     def modifier(self):
         return Resources()
@@ -187,12 +181,6 @@ class SolarPowerPlant(Building):
     def requirements(self):
         return BuildingRequirements(resources=Resources(
             ore=10+(5*self.level), metal=50+(6*self.level)))
-
-    def __getstate__(self):
-        return (self.level, self.sun_cb)
-
-    def __setstate__(self, state):
-        (self.level, self.sun_cb) = state
 
 
 ALL_BUILDINGS = [Mine, SolarPowerPlant]
