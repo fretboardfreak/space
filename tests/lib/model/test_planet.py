@@ -75,9 +75,9 @@ class TestPlanet(ModelObjectTest, ModelObjectStateMixin):
                          model.Resources(ore=sum(range(10))))
 
     def prep_update_tst(self):
-        planet.time = Mock(return_value=110)
-        self.object.last_update = 100
-        time_diff = 10
+        planet.time = Mock(return_value=110.0)
+        self.object.last_update = 100.0
+        time_diff = 10.0
         self.object.buildings['bld'] = Building(1)
         expected_rate = 1  # Building defaults to 1 ore per time unit
         return time_diff, expected_rate
@@ -115,13 +115,46 @@ class TestPlanet(ModelObjectTest, ModelObjectStateMixin):
         # costs removed from planet
 
     def test_get_available_buildings(self):
-        self.skipTest('Not Implemented Yet')
+        expected = [
+            (model.Mine, 1, model.Resources(ore=10)),
+            (model.SolarPowerPlant, 1, model.Resources(ore=15, metal=56)),
+            (model.Mine, 10, model.Resources(ore=28, metal=45)),
+            (model.SolarPowerPlant, 10, model.Resources(ore=60, metal=110))]
+        self.assertEqual([], self.object.get_available_buildings())
+        for bld, lvl, resources in expected:
+            self.object.resources = resources
+            if lvl > 1:
+                self.object.buildings[bld] = bld(lvl - 1)
+            avail = self.object.get_available_buildings()
+            self.assertIn((bld, lvl), avail)
 
     def test_name_generation(self):
-        self.skipTest('Not Implemented Yet')
+        num = 10
+        names = set(self.get_new_instance().name for _ in range(num))
+        self.assertEqual(num, len(names))
 
-    def test_sun(self):
-        self.skipTest('Not Implemented Yet')
+    def test_sun_distance(self):
+        """Sun energy decreases as distance increases"""
+        brightness = 500
+        tests = [model.Planet(sun_distance=dist,
+                              sun_brightness=brightness).sun
+                 for dist in range(2, 15)]
+        self.assertTrue(all(tests[i] >= tests[i+1]
+                            for i in range(len(tests)-1)))
+
+    def test_sun_brightness(self):
+        """Sun energy increases as brightness increases"""
+        distance = 1
+        tests = [model.Planet(sun_distance=distance, sun_brightness=sb).sun
+                 for sb in range(100, 1000, 50)]
+        self.assertTrue(all(tests[i] <= tests[i+1]
+                            for i in range(len(tests)-1)))
 
     def test_electricity(self):
-        self.skipTest('Not Implemented Yet')
+        num_blds = 10
+        elec_per_bld = 10
+        for bld_num in range(num_blds):
+            bldng = Building()
+            bldng._electricity = elec_per_bld
+            self.object.buildings[bld_num] = bldng
+        self.assertEqual(self.object.electricity, num_blds * elec_per_bld)
