@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
+from tests.base import SpaceTest
 from unittest.mock import Mock
 
 
-class LibModelTest(unittest.TestCase):
+class LibModelTest(SpaceTest):
 
     """Test the contribution of a module to the game model package var __all__.
     """
@@ -135,7 +135,7 @@ class ModelObjectEqualityMixin(object):
         assert_a(self.object <= test_obj)
 
 
-class ModelObjectTest(unittest.TestCase):
+class ModelObjectTest(SpaceTest):
 
     """A minimal set of tests for the game model objects.
 

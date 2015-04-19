@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
 import random
 from collections import Callable
 
+from tests.base import SpaceTest
 from .base import (LibModelTest, ModelObjectTest, ModelObjectStateMixin,
                    ModelObjectEqualityMixin)
 
@@ -31,7 +31,7 @@ class TestLibModelBuilding(LibModelTest):
                                  'get_all_building_abbr']
 
 
-class TestBuildingModule(unittest.TestCase):
+class TestBuildingModule(SpaceTest):
     def setUp(self):
         self.expected_building_classes = ['Mine', 'SolarPowerPlant']
         self.expected_building_names = ['Mine', 'Solar Power Plant']

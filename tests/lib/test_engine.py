@@ -14,12 +14,14 @@
 
 import sys
 import os
-import unittest
 import pickle
 import tempfile
 from unittest.mock import Mock
 
+from tests.base import SpaceTest
+
 #import lib.engine as engine
+engine = Mock()
 
 
 class MockGameState(object):
@@ -27,8 +29,7 @@ class MockGameState(object):
         self.save_file = None
 
 
-@unittest.skip('lib.model is in the process of being refactored')
-class TestEngine(unittest.TestCase):
+class TestEngine(SpaceTest):
 
     def setUp(self):
         self.save_file = tempfile.NamedTemporaryFile()
@@ -37,6 +38,7 @@ class TestEngine(unittest.TestCase):
         self.engine.state.save_file = self.save_file.name
 
     def test_load(self):
+        self.skipTest('lib.model is in the process of being refactored')
         orig_state = hash(self.engine.state)
         pickle.dump(self.engine.state, self.save_file.file)
         self.save_file.file.seek(0)

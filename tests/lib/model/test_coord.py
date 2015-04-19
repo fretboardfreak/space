@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
 import random
 import re
 
+from tests.base import SpaceTest
 from .base import LibModelTest
 
 from lib.model import coord
@@ -26,7 +26,7 @@ class TestLibModelCoord(LibModelTest):
         self.expected_exports = ['Coord', 'SystemCoord']
 
 
-class BaseCoordTest(unittest.TestCase):
+class BaseCoordTest(SpaceTest):
     def setUp(self):
         self.coord = coord.Coord(0, 0, 0)
 
