@@ -112,7 +112,7 @@ class TestBuildingRequirements(ModelObjectTest, ModelObjectStateMixin):
     def get_new_instance(self):
         return building.BuildingRequirements()
 
-    def get_test_state(self):
+    def get_tst_state(self):
         return (resources.Resources(ore=3, metal=11), {'Mine', 3}, {})
 
     def setUp(self):
@@ -142,7 +142,7 @@ class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
     def get_new_instance(self, level=None):
         return building.Building(level=level, sun_cb=self.sun_cb)
 
-    def get_test_state(self):
+    def get_tst_state(self):
         return (self.level, self.sun_cb)
 
     def setUp(self):
@@ -168,11 +168,11 @@ class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
         self.expected_attrs.pop('sun_cb')
         super().test_str()
 
-    def get_equal_test_values(self):
+    def get_equal_tst_values(self):
         self.object = self.get_new_instance(self.level)
         return self.get_new_instance(self.level)
 
-    def get_non_equal_test_values(self):
+    def get_non_equal_tst_values(self):
         self.object = self.get_new_instance(self.level)
         return self.get_new_instance(self.level+1)
 
@@ -200,7 +200,7 @@ class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
         Although value is based on level, modifier and electricity values
         the modifier and electricity values are calculated based on level.
         """
-        test_obj = self.get_non_equal_test_values()
+        test_obj = self.get_non_equal_tst_values()
         test_val = self.object._compare(test_obj)
         assert_a, _ = self.get_equality_assert_methods()
         assert_a(test_val < 0)
@@ -228,11 +228,11 @@ class TestMine(TestBuildingBaseClass):
                 (high.modifier.trade_value - low.modifier.trade_value)) / 3.0
         return retval
 
-    def get_non_equal_test_values(self):
+    def get_non_equal_tst_values(self):
         if not self.disable_prediction:
             avg = self.predict_avg()
             self.negative_equality_logic = ((avg < 0) is True)
-        return super().get_non_equal_test_values()
+        return super().get_non_equal_tst_values()
 
     def test_not_equal_eq_ne(self):
         self.disable_prediction = True
@@ -250,5 +250,5 @@ class TestSolarPowerPlant(TestBuildingBaseClass):
     def test_electricity(self):
         for level in range(1000):
             self.level = level
-            test_spp = self.get_non_equal_test_values()
+            test_spp = self.get_non_equal_tst_values()
             self.assertLessEqual(self.object.electricity, test_spp.electricity)

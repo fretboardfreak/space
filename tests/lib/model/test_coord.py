@@ -38,13 +38,13 @@ class BaseCoordTest(SpaceTest):
 
     def _property_test(self, name):
         if name == 'planet':
-            test_value = self.get_test_values(planet=True)
+            test_value = self.get_tst_values(planet=True)
         else:
-            test_value = self.get_test_values(planet=False)
+            test_value = self.get_tst_values(planet=False)
         setattr(self.coord, name, test_value)
         self.assertEqual(getattr(self.coord, name), test_value)
 
-    def get_test_values(self, planet=False):
+    def get_tst_values(self, planet=False):
         count = 2
         if planet:
             count = 1
@@ -57,9 +57,9 @@ class TestCoord(BaseCoordTest):
 
     def test_hash(self):
         start_hash = hash(self.coord)
-        test_sector = self.get_test_values()
-        test_system = self.get_test_values()
-        test_planet = self.get_test_values(planet=True)
+        test_sector = self.get_tst_values()
+        test_system = self.get_tst_values()
+        test_planet = self.get_tst_values(planet=True)
         example_coord = coord.Coord()
         self.assertEqual(hash(example_coord), start_hash)
         example_coord.sector = test_sector
@@ -83,9 +83,9 @@ class TestCoord(BaseCoordTest):
         self.assertEqual(expected, self.coord.__getstate__())
 
     def test_setstate(self):
-        self.coord.sector = self.get_test_values()
-        self.coord.system = self.get_test_values()
-        self.coord.planet = self.get_test_values(planet=True)
+        self.coord.sector = self.get_tst_values()
+        self.coord.system = self.get_tst_values()
+        self.coord.planet = self.get_tst_values(planet=True)
         test_obj = coord.Coord()
         test_obj.__setstate__((self.coord.x, self.coord.y, self.coord.planet))
         self.assertEqual((self.coord.x, self.coord.y, self.coord.planet),
@@ -101,8 +101,8 @@ class TestSystemCoord(BaseCoordTest):
 
     def test_hash(self):
         start_hash = hash(self.coord)
-        test_sector = self.get_test_values()
-        test_system = self.get_test_values()
+        test_sector = self.get_tst_values()
+        test_system = self.get_tst_values()
         example_coord = coord.SystemCoord()
         self.assertEqual(hash(example_coord), start_hash)
         example_coord.sector = test_sector
@@ -124,8 +124,8 @@ class TestSystemCoord(BaseCoordTest):
         self.assertTrue(re.search(expected, str(self.coord)))
 
     def test_setstate(self):
-        self.coord.sector = self.get_test_values()
-        self.coord.system = self.get_test_values()
+        self.coord.sector = self.get_tst_values()
+        self.coord.system = self.get_tst_values()
         test_obj = coord.SystemCoord()
         test_obj.__setstate__((self.coord.x, self.coord.y))
         self.assertEqual((self.coord.x, self.coord.y),

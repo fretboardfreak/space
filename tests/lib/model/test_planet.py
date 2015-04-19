@@ -45,7 +45,7 @@ class TestPlanet(ModelObjectTest, ModelObjectStateMixin):
     def get_new_instance(self):
         return planet.Planet(self.sun_brightness, self.sun_distance)
 
-    def get_test_state(self):
+    def get_tst_state(self):
         return ('name', 'emperor', model.Resources(), 123456, {}, 555, 3)
 
     def set_expected_attrs_for_representation(self):

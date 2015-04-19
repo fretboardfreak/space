@@ -38,7 +38,7 @@ class ModelObjectStateMixin(object):
     Subclasses using this mixin need to define self.expected_state
     """
 
-    def get_test_state(self):
+    def get_tst_state(self):
         return tuple()
 
     def test_getstate(self):
@@ -47,23 +47,23 @@ class ModelObjectStateMixin(object):
             self.assertIsInstance(actual, expected_type)
 
     def test_setstate(self):
-        new_state = self.get_test_state()
+        new_state = self.get_tst_state()
         test_bld = self.get_new_instance()
         test_bld.__setstate__(new_state)
 
 
 class ModelObjectEqualityMixin(object):
 
-    def get_equal_test_values(self):
+    def get_equal_tst_values(self):
         """Subclasses should redefine this method."""
         self.object = self.get_new_instance()
         return self.get_new_instance()
 
-    def get_non_equal_test_values(self):
+    def get_non_equal_tst_values(self):
         """Subclasses should redefine this method.
 
         Return Value should be greater than that returned by
-        self.get_equal_test_values()
+        self.get_equal_tst_values()
         """
         self.object = self.get_new_instance()
         return self.get_new_instance()
@@ -75,61 +75,61 @@ class ModelObjectEqualityMixin(object):
         return self.assertTrue, self.assertFalse
 
     def test_equal_eq_ne(self):
-        test_obj = self.get_equal_test_values()
+        test_obj = self.get_equal_tst_values()
         assert_a, assert_b = self.get_equality_assert_methods()
         assert_a(test_obj == self.object)
         assert_b(test_obj != self.object)
 
     def test_equal_gt(self):
-        test_obj = self.get_equal_test_values()
+        test_obj = self.get_equal_tst_values()
         assert_a, assert_b = self.get_equality_assert_methods()
         assert_b(test_obj > self.object)
         assert_b(self.object > test_obj)
 
     def test_equal_lt(self):
-        test_obj = self.get_equal_test_values()
+        test_obj = self.get_equal_tst_values()
         assert_a, assert_b = self.get_equality_assert_methods()
         assert_b(test_obj < self.object)
         assert_b(self.object < test_obj)
 
     def test_equal_le(self):
-        test_obj = self.get_equal_test_values()
+        test_obj = self.get_equal_tst_values()
         assert_a, assert_b = self.get_equality_assert_methods()
         assert_a(test_obj <= self.object)
         assert_a(self.object <= test_obj)
 
     def test_equal_ge(self):
-        test_obj = self.get_equal_test_values()
+        test_obj = self.get_equal_tst_values()
         assert_a, assert_b = self.get_equality_assert_methods()
         assert_a(test_obj >= self.object)
         assert_a(self.object >= test_obj)
 
     def test_not_equal_eq_ne(self):
-        test_obj = self.get_non_equal_test_values()
+        test_obj = self.get_non_equal_tst_values()
         assert_a, assert_b = self.get_equality_assert_methods()
         assert_b(test_obj == self.object)
         assert_a(test_obj != self.object)
 
     def test_not_equal_gt(self):
-        test_obj = self.get_non_equal_test_values()
+        test_obj = self.get_non_equal_tst_values()
         assert_a, assert_b = self.get_equality_assert_methods()
         assert_a(test_obj > self.object)
         assert_b(self.object > test_obj)
 
     def test_not_equal_lt(self):
-        test_obj = self.get_non_equal_test_values()
+        test_obj = self.get_non_equal_tst_values()
         assert_a, assert_b = self.get_equality_assert_methods()
         assert_b(test_obj < self.object)
         assert_a(self.object < test_obj)
 
     def test_not_equal_ge(self):
-        test_obj = self.get_non_equal_test_values()
+        test_obj = self.get_non_equal_tst_values()
         assert_a, assert_b = self.get_equality_assert_methods()
         assert_a(test_obj >= self.object)
         assert_b(self.object >= test_obj)
 
     def test_not_equal_le(self):
-        test_obj = self.get_non_equal_test_values()
+        test_obj = self.get_non_equal_tst_values()
         assert_a, assert_b = self.get_equality_assert_methods()
         assert_b(test_obj <= self.object)
         assert_a(self.object <= test_obj)
