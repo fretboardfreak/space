@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
-import os
 import pickle
 import tempfile
 from unittest.mock import Mock
 
 from tests.base import SpaceTest
 
-#import lib.engine as engine
+# import lib.engine as engine
 engine = Mock()
 
 

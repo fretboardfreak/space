@@ -20,33 +20,37 @@ battles various challenges in growing their empire.
 """
 # requires python 3
 
-import sys, logging
+import sys
+import logging
 from argparse import ArgumentParser
 
 from lib.engine import SpaceEngine
 from lib.cmdline.interpreter import SpaceCmdInterpreter
 
+
 def main():
     args = parse_args()
     logging.basicConfig(
-            filename=args.log_file, level=logging.DEBUG, filemode='a',
-            format='%(levelname)s [%(module)s|%(funcName)s] %(message)s')
+        filename=args.log_file, level=logging.DEBUG, filemode='a',
+        format='%(levelname)s [%(module)s|%(funcName)s] %(message)s')
     print('logging to %s started' % args.log_file)
     logging.debug('logging to %s started' % args.log_file)
     engine = SpaceEngine(args.save_file)
     SpaceCmdInterpreter(engine).start()
+
 
 def parse_args():
     epilog = 'Stay awesome, spacelings!'
     parser = ArgumentParser(description=__doc__,
                             epilog=epilog)
     parser.add_argument(
-            '-s', '--save-file', default='save.space', dest='save_file',
-            help='The persistant game save file.')
+        '-s', '--save-file', default='save.space', dest='save_file',
+        help='The persistant game save file.')
     parser.add_argument(
-            '-l', '--log-file', default='runlog', dest='log_file',
-            help='The filename to store game logs.')
+        '-l', '--log-file', default='runlog', dest='log_file',
+        help='The filename to store game logs.')
     return parser.parse_args()
+
 
 if __name__ == "__main__":
     sys.exit(main())

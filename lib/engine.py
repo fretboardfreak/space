@@ -12,12 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys, pickle
+import pickle
 from logging import debug
-from random import randint
 
 from .model import GameState
-from .cmdline import ui
+
 
 class SpaceEngine(object):
     def __init__(self, save_file):

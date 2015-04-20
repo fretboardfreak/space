@@ -69,8 +69,8 @@ class TestPlanet(ModelObjectTest, ModelObjectStateMixin):
 
     def test_rates(self):
         for lvl in range(10):
-           self.object.buildings[lvl] = Building(lvl)
-           self.object.buildings[lvl].level = lvl
+            self.object.buildings[lvl] = Building(lvl)
+            self.object.buildings[lvl].level = lvl
         self.assertEqual(self.object.rates,
                          model.Resources(ore=sum(range(10))))
 

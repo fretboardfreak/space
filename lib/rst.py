@@ -26,6 +26,8 @@ RST Constructs to be supported:
     - list (unordered, ordered)
     - table
 """
+
+from functools import reduce
 #import docutils.core
 #import sys, os.path
 

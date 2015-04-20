@@ -223,9 +223,9 @@ class TestMine(TestBuildingBaseClass):
     def predict_avg(self):
         low = self.get_new_instance(self.level)
         high = self.get_new_instance(self.level+1)
-        retval=((high.level - low.level) +
-                (high.electricity - low.electricity) +
-                (high.modifier.trade_value - low.modifier.trade_value)) / 3.0
+        retval = ((high.level - low.level) +
+                  (high.electricity - low.electricity) +
+                  (high.modifier.trade_value - low.modifier.trade_value)) / 3.0
         return retval
 
     def get_non_equal_tst_values(self):
