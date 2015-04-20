@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from tests.base import SpaceTest
-from unittest.mock import Mock
 
 
 class LibModelTest(SpaceTest):
@@ -26,6 +25,8 @@ class LibModelTest(SpaceTest):
         self.expected_exports = []  # to be set by subclasses
 
     def test_model(self):
+        if self.__class__.__name__ == 'LibModelTest':
+            self.skipTest('base class, not a real test')
         import lib.model
         for export in self.expected_exports:
             self.assertIn(export, lib.model.__all__)
@@ -50,19 +51,8 @@ class ModelObjectTest(SpaceTest):
 
     def get_new_instance(self):
         """Subclasses should redefine this initialization code."""
-        inst = Mock()
-
-        def _repr(self):
-            return '{}()'.format(self.object.__class__.__name__)
-
-        def _str(self):
-            return ''
-
-        inst.__str__ = _str
-        inst.__repr__ = _repr
-        inst.__getstate__ = lambda self: tuple()
-        inst.__setstate__ = lambda self, state: None
-        return inst
+        if self.__class__.__name__ == 'ModelObjectTest':
+            self.skipTest('base class, not a real test')
 
     def setUp(self):
         self.object = self.get_new_instance()
@@ -99,11 +89,13 @@ class StateMixinTest(object):
 
     """Test state getting/setting of objects.
 
-    Subclasses using this mixin need to define self.expected_state
+    Subclasses using this mixin need to define self.expected_state, and
+    implement self.get_tst_state
     """
 
     def get_tst_state(self):
-        return tuple()
+        """Subclasses should redefine this method."""
+        self.skipTest('base class, not a real test')
 
     def test_getstate(self):
         state = self.object.__getstate__()
@@ -119,12 +111,12 @@ class StateMixinTest(object):
 class EqualityMixinTest(object):
 
     def get_equal_tst_values(self):
-        """Subclasses should redefine this method."""
+        """Subclasses should redefine this method if needed."""
         self.object = self.get_new_instance()
         return self.get_new_instance()
 
     def get_non_equal_tst_values(self):
-        """Subclasses should redefine this method.
+        """Subclasses should redefine this method if needed.
 
         Return Value should be greater than that returned by
         self.get_equal_tst_values()
@@ -133,6 +125,8 @@ class EqualityMixinTest(object):
         return self.get_new_instance()
 
     def get_equality_assert_methods(self):
+        if self.__class__.__name__ == 'EqualityMixinTest':
+            self.skipTest('base class, not a real test')
         if (hasattr(self, 'negative_equality_logic') and
                 getattr(self, 'negative_equality_logic')):
             return self.assertFalse, self.assertTrue
