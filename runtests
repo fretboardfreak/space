@@ -1,3 +1,22 @@
 #!/bin/bash
 
-nosetests-3.4 --failed --with-id --exe $@
+# This cmd will rerun only tests that failed on the previous run
+# side effect: the --with-id will create a .noseids file
+# CMD="nosetests-3.4 --failed --with-id --exe --detailed-errors"
+
+# Right now the test suit is small enough that just running the tests in
+# parallel keeps things short enough to be usable.
+# bonus side effect: no .noseids file or weird behaviour to worry about
+CMD="nosetests-3.4 --exe --detailed-errors --processes=-1 "
+
+# Alternative Interface:
+# if [[ "$1" = "-f" ]] || [[ "$1" = "--fancy" ]]; then
+
+if [[ $# -eq 0 ]]; then
+    exec $CMD --verbosity=2 2>&1 | \
+        sed '/ \.\.\. SKIP: base class, not a real test/d' | \
+        sed '/ \.\.\. ok/d' | \
+        sed 's/ \.\.\. S/\n    S/'
+else
+    exec $CMD $@
+fi
