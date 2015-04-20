@@ -39,9 +39,10 @@ class Planet(object):
 
         # keys will be the building classname
         self.buildings = dict()
-        debug('Constructing new Planet: sun_dist={}, sun_brightness={},'
-              'resources={}'.format(self.sun_distance, self.sun_brightness,
-                                    self.resources))
+        debug('Constructing new Planet: name={}, sun_dist={}, '
+              ' sun_brightness={}, resources={}'.format(
+                  self.name, self.sun_distance, self.sun_brightness,
+                  self.resources))
 
     def __getstate__(self):
         return (self.name, self.emperor, self.resources, self.last_update,
