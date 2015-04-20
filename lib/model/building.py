@@ -148,39 +148,28 @@ class Mine(Building):
     name = 'Mine'
     abbr = 'Mn'
 
-    @property
-    def modifier(self):
-        return Resources(ore=2*self.level,
-                         metal=0.25*self.level)
-
-    @property
-    def electricity(self):
-        return -1 * pow(self.level, 2)
-
-    @property
-    def requirements(self):
-        return BuildingRequirements(resources=Resources(
-            ore=10+(2*(-1+self.level)), metal=-10+(5*(1+self.level)),))
+    def __init__(self, level=None, sun_cb=None):
+        super().__init__(level, sun_cb)
+        self._modifier = Resources(ore=2*self.level,
+                                   metal=0.25*self.level)
+        self._electricity = -1 * pow(self.level, 2)
+        self._requirements = BuildingRequirements(
+            resources=Resources(ore=10+(2*(-1+self.level)),
+                                metal=-10+(5*(1+self.level))))
 
 
 class SolarPowerPlant(Building):
     name = 'Solar Power Plant'
     abbr = 'SPP'
 
-    @property
-    def modifier(self):
-        return Resources()
-
-    @property
-    def electricity(self):
-        if not self.sun_cb:
-            return 0
-        return 10 * abs(log10(self.sun_cb())) * self.level
-
-    @property
-    def requirements(self):
-        return BuildingRequirements(resources=Resources(
-            ore=10+(5*self.level), metal=50+(6*self.level)))
+    def __init__(self, level=None, sun_cb=None):
+        super().__init__(level, sun_cb)
+        self._modifier = Resources()
+        if self.sun_cb:
+            self._electricity = 10 * abs(log10(self.sun_cb())) * self.level
+        self._requirements = BuildingRequirements(
+            resources=Resources(ore=10+(5*self.level),
+                                metal=50+(6*self.level)))
 
 
 ALL_BUILDINGS = [Mine, SolarPowerPlant]
