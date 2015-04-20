@@ -22,9 +22,11 @@ from lib.model import resources
 
 class TestLibModelResources(LibModelTest):
     def setUp(self):
-        self.expected_exports = ['ORE', 'METAL', 'THORIUM', 'HYDROCARBON',
-                                 'DEUTERIUM', 'SUN', 'ELECTRICITY',
-                                 'ALL_RESOURCES', 'TRADE_RATIO', 'Resources']
+        self.expected_exports = [
+            resources.ORE, resources.METAL, resources.THORIUM,
+            resources.HYDROCARBON, resources.DEUTERIUM, resources.SUN,
+            resources.ELECTRICITY, resources.ALL_RESOURCES,
+            resources.TRADE_RATIO, resources.Resources]
 
 
 class TestResources(ModelObjectTest, ModelObjectEqualityMixin):

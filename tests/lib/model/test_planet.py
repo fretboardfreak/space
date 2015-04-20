@@ -22,7 +22,7 @@ from lib.model import planet
 
 class TestLibModelCoord(LibModelTest):
     def setUp(self):
-        self.expected_exports = ['Planet']
+        self.expected_exports = [planet.Planet]
 
 
 class TestPlanet(ModelObjectTest, ModelObjectStateMixin):

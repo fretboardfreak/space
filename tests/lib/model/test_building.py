@@ -26,9 +26,10 @@ from lib.model import building
 
 class TestLibModelBuilding(LibModelTest):
     def setUp(self):
-        self.expected_exports = ['Mine', 'SolarPowerPlant', 'ALL_BUILDINGS',
-                                 'get_building', 'get_all_building_names',
-                                 'get_all_building_abbr']
+        self.expected_exports = [
+            building.Mine, building.SolarPowerPlant, building.ALL_BUILDINGS,
+            building.get_building, building.get_all_building_names,
+            building.get_all_building_abbr]
 
 
 class TestBuildingModule(SpaceTest):

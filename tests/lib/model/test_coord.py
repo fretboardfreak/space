@@ -23,7 +23,7 @@ from lib.model import coord
 
 class TestLibModelCoord(LibModelTest):
     def setUp(self):
-        self.expected_exports = ['Coord', 'SystemCoord']
+        self.expected_exports = [coord.Coord, coord.SystemCoord]
 
 
 class BaseCoordTest(SpaceTest):
