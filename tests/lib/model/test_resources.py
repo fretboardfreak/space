@@ -15,7 +15,7 @@
 import re
 from itertools import repeat
 
-from .base import LibModelTest, ModelObjectTest, ModelObjectEqualityMixin
+from .base import LibModelTest, ModelObjectTest, EqualityMixinTest
 
 from lib.model import resources
 
@@ -29,7 +29,7 @@ class TestLibModelResources(LibModelTest):
             resources.TRADE_RATIO, resources.Resources]
 
 
-class TestResources(ModelObjectTest, ModelObjectEqualityMixin):
+class TestResources(ModelObjectTest, EqualityMixinTest):
     def get_new_instance(self, *args, **kwargs):
         return resources.Resources(*args, **kwargs)
 

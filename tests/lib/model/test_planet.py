@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from unittest.mock import Mock
-from .base import LibModelTest, ModelObjectTest, ModelObjectStateMixin
+from .base import LibModelTest, ModelObjectTest, StateMixinTest
 
 from lib import model
 from lib.model.building import Building
@@ -25,7 +25,7 @@ class TestLibModelCoord(LibModelTest):
         self.expected_exports = [planet.Planet]
 
 
-class TestPlanet(ModelObjectTest, ModelObjectStateMixin):
+class TestPlanet(ModelObjectTest, StateMixinTest):
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
         self.sun_brightness = 555

@@ -16,8 +16,8 @@ import random
 from collections import Callable
 
 from tests.base import SpaceTest
-from .base import (LibModelTest, ModelObjectTest, ModelObjectStateMixin,
-                   ModelObjectEqualityMixin)
+from .base import (LibModelTest, ModelObjectTest, StateMixinTest,
+                   EqualityMixinTest)
 
 from lib.error import ObjectNotFound
 from lib.model import resources
@@ -109,7 +109,7 @@ class TestBuildingModule(SpaceTest):
             self.assertIsInstance(test_val, building_type)
 
 
-class TestBuildingRequirements(ModelObjectTest, ModelObjectStateMixin):
+class TestBuildingRequirements(ModelObjectTest, StateMixinTest):
     def get_new_instance(self):
         return building.BuildingRequirements()
 
@@ -138,8 +138,8 @@ class TestBuildingRequirements(ModelObjectTest, ModelObjectStateMixin):
         self.assertEqual(2, string.count('\n'))
 
 
-class TestBuildingBaseClass(ModelObjectTest, ModelObjectStateMixin,
-                            ModelObjectEqualityMixin):
+class TestBuildingBaseClass(ModelObjectTest, StateMixinTest,
+                            EqualityMixinTest):
     def get_new_instance(self, level=None):
         return building.Building(level=level, sun_cb=self.sun_cb)
 

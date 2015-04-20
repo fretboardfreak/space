@@ -95,7 +95,7 @@ class ModelObjectTest(SpaceTest):
                                   self.expected_attrs[attr])
 
 
-class ModelObjectStateMixin(object):
+class StateMixinTest(object):
 
     """Test state getting/setting of objects.
 
@@ -116,7 +116,7 @@ class ModelObjectStateMixin(object):
         test_bld.__setstate__(new_state)
 
 
-class ModelObjectEqualityMixin(object):
+class EqualityMixinTest(object):
 
     def get_equal_tst_values(self):
         """Subclasses should redefine this method."""
