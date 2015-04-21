@@ -22,3 +22,7 @@ class ObjectNotFound(Exception):
             msg += extra % name
         super(ObjectNotFound, self).__init__(msg)
         debug(msg)
+
+
+class ModelObjectError(Exception):
+    pass

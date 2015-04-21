@@ -15,6 +15,7 @@
 from unittest.mock import Mock
 from .base import LibModelTest, ModelObjectTest, StateMixinTest
 
+from lib.error import ModelObjectError
 from lib import model
 from lib.model.building import Building
 from lib.model import planet
@@ -158,3 +159,7 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
             bldng._electricity = elec_per_bld
             self.object.buildings[bld_num] = bldng
         self.assertEqual(self.object.electricity, num_blds * elec_per_bld)
+
+    def test_sun_distance_invalid(self):
+        self.assertRaises(ModelObjectError,
+                          planet.Planet, self.sun_brightness, 0)

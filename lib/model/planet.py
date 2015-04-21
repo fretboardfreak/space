@@ -16,6 +16,7 @@ from time import time
 from math import pi
 from logging import debug
 
+from lib.error import ModelObjectError
 from lib.namegen import NameGen
 from lib.rst import indent
 
@@ -35,6 +36,9 @@ class Planet(object):
         self.resources = Resources()
         self.last_update = time()
         self.sun_brightness = sun_brightness
+        if sun_distance <= 0:
+            raise ModelObjectError(
+                    'Planet: Sun Distance must be greater than 0.')
         self.sun_distance = sun_distance
 
         # keys will be the building classname
