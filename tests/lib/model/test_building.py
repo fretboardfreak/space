@@ -14,6 +14,7 @@
 
 import random
 from collections import Callable
+from unittest.mock import Mock
 
 from tests.base import SpaceTest
 from .base import (LibModelTest, ModelObjectTest, StateMixinTest,
@@ -107,6 +108,23 @@ class TestBuildingModule(SpaceTest):
         for building_type in building.ALL_BUILDINGS:
             test_val = building.get_building(building_type.abbr, level=level)
             self.assertIsInstance(test_val, building_type)
+
+    def test_are_requirements_met_resources(self):
+        site = Mock()
+        bld = building.Mine
+        site.resources = resources.Resources()
+        self.assertFalse(bld.are_requirements_met(site, level=1))
+
+        site.resources.ore = 11
+        self.assertTrue(bld.are_requirements_met(site))
+
+    def test_are_requirements_met_buildings(self):
+        self.skipTest('Not implemented. Need to have buildings with building '
+                      'requirements to test.')
+
+    def test_are_requirements_met_research(self):
+        self.skipTest('Not implemented. Need to have buildings with research '
+                      'requirements to test.')
 
 
 class TestBuildingRequirements(ModelObjectTest, StateMixinTest):
