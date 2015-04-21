@@ -27,11 +27,17 @@ class System(object):
               (self.size, self.sun_brightness))
         self.planets = [Planet(sun_brightness=self.sun_brightness,
                                sun_distance=i)
-                        for i in range(self.size)]
+                        for i in range(1, self.size+1)]
 
     def __repr__(self):
-        return ("System(size=%s, sun_brightness=%s, planets=%s)" %
-                (self.size, self.sun_brightness, self.planets))
+        return "{}(Size: {}, Sun Brightness: {}, Planets: {})".format(
+            self.__class__.__name__, self.size, self.sun_brightness,
+            self.planets)
+
+    def __str__(self):
+        return "{}: Size: {}, Sun Brightness: {}\nPlanets:\n{}".format(
+            self.__class__.__name__, self.size, self.sun_brightness,
+            self.planets)
 
     def show(self, coords=None):
         msg = "%s planet system"
