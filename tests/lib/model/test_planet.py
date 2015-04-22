@@ -106,11 +106,11 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
         Test behaviour of the planet when consumtion is higher than
         production and the resources stockpile runs out.
         """
-        self.skipTest('Not Implemented Yet: Need to determine desired '
+        self.skipTest('NIY: Need to determine desired '
                       'behaviour here. Deferring tests for now.')
 
     def test_build(self):
-        self.skipTest('Not Implemented Yet')
+        self.skipTest('NIY')
         # no-blding -> lvl 1 vs lvl x -> lvl x+1
         # building reqs met vs not met (resources, bldings, research)
         # costs removed from planet
