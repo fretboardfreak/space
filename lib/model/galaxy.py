@@ -20,16 +20,15 @@ from lib.rst import indent
 from .system import System
 from .coord import SystemCoord
 
-__all__ = ['Galaxy']
 
 class Galaxy(object):
     def __init__(self):
-        self.__systems = defaultdict(System)
+        self._systems = defaultdict(System)
 
     def system(self, coord):
         system_coord = SystemCoord(coord.x, coord.y)
         debug('looking up system: %s' % system_coord)
-        return self.__systems[system_coord]
+        return self._systems[system_coord]
 
     def planet(self, coord):
         system = self.system(coord)
@@ -37,20 +36,26 @@ class Galaxy(object):
         return system.planets[coord.planet]
 
     def __repr__(self):
-        return ("Galaxy(systems=[%s])" %
-                ','.join([str(system)
-                          for system in self.__systems.iteritems()]))
+        systems = ','.join(['{}: {}'.format(coord, repr(system))
+                            for coord, system in self._systems.items()])
+        return "{}(systems: [{}])".format(self.__class__.__name__, systems)
+
+    def __str__(self):
+        systems = '\n'.join(['{}: {}'.format(coord, str(system))
+                             for coord, system in self._systems.items()])
+        systems.replace('\n', '\n    ')  # indent the systems a bit
+        return '{}: systems:\n{}'.format(self.__class__.__name__, systems)
 
     def show(self):
         systems = []
         debug('showing the galaxy...')
-        for c, s in self.__systems.iteritems():
+        for c, s in self._systems.iteritems():
             sys = indent(s.show(), '  ')[2:]
             systems.append('%s %s' % (c, sys))
         return 'Galaxy:\n%s' % indent('\n'.join(systems), '  ')
 
     def __getstate__(self):
-        return (self.__systems,)
+        return (dict(self._systems),)
 
     def __setstate__(self, state):
-        (self.__systems,) = state
+        self._systems = defaultdict(System, state[0])
