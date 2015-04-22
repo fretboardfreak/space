@@ -9,6 +9,7 @@ from .building import (Mine, SolarPowerPlant, ALL_BUILDINGS, get_building,
                        get_all_building_names, get_all_building_abbr)
 from .planet import Planet
 from .system import System
+from .galaxy import Galaxy
 
 
 __all__ = [Coord, SystemCoord, ]
@@ -22,3 +23,4 @@ __all__.extend([Mine, SolarPowerPlant, ALL_BUILDINGS, get_building,
 
 __all__.append(Planet)
 __all__.append(System)
+__all__.append(Galaxy)
