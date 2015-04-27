@@ -66,8 +66,9 @@ class TestPep8(SpaceTest):
         self.tst_style(self.get_path('tests'), self.run_pep8)
 
     def test_lib_pep8(self):
-        self.skipTest('Too many pep8 errors in "space/lib" for now.')
-        self.tst_style(self.get_path('lib'), self.run_pep8)
+        # TODO: Add the remainder of the lib package to this test as things get
+        # refactored.
+        self.tst_style(self.get_path('lib/model'), self.run_pep8)
 
     def test_space_pep8(self):
         self.run_pep8(self.get_path('space'))
