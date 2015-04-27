@@ -18,9 +18,6 @@ from lib.error import ObjectNotFound
 from lib.rst import indent
 
 
-__all__ = ['User']
-
-
 class User(object):
     def __init__(self, name, home_planet_coords, home_planet):
         debug('Creating new user object %s' % name)
@@ -29,8 +26,12 @@ class User(object):
         home_planet.emperor = self.name
 
     def __repr__(self):
-        return ("User(name=%s, planets=%s)" %
-                (self.name, self.planets))
+        return "{}(name: {}, planets: {})".format(
+                self.__class__.__name__, self.name, self.planets)
+
+    def __str__(self):
+        return "{} name: {}\nplanets: {}".format(
+                self.__class__.__name__, self.name, self.planets)
 
     def show_planets(self, verbose=None):
         debug("showing user %s's planets: verbose=%s" %
@@ -54,7 +55,7 @@ class User(object):
 
     def get_planet(self, name):
         debug('retrieving planet %s' % name)
-        for coord, planet in self.planets.iteritems():
+        for coord, planet in self.planets.items():
             if planet.name.lower() == name.lower():
                 return (coord, planet)
         raise ObjectNotFound(name)
