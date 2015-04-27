@@ -91,19 +91,23 @@ class TestResources(ModelObjectTest, EqualityMixinTest):
         value = self.get_equal_tst_values()
         zero = self.get_new_instance()
         self.assertEqual(self.object, value + zero)
-        non_zero = self.get_new_instance(ore=1)
-        new_val = value + non_zero
+        new_val = value + self.object
         self.assertNotEqual(self.object, new_val)
-        self.assertTrue(self.object < new_val)
+        self.assertLess(self.object, new_val)
+        for res in new_val:
+            self.assertEqual(new_val[res], value[res] + self.object[res])
 
     def test_sub(self):
+        self.skipTest('Need to implement True Value vs Trade Value '
+                      'representations of resources.')
         value = self.get_equal_tst_values()
         zero = self.get_new_instance()
         self.assertEqual(self.object, value - zero)
-        non_zero = self.get_new_instance(ore=1)
-        new_val = value - non_zero
+        new_val = value - self.object
         self.assertNotEqual(self.object, new_val)
-        self.assertTrue(self.object > new_val)
+        self.assertGreater(self.object, new_val)
+        for res in new_val:
+            self.assertEqual(new_val[res], value[res] - self.object[res])
 
     def test_trade_value(self):
         # expected value: sum of relative values of resources in order: ore,
