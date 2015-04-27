@@ -11,6 +11,7 @@ from .planet import Planet
 from .system import System
 from .galaxy import Galaxy
 from .user import User
+from .gamestate import GameState
 
 
 __all__ = [Coord, SystemCoord, ]
@@ -26,3 +27,4 @@ __all__.append(Planet)
 __all__.append(System)
 __all__.append(Galaxy)
 __all__.append(User)
+__all__.append(GameState)
