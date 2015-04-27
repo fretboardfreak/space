@@ -27,8 +27,7 @@ class TestLibModelCoord(LibModelTest):
 
 
 class TestPlanet(ModelObjectTest, StateMixinTest):
-    def __init__(self, methodName='runTest'):
-        super().__init__(methodName)
+    def setUp(self):
         self.sun_brightness = 555
         self.sun_distance = 3
         self.expected_state = (str, (str, type(None)), model.Resources,
@@ -42,6 +41,7 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
             'ore': int, 'thorium': int, 'metal': int, 'hydrocarbon': int,
             'deuterium': int, 'sun': float, 'electricity': int,
             'research': dict, 'buildings': dict}
+        super().setUp()
 
     def get_new_instance(self):
         return planet.Planet(self.sun_brightness, self.sun_distance)

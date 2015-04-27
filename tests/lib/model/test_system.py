@@ -24,8 +24,8 @@ class TestLibModelSystem(LibModelTest):
 
 
 class TestSystem(ModelObjectTest, StateMixinTest):
-    def __init__(self, methodName='runTest'):
-        super().__init__(methodName)
+    def setUp(self):
+        super().setUp()
         self.expected_state = (int, int, list)
         self.classname_in_repr = True
         self.expected_attrs = {'size': int, 'sun_brightness': int,

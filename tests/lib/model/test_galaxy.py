@@ -24,8 +24,8 @@ class TestLibModelGalaxy(LibModelTest):
 
 
 class TestGalaxy(ModelObjectTest, StateMixinTest):
-    def __init__(self, methodName='runTest'):
-        super().__init__(methodName)
+    def setUp(self):
+        super().setUp()
         self.expected_state = (dict,)
         self.classname_in_repr = True
         self.expected_attrs = {}

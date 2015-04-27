@@ -26,8 +26,8 @@ class TestLibModelCoord(LibModelTest):
 
 
 class TestUser(ModelObjectTest, StateMixinTest):
-    def __init__(self, methodName='runTest'):
-        super().__init__(methodName)
+    def setUp(self):
+        super().setUp()
         self.expected_state = (str, dict)
         self.classname_in_repr = True
         self.expected_attrs = {'name': str, 'planets': dict}
