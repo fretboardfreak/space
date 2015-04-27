@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__all__ = ['GameState']
+import lib.model
 
 
 class GameState(object):
@@ -22,11 +22,22 @@ class GameState(object):
         self.galaxy = None
 
     def __repr__(self):
-        return ("GameState(save_file=%s,%s,%s)" %
-                (self.save_file, self.user, self.galaxy))
+        return "{}(save file: {}, user: {}, galaxy: {})".format(
+                self.__class__.__name__, self.save_file, repr(self.user),
+                repr(self.galaxy))
 
     def __getstate__(self):
-        return (self.save_file, self.user, self.galaxy)
+        user_state = None if self.user is None else self.user.__getstate__()
+        gxy_state = None if self.galaxy is None else self.galaxy.__getstate__()
+        return (self.save_file, user_state, gxy_state)
 
     def __setstate__(self, state):
-        (self.save_file, self.user, self.galaxy) = state
+        (self.save_file, user_state, galaxy_state) = state
+        self.user = None
+        self.galaxy = None
+        if not user_state is None:
+            self.user = lib.model.User(name='')
+            self.user.__setstate__(user_state)
+        if not galaxy_state is None:
+            self.galaxy = lib.model.Galaxy()
+            self.galaxy.__setstate__(galaxy_state)
