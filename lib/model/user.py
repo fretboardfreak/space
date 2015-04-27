@@ -19,11 +19,13 @@ from lib.rst import indent
 
 
 class User(object):
-    def __init__(self, name, home_planet_coords, home_planet):
+    def __init__(self, name, home_planet_coords=None, home_planet=None):
         debug('Creating new user object %s' % name)
         self.name = name
-        self.planets = {home_planet_coords: home_planet}
-        home_planet.emperor = self.name
+        self.planets = {}
+        if not home_planet_coords is None:
+            self.planets = {home_planet_coords: home_planet}
+            home_planet.emperor = self.name
 
     def __repr__(self):
         return "{}(name: {}, planets: {})".format(
