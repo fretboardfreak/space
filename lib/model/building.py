@@ -43,8 +43,8 @@ class BuildingRequirements(object):
 
     def __str__(self):
         return "Resources: {}\nResearch: {}\nBuildings: {}".format(
-                str(self.resources).replace('\n', ', '), self.research,
-                self.buildings)
+            str(self.resources).replace('\n', ', '), self.research,
+            self.buildings)
 
     def __getstate__(self):
         return (self.resources, self.research, self.buildings)

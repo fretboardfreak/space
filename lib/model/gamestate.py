@@ -23,8 +23,8 @@ class GameState(object):
 
     def __repr__(self):
         return "{}(save file: {}, user: {}, galaxy: {})".format(
-                self.__class__.__name__, self.save_file, repr(self.user),
-                repr(self.galaxy))
+            self.__class__.__name__, self.save_file, repr(self.user),
+            repr(self.galaxy))
 
     def __getstate__(self):
         user_state = None if self.user is None else self.user.__getstate__()
@@ -35,9 +35,9 @@ class GameState(object):
         (self.save_file, user_state, galaxy_state) = state
         self.user = None
         self.galaxy = None
-        if not user_state is None:
+        if user_state is not None:
             self.user = lib.model.User(name='')
             self.user.__setstate__(user_state)
-        if not galaxy_state is None:
+        if galaxy_state is not None:
             self.galaxy = lib.model.Galaxy()
             self.galaxy.__setstate__(galaxy_state)

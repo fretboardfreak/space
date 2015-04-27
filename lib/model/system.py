@@ -20,6 +20,7 @@ from .planet import Planet
 
 class System(object):
     size_range = (2, 15)
+
     def __init__(self):
         self.size = randint(*self.size_range)
         self.sun_brightness = randint(*self.get_brightness_bounds(self.size))

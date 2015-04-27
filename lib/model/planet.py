@@ -38,7 +38,7 @@ class Planet(object):
         self.sun_brightness = sun_brightness
         if sun_distance <= 0:
             raise ModelObjectError(
-                    'Planet: Sun Distance must be greater than 0.')
+                'Planet: Sun Distance must be greater than 0.')
         self.sun_distance = sun_distance
 
         # keys will be the building classname
@@ -137,8 +137,8 @@ class Planet(object):
             details.append(sun)
         if rates:
             res = '\n'.join(['- {}: {} ({})'.format(
-                                name, self.resources[name], self.rates[name])
-                             for name in self.resources])
+                name, self.resources[name], self.rates[name])
+                for name in self.resources])
         else:
             res = indent(str(self.resources), '- ')
         details.append(indent(res, '  '))

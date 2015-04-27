@@ -23,17 +23,17 @@ class User(object):
         debug('Creating new user object %s' % name)
         self.name = name
         self.planets = {}
-        if not home_planet_coords is None:
+        if home_planet_coords is not None:
             self.planets = {home_planet_coords: home_planet}
             home_planet.emperor = self.name
 
     def __repr__(self):
         return "{}(name: {}, planets: {})".format(
-                self.__class__.__name__, self.name, self.planets)
+            self.__class__.__name__, self.name, self.planets)
 
     def __str__(self):
         return "{} name: {}\nplanets: {}".format(
-                self.__class__.__name__, self.name, self.planets)
+            self.__class__.__name__, self.name, self.planets)
 
     def show_planets(self, verbose=None):
         debug("showing user %s's planets: verbose=%s" %
