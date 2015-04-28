@@ -22,6 +22,9 @@ class BaseCoord(object):
         self.x = str(float(x))
         self.y = str(float(y))
 
+        # attributes that contribute to equality when comparing two Coords
+        self._eq_attrs = ['x', 'y']
+
     @property
     def sector(self):
         return (int(self.x.split('.')[0]),
@@ -46,8 +49,15 @@ class BaseCoord(object):
         self.x = '.'.join([str(self.x).split('.')[0], sys_x])
         self.y = '.'.join([str(self.y).split('.')[0], sys_y])
 
+    def __eq__(self, other):
+        return all([getattr(self, attr) == getattr(other, attr)
+                    for attr in self._eq_attrs])
+
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash(tuple([getattr(self, attr) for attr in self._eq_attrs]))
 
 
 class Coord(BaseCoord):
@@ -56,17 +66,11 @@ class Coord(BaseCoord):
             planet = 0
         self.planet = str(int(planet))
         super().__init__(x, y)
-
-    def __eq__(self, other):
-        return (other.x == self.x and
-                other.y == self.y and
-                other.planet == self.planet)
-
-    def __hash__(self):
-        return hash((self.x, self.y, self.planet))
+        self._eq_attrs.append('planet')
 
     def __repr__(self):
-        return "Coord({}, {}, {})".format(self.x, self.y, self.planet)
+        return "{}({}, {}, {})".format(self.__class__.__name__, self.x,
+                                       self.y, self.planet)
 
     def __str__(self):
         return str((self.x, self.y, self.planet))
@@ -78,20 +82,12 @@ class Coord(BaseCoord):
         self.x, self.y, self.planet = state
 
 
-class SystemCoord(Coord):
+class SystemCoord(BaseCoord):
     def __init__(self, x=None, y=None):
-        super().__init__(x, y, None)
-        del(self.planet)
-
-    def __eq__(self, other):
-        return (other.x == self.x and
-                other.y == self.y)
-
-    def __hash__(self):
-        return hash((self.x, self.y))
+        super().__init__(x, y)
 
     def __repr__(self):
-        return "SystemCoord({}, {})".format(self.x, self.y)
+        return "{}({}, {})".format(self.__class__.__name__, self.x, self.y)
 
     def __str__(self):
         return str((self.x, self.y))
