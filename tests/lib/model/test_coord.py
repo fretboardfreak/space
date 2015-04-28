@@ -15,8 +15,7 @@
 import random
 import re
 
-from tests.base import SpaceTest
-from .base import LibModelTest
+from .base import LibModelTest, ModelObjectTest
 
 from lib.model import coord
 
@@ -24,11 +23,21 @@ from lib.model import coord
 class TestLibModelCoord(LibModelTest):
     def setUp(self):
         self.expected_exports = [coord.Coord, coord.SystemCoord]
+        super().setUp()
 
 
-class BaseCoordTest(SpaceTest):
+class BaseCoordTest(ModelObjectTest):
+    def skip_base_class(self):
+        if self.__class__.__name__ == 'BaseCoordTest':
+            self.skipTest('base class, not valid test')
+
     def setUp(self):
-        self.object = coord.Coord(0, 0, 0)
+        super().setUp()
+        self.classname_in_repr = True
+        self.expected_attrs = {'x': str, 'y': str}
+
+    def get_new_instance(self):
+        return coord.BaseCoord(0, 0)
 
     def test_sector(self):
         self._property_test('sector')
@@ -50,8 +59,24 @@ class BaseCoordTest(SpaceTest):
             count = 1
         return tuple([random.randint(0, 1000) for _ in range(count)])
 
+    def test_str(self):
+        self.skip_base_class()
+        super().test_str()
+
+    def test_repr(self):
+        self.skip_base_class()
+        super().test_str()
+
 
 class TestCoord(BaseCoordTest):
+    def setUp(self):
+        super().setUp()
+        self.classname_in_repr = True
+        self.expected_attrs = {'x': str, 'y': str, 'planet': str}
+
+    def get_new_instance(self):
+        return coord.Coord(0, 0, 0)
+
     def test_planet(self):
         self._property_test('planet')
 
@@ -95,7 +120,12 @@ class TestCoord(BaseCoordTest):
 
 class TestSystemCoord(BaseCoordTest):
     def setUp(self):
-        self.object = coord.SystemCoord(0, 0)
+        super().setUp()
+        self.classname_in_repr = True
+        self.expected_attrs = {'x': str, 'y': str}
+
+    def get_new_instance(self):
+        return coord.SystemCoord(0, 0)
 
     def test_no_planet(self):
         self.assertFalse(hasattr(self.object, 'planet'))
