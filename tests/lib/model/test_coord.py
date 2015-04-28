@@ -28,7 +28,7 @@ class TestLibModelCoord(LibModelTest):
 
 class BaseCoordTest(SpaceTest):
     def setUp(self):
-        self.coord = coord.Coord(0, 0, 0)
+        self.object = coord.Coord(0, 0, 0)
 
     def test_sector(self):
         self._property_test('sector')
@@ -41,8 +41,8 @@ class BaseCoordTest(SpaceTest):
             test_value = self.get_tst_values(planet=True)
         else:
             test_value = self.get_tst_values(planet=False)
-        setattr(self.coord, name, test_value)
-        self.assertEqual(getattr(self.coord, name), test_value)
+        setattr(self.object, name, test_value)
+        self.assertEqual(getattr(self.object, name), test_value)
 
     def get_tst_values(self, planet=False):
         count = 2
@@ -56,7 +56,7 @@ class TestCoord(BaseCoordTest):
         self._property_test('planet')
 
     def test_hash(self):
-        start_hash = hash(self.coord)
+        start_hash = hash(self.object)
         test_sector = self.get_tst_values()
         test_system = self.get_tst_values()
         test_planet = self.get_tst_values(planet=True)
@@ -65,68 +65,69 @@ class TestCoord(BaseCoordTest):
         example_coord.sector = test_sector
         example_coord.system = test_system
         example_coord.planet = test_planet
-        self.coord.sector = test_sector
-        self.coord.system = test_system
-        self.coord.planet = test_planet
-        self.assertEqual(hash(self.coord), hash(example_coord))
+        self.object.sector = test_sector
+        self.object.system = test_system
+        self.object.planet = test_planet
+        self.assertEqual(hash(self.object), hash(example_coord))
 
     def test_repr(self):
         expected = 'Coord\(\d\.\d, \d\.\d, \d\)'
-        self.assertTrue(re.search(expected, repr(self.coord)))
+        self.assertTrue(re.search(expected, repr(self.object)))
 
     def test_str(self):
         expected = '\(\'\d\.\d\', \'\d\.\d\', \'\d\'\)'
-        self.assertTrue(re.search(expected, str(self.coord)))
+        self.assertTrue(re.search(expected, str(self.object)))
 
     def test_getstate(self):
         expected = ('0.0', '0.0', '0')
-        self.assertEqual(expected, self.coord.__getstate__())
+        self.assertEqual(expected, self.object.__getstate__())
 
     def test_setstate(self):
-        self.coord.sector = self.get_tst_values()
-        self.coord.system = self.get_tst_values()
-        self.coord.planet = self.get_tst_values(planet=True)
+        self.object.sector = self.get_tst_values()
+        self.object.system = self.get_tst_values()
+        self.object.planet = self.get_tst_values(planet=True)
         test_obj = coord.Coord()
-        test_obj.__setstate__((self.coord.x, self.coord.y, self.coord.planet))
-        self.assertEqual((self.coord.x, self.coord.y, self.coord.planet),
+        test_obj.__setstate__((self.object.x, self.object.y,
+                               self.object.planet))
+        self.assertEqual((self.object.x, self.object.y, self.object.planet),
                          (test_obj.x, test_obj.y, test_obj.planet))
 
 
 class TestSystemCoord(BaseCoordTest):
     def setUp(self):
-        self.coord = coord.SystemCoord(0, 0)
+        self.object = coord.SystemCoord(0, 0)
 
     def test_no_planet(self):
-        self.assertFalse(hasattr(self.coord, 'planet'))
+        self.assertFalse(hasattr(self.object, 'planet'))
 
     def test_hash(self):
-        start_hash = hash(self.coord)
+        start_hash = hash(self.object)
         test_sector = self.get_tst_values()
         test_system = self.get_tst_values()
         example_coord = coord.SystemCoord()
         self.assertEqual(hash(example_coord), start_hash)
         example_coord.sector = test_sector
         example_coord.system = test_system
-        self.coord.sector = test_sector
-        self.coord.system = test_system
-        self.assertEqual(hash(self.coord), hash(example_coord))
+        self.object.sector = test_sector
+        self.object.system = test_system
+        self.assertEqual(hash(self.object), hash(example_coord))
 
     def test_getstate(self):
         expected = ('0.0', '0.0')
-        self.assertEqual(expected, self.coord.__getstate__())
+        self.assertEqual(expected, self.object.__getstate__())
 
     def test_repr(self):
         expected = 'SystemCoord\(\d\.\d, \d\.\d\)'
-        self.assertTrue(re.search(expected, repr(self.coord)))
+        self.assertTrue(re.search(expected, repr(self.object)))
 
     def test_str(self):
         expected = '\(\'\d\.\d\', \'\d\.\d\'\)'
-        self.assertTrue(re.search(expected, str(self.coord)))
+        self.assertTrue(re.search(expected, str(self.object)))
 
     def test_setstate(self):
-        self.coord.sector = self.get_tst_values()
-        self.coord.system = self.get_tst_values()
+        self.object.sector = self.get_tst_values()
+        self.object.system = self.get_tst_values()
         test_obj = coord.SystemCoord()
-        test_obj.__setstate__((self.coord.x, self.coord.y))
-        self.assertEqual((self.coord.x, self.coord.y),
+        test_obj.__setstate__((self.object.x, self.object.y))
+        self.assertEqual((self.object.x, self.object.y),
                          (test_obj.x, test_obj.y))
