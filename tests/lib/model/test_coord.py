@@ -67,6 +67,32 @@ class BaseCoordTest(ModelObjectTest):
         self.skip_base_class()
         super().test_str()
 
+    def test_hash(self):
+        start_hash = hash(self.object)
+        test_sector = self.get_tst_values()
+        test_system = self.get_tst_values()
+        example_coord = self.get_new_instance()
+        self.assertEqual(hash(example_coord), start_hash)
+        example_coord.sector = test_sector
+        example_coord.system = test_system
+        self.object.sector = test_sector
+        self.object.system = test_system
+        self.assertEqual(hash(self.object), hash(example_coord))
+
+    def test_eq(self):
+        test_obj = self.get_new_instance()
+        self.assertEqual(self.object, test_obj)
+        test_sector = self.get_tst_values()
+        test_obj.sector = test_sector
+        self.assertNotEqual(self.object, test_obj)
+        self.object.sector = test_sector
+        self.assertEqual(self.object, test_obj)
+        test_system = self.get_tst_values()
+        test_obj.system = test_system
+        self.assertNotEqual(self.object, test_obj)
+        self.object.system = test_system
+        self.assertEqual(self.object, test_obj)
+
 
 class TestCoord(BaseCoordTest):
     def setUp(self):
@@ -82,18 +108,10 @@ class TestCoord(BaseCoordTest):
 
     def test_hash(self):
         start_hash = hash(self.object)
-        test_sector = self.get_tst_values()
-        test_system = self.get_tst_values()
-        test_planet = self.get_tst_values(planet=True)
-        example_coord = coord.Coord()
-        self.assertEqual(hash(example_coord), start_hash)
-        example_coord.sector = test_sector
-        example_coord.system = test_system
-        example_coord.planet = test_planet
-        self.object.sector = test_sector
-        self.object.system = test_system
-        self.object.planet = test_planet
-        self.assertEqual(hash(self.object), hash(example_coord))
+        self.object.planet = self.get_tst_values(planet=True)[0]
+        self.assertNotEqual(hash(self.object), start_hash)
+        self.object = self.get_new_instance()
+        super().test_hash()
 
     def test_repr(self):
         expected = 'Coord\(\d\.\d, \d\.\d, \d\)'
@@ -110,12 +128,22 @@ class TestCoord(BaseCoordTest):
     def test_setstate(self):
         self.object.sector = self.get_tst_values()
         self.object.system = self.get_tst_values()
-        self.object.planet = self.get_tst_values(planet=True)
+        self.object.planet = self.get_tst_values(planet=True)[0]
         test_obj = coord.Coord()
         test_obj.__setstate__((self.object.x, self.object.y,
                                self.object.planet))
         self.assertEqual((self.object.x, self.object.y, self.object.planet),
                          (test_obj.x, test_obj.y, test_obj.planet))
+
+    def test_eq(self):
+        test_obj = self.get_new_instance()
+        test_planet = self.get_tst_values(planet=True)[0]
+        test_obj.planet = test_planet
+        self.assertNotEqual(self.object, test_obj)
+        self.object.planet = test_planet
+        self.assertEqual(self.object, test_obj)
+        self.object = self.get_new_instance()
+        super().test_eq()
 
 
 class TestSystemCoord(BaseCoordTest):
@@ -129,18 +157,6 @@ class TestSystemCoord(BaseCoordTest):
 
     def test_no_planet(self):
         self.assertFalse(hasattr(self.object, 'planet'))
-
-    def test_hash(self):
-        start_hash = hash(self.object)
-        test_sector = self.get_tst_values()
-        test_system = self.get_tst_values()
-        example_coord = coord.SystemCoord()
-        self.assertEqual(hash(example_coord), start_hash)
-        example_coord.sector = test_sector
-        example_coord.system = test_system
-        self.object.sector = test_sector
-        self.object.system = test_system
-        self.assertEqual(hash(self.object), hash(example_coord))
 
     def test_getstate(self):
         expected = ('0.0', '0.0')
