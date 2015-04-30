@@ -13,41 +13,29 @@
 # limitations under the License.
 
 """
-libRst
-======
-
-This module is intended to provide compilation support for rst.  The intention
-is to keep the required libraries all in one place to provide a deployable,
-python 2.6/2.7 compatible, rst compiler.
-
-RST Constructs to be supported:
-    - paragraph
-    - heading
-    - list (unordered, ordered)
-    - table
+RST: An interface for creating string constructs that conform to the
+reStructuredText specification.
 """
 
 from functools import reduce
-#import docutils.core
-#import sys, os.path
+# def toHtml(text):
+#     """ Use Docutils to compile text into html. """
+#     return docutils.core.publish_parts(source=text,
+#                                        writer_name='html')['html_body']
 
-
-#def toHtml(text):
-#    """ Use Docutils to compile text into html. """
-#    return docutils.core.publish_parts(source=text,
-#                                       writer_name='html')['html_body']
-#
 
 def indent(text, indent):
-    """ Indent some text by a number of spaces
+    """Indent some text by a number of spaces
 
-        :param indent: (int or str) number of spaces to indent the text, or
-                       the text to use as the indentation
+    :param text: (str) the line of text to indent
+    :param indent: (int or str) number of spaces to indent the text, or
+                   the text to use as the indentation
 
-        >>> indent('foo\\nbar', indent=3)
-        '   foo\\n   bar'
-        >>> indent('foo\\nbar', indent='__')
-        '__foo\\n__bar'
+    # TODO: convert these doctests to unit tests
+    >>> indent('foo\\nbar', indent=3)
+    '   foo\\n   bar'
+    >>> indent('foo\\nbar', indent='__')
+    '__foo\\n__bar'
     """
     if isinstance(indent, int):
         indent = ' ' * indent
@@ -55,27 +43,28 @@ def indent(text, indent):
 
 
 def wrap(line, width=80, continuationPrefix=None, splitWords=False,
-             wordSplitChar='-'):
-    """ Wrap text to the given width.
+         wordSplitChar='-'):
+    """Wrap text to the given width.
 
-        :param line: (str) the line of text to wrap
-        :param width: (int) the width to wrap the line to
-        :param continuationPrefix: (str) the string to prefix continued lines with
-        :param splitWords: (bool) whether or not to split words to fill the line
-        :param wordSplitChar: (str) The string to use to indicate a word
-                              continues on another line.  wordSplitChar has no
-                              effect if splitWords is False.
+    :param line: (str) the line of text to wrap
+    :param width: (int) the width to wrap the line to
+    :param continuationPrefix: (str) the string to prefix continued lines with
+    :param splitWords: (bool) whether or not to split words to fill the line
+    :param wordSplitChar: (str) The string to use to indicate a word
+                          continues on another line.  wordSplitChar has no
+                          effect if splitWords is False.
 
-        >>> wrap('foo bar', width=6)
-        'foo \\nbar \\n'
-        >>> wrap('foo bar', width=6, continuationPrefix=' ')
-        'foo \\n bar \\n'
-        >>> wrap('foo bar', width=6, splitWords=True)
-        'foo b-\\nar \\n'
-        >>> wrap('foo bar', width=6, splitWords=True, wordSplitChar='>')
-        'foo b>\\nar \\n'
-        >>> wrap('foo bar', width=5, splitWords=True)
-        'foo \\nbar \\n'
+    # TODO: convert these doctests to unit tests
+    >>> wrap('foo bar', width=6)
+    'foo \\nbar \\n'
+    >>> wrap('foo bar', width=6, continuationPrefix=' ')
+    'foo \\n bar \\n'
+    >>> wrap('foo bar', width=6, splitWords=True)
+    'foo b-\\nar \\n'
+    >>> wrap('foo bar', width=6, splitWords=True, wordSplitChar='>')
+    'foo b>\\nar \\n'
+    >>> wrap('foo bar', width=5, splitWords=True)
+    'foo \\nbar \\n'
     """
     if not continuationPrefix:
         continuationPrefix = ''
@@ -90,7 +79,7 @@ def wrap(line, width=80, continuationPrefix=None, splitWords=False,
             retVal += newLine + '\n'
             newLine = continuationPrefix + word + ' '
             continue
-        else: #split the word
+        else:  # split the word
             remainingSpace = width - len(newLine)
             if remainingSpace <= 1:
                 retVal += newLine + '\n'
@@ -106,15 +95,16 @@ def wrap(line, width=80, continuationPrefix=None, splitWords=False,
 
 
 def _separateNewlines(text):
-    """ Separate newlines from beginning and end of text and return them in a tuple.
+    """Separate '\n' from beginning and end of text, return them in a tuple.
 
-        :return: (tuple of str) the beginning newline value, stripped text,
-                 ending newline value
+    :return: (tuple of str) the beginning newline value, stripped text,
+             ending newline value
 
-        >>> _separateNewlines('\\nfoo\\n')
-        ('\\n', 'foo', '\\n')
-        >>> _separateNewlines('foo')
-        ('', 'foo', '')
+    # TODO: convert these doctests to unit tests
+    >>> _separateNewlines('\\nfoo\\n')
+    ('\\n', 'foo', '\\n')
+    >>> _separateNewlines('foo')
+    ('', 'foo', '')
     """
     start = ''
     end = ''
@@ -128,21 +118,23 @@ def _separateNewlines(text):
 
 
 def heading(text, level):
-    """ Turn a line of text into an RST heading.  Always returns a trailing
-        newline.
+    """Turn a line of text into an RST heading.
 
-        :param level: (int) the level of heading to produce.  Level 0 is the
-                      document title and is overlined.
+    Always returns a trailing newline.
 
-        >>> heading('foo', 0)
-        '===\\nfoo\\n===\\n'
-        >>> heading('foo', 1)
-        'foo\\n===\\n'
-        >>> heading('\\nfoo\\n', 2)
-        '\\nfoo\\n---\\n'
-        >>> heading('foo', 11)  # doctest: +IGNORE_EXCEPTION_DETAIL
-        Traceback (most recent call last):
-        ValueError: A heading cannot have a level less than 0 or ...
+    :param level: (int) the level of heading to produce.  Level 0 is the
+                  document title and is overlined.
+
+    # TODO: convert these doctests to unit tests
+    >>> heading('foo', 0)
+    '===\\nfoo\\n===\\n'
+    >>> heading('foo', 1)
+    'foo\\n===\\n'
+    >>> heading('\\nfoo\\n', 2)
+    '\\nfoo\\n---\\n'
+    >>> heading('foo', 11)  # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    ValueError: A heading cannot have a level less than 0 or ...
     """
     _chars = ['=', '-', '~', '"', "'", '*', '^', '_', '+', ':', '#']
     getUnderline = lambda charIndex: _chars[charIndex] * len(text)
@@ -155,37 +147,37 @@ def heading(text, level):
         return '%s%s\n%s\n%s\n' % (start, getUnderline(level), text,
                                    getUnderline(level))
     else:
-        return '%s%s\n%s\n' % (start, text, getUnderline(level-1))
+        return '%s%s\n%s\n' % (start, text, getUnderline(level - 1))
 
 
 def list(elements, ordered=False, startIndex=1):
-    """ Create an RST List from a collection.
+    """Create an RST List from a collection.
 
-        :param elements: (list) a collection of strings, each an element of
-                         the list
-        :param ordered: (bool) set's list type between bulleted and enumerated
-        :param startIndex: (int) if start index is 1 then an auto-enumerated
-                           list is used ("#. element\\\n")
+    :param elements: (list) a collection of strings, each an element of
+                     the list
+    :param ordered: (bool) set's list type between bulleted and enumerated
+    :param startIndex: (int) if start index is 1 then an auto-enumerated
+                       list is used ("#. element\\\n")
 
-        >>> list(['foo', 'bar'])
-        '- foo\\n- bar\\n'
-        >>> list(['foo', 'bar'], ordered=True)
-        '#. foo\\n#. bar\\n'
-        >>> list(['foo', 'bar'], ordered=True, startIndex=3)
-        '3. foo\\n4. bar\\n'
+    # TODO: convert these doctests to unit tests
+    >>> list(['foo', 'bar'])
+    '- foo\\n- bar\\n'
+    >>> list(['foo', 'bar'], ordered=True)
+    '#. foo\\n#. bar\\n'
+    >>> list(['foo', 'bar'], ordered=True, startIndex=3)
+    '3. foo\\n4. bar\\n'
 
-        startIndex has no effect if not ordered
-        >>> list(['foo', 'bar'], ordered=False, startIndex=3)
-        '- foo\\n- bar\\n'
-
+    startIndex has no effect if not ordered
+    >>> list(['foo', 'bar'], ordered=False, startIndex=3)
+    '- foo\\n- bar\\n'
     """
-    #TODO: make this work with multiline elements
+    # TODO: make this work with multiline elements
     retVal = ''
     index = startIndex
     for element in elements:
-        if ordered and startIndex==1:
+        if ordered and startIndex == 1:
             retVal += '#. %s\n' % (element)
-        elif ordered and startIndex>1:
+        elif ordered and startIndex > 1:
             retVal += '%s. %s\n' % (index, element)
             index = index + 1
         else:
@@ -194,17 +186,17 @@ def list(elements, ordered=False, startIndex=1):
 
 
 def table(grid):
-    """ Build an RST table out of nested lists. """
-    #TODO: make this work with multiline cells
+    """Build an RST table out of nested lists."""
+    # TODO: make this work with multiline cells
     grid = _padGrid(grid)
-    cell_width = 2 + max(reduce(lambda x,y: x+y,
+    cell_width = 2 + max(reduce(lambda x, y: x + y,
                                 [[len(str(item)) for item in row]
                                  for row in grid], []))
     num_cols = len(grid[0])
     rst = _tableDiv(num_cols, cell_width, 0)
     header_flag = 1
     for row in grid:
-        rst = rst + '| ' + '| '.join([_normalizeCell(x, cell_width-1)
+        rst = rst + '| ' + '| '.join([_normalizeCell(x, cell_width - 1)
                                       for x in row]) + '|\n'
         rst = rst + _tableDiv(num_cols, cell_width, header_flag)
         header_flag = 0
@@ -213,9 +205,9 @@ def table(grid):
 
 def _tableDiv(num_cols, col_width, header_flag):
     if header_flag == 1:
-        return num_cols*('+' + (col_width)*'=') + '+\n'
+        return num_cols * ('+' + (col_width) * '=') + '+\n'
     else:
-        return num_cols*('+' + (col_width)*'-') + '+\n'
+        return num_cols * ('+' + (col_width) * '-') + '+\n'
 
 
 def _normalizeCell(string, length):
@@ -231,6 +223,6 @@ def _padGrid(grid):
     return grid
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     import doctest
     doctest.testmod()
