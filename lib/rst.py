@@ -30,12 +30,6 @@ def indent(text, indent):
     :param text: (str) the line of text to indent
     :param indent: (int or str) number of spaces to indent the text, or
                    the text to use as the indentation
-
-    # TODO: convert these doctests to unit tests
-    >>> indent('foo\\nbar', indent=3)
-    '   foo\\n   bar'
-    >>> indent('foo\\nbar', indent='__')
-    '__foo\\n__bar'
     """
     if isinstance(indent, int):
         indent = ' ' * indent
