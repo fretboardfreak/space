@@ -37,7 +37,7 @@ class TestGalaxy(ModelObjectTest, StateMixinTest):
         return ({},)
 
     def test_system(self):
-        self.skipTest('NIY')
+        self.skipTest('NYI')
 
     def test_planet(self):
-        self.skipTest('NIY')
+        self.skipTest('NYI')
