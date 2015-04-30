@@ -69,6 +69,7 @@ class TestPep8(SpaceTest):
         # TODO: Add the remainder of the lib package to this test as things get
         # refactored.
         self.tst_style(self.get_path('lib/model'), self.run_pep8)
+        self.tst_style(self.get_path('lib/namegen.py'), self.run_pep8)
 
     def test_space_pep8(self):
         self.run_pep8(self.get_path('space'))

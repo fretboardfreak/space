@@ -1,60 +1,68 @@
 #!/usr/bin/env python3
 
-#Copyright 2010 Joao Henriques <jotaf (no spam) at hotmail dot com>.
+# Copyright 2010 Joao Henriques <jotaf (no spam) at hotmail dot com>.
 #
-#This file is part of name-gen.
+# This file is part of name-gen.
 #
-#name-gen is free software: you can redistribute it and/or modify
-#it under the terms of the GNU Lesser General Public License as
-#published by the Free Software Foundation, either version 3 of the
-#License, or (at your option) any later version.
+# name-gen is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
 #
-#name-gen is distributed in the hope that it will be useful, but
-#WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#Lesser General Public License for more details.
+# name-gen is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
-#You should have received a copy of the GNU Lesser General Public
-#License along with name-gen.  If not, see
-#<http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU Lesser General Public
+# License along with name-gen.  If not, see
+# <http://www.gnu.org/licenses/>.
 
 # Updated by Curtis Sand for use in Space, 2015
+# Changes made:
+# - Included a default language file data in the module itself.
+# - Updates for python 3, code clarity, pep 8
+# - Unix newlines
 
 """
 Namegen.py - A basic name generator script.
 """
 
-import sys, random, locale
+import sys
+import random
+import locale
 from argparse import ArgumentParser
 
 try:
     from StringIO import StringIO
-except ImportError: # python 3
+except ImportError:  # python 3
     from io import StringIO
 
 
-class NameGen:
+class NameGen(object):
     """
-    name-gen: Free python name generator module that analyzes sample text and produces
-    similar words.
+    name-gen: Free python name generator module that analyzes sample text and
+    produces similar words.
 
     Usage:
-        1. Initialize with path to language file (generated using 'namegen_training.py').
+        1. Initialize with path to language file (generated using
+           'namegen_training.py').
         2. Call gen_word() method, returns generated string.
 
     Optional:
-        . Change min_syl and max_syl to control number of syllables.
-        . Pass the sample file as 2nd parameter at initialization to set it as the list
-          of forbidden words. No words from the sample will be replicated.
-        . Pass True as the 1st parameter to name_gen() to add the generated word to the
-          list of forbidden words. The word will not occur again.
+        - Change min_syl and max_syl to control number of syllables.
+        - Pass the sample file as 2nd parameter at initialization to set it as
+          the list of forbidden words. No words from the sample will be
+          replicated.
+        - Pass True as the 1st parameter to name_gen() to add the generated
+          word to the list of forbidden words. The word will not occur again.
     """
 
-    def __init__(self, language_file = None, forbidden_file = None):
+    def __init__(self, language_file=None, forbidden_file=None):
         self.min_syl = 2
         self.max_syl = 4
 
-        #load language file
+        # load language file
         if language_file is None:
             f = StringIO(LANG_STR)
         else:
@@ -63,21 +71,26 @@ class NameGen:
         try:
             lines = [line.strip() for line in f.readlines()]
 
-            self.syllables = lines[0].split(',')  #first line, list of syllables
+            # first line, list of syllables
+            self.syllables = lines[0].split(',')
 
-            starts_ids = [int(n) for n in lines[1].split(',')]  #next 2 lines, start syllable indexes and counts
+            # next 2 lines, start syllable indexes and counts
+            starts_ids = [int(n) for n in lines[1].split(',')]
             starts_counts = [int(n) for n in lines[2].split(',')]
-            self.starts = list(zip(starts_ids, starts_counts))  #zip into a list of tuples
+            # zip into a list of tuples
+            self.starts = list(zip(starts_ids, starts_counts))
 
-            ends_ids = [int(n) for n in lines[3].split(',')]  #next 2, same for syllable ends
+            # next 2, same for syllable ends
+            ends_ids = [int(n) for n in lines[3].split(',')]
             ends_counts = [int(n) for n in lines[4].split(',')]
             self.ends = list(zip(ends_ids, ends_counts))
 
-            #starting with the 6th and 7th lines, each pair of lines holds ids and counts
-            #of the "next syllables" for a previous syllable.
+            # starting with the 6th and 7th lines, each pair of lines holds ids
+            # and counts of the "next syllables" for a previous syllable.
             self.combinations = []
-            for (ids_str, counts_str) in list(zip(lines[5:None:2], lines[6:None:2])):
-                if len(ids_str) == 0 or len(counts_str) == 0:  #empty lines
+            for (ids_str, counts_str) in list(zip(lines[5:None:2],
+                                                  lines[6:None:2])):
+                if len(ids_str) == 0 or len(counts_str) == 0:  # empty lines
                     self.combinations.append([])
                 else:
                     line_ids = [int(n) for n in ids_str.split(',')]
@@ -86,54 +99,62 @@ class NameGen:
         finally:
             f.close()
 
-        #load forbidden words file if needed
+        # load forbidden words file if needed
         if forbidden_file is None:
             self.forbidden = ''
         else:
             self.forbidden = _load_sample(forbidden_file)
 
-    def gen_word(self, no_repeat = False):
-        #random number of syllables, the last one is always appended
+    def gen_word(self, no_repeat=False):
+        # random number of syllables, the last one is always appended
         num_syl = random.randint(self.min_syl, self.max_syl - 1)
 
-        #turn ends list of tuples into a dictionary
+        # turn ends list of tuples into a dictionary
         ends_dict = dict(self.ends)
 
-        #we may have to repeat the process if the first "min_syl" syllables were a bad choice
-        #and have no possible continuations; or if the word is in the forbidden list.
-        word = []; word_str = ''
+        # we may have to repeat the process if the first "min_syl" syllables
+        # were a bad choice and have no possible continuations; or if the word
+        # is in the forbidden list.
+        word = []
+        word_str = ''
         while len(word) < self.min_syl or self.forbidden.find(word_str) != -1:
-            #start word with the first syllable
+            # start word with the first syllable
             syl = _select_syllable(self.starts, 0)
             word = [self.syllables[syl]]
 
             for i in range(1, num_syl):
-                #don't end yet if we don't have the minimum number of syllables
-                if i < self.min_syl: end = 0
-                else: end = ends_dict.get(syl, 0)  #probability of ending for this syllable
+                # dont end yet if we don't have the minimum number of syllables
+                if i < self.min_syl:
+                    end = 0
+                else:  # probability of ending for this syllable
+                    end = ends_dict.get(syl, 0)
 
-                #select next syllable
+                # select next syllable
                 syl = _select_syllable(self.combinations[syl], end)
-                if syl is None: break  #early end for this word, end syllable was chosen
+                if syl is None:
+                    break  # early end for this word, end syllable was chosen
 
                 word.append(self.syllables[syl])
 
-            else:  #forcefully add an ending syllable if the loop ended without one
+            else:  # add an ending syllable if the loop ended without one
                 syl = _select_syllable(self.ends, 0)
                 word.append(self.syllables[syl])
 
             word_str = ''.join(word)
 
-        #to ensure the word doesn't repeat, add it to the forbidden words
-        if no_repeat: self.forbidden = self.forbidden + '\n' + word_str
+        # to ensure the word doesn't repeat, add it to the forbidden words
+        if no_repeat:
+            self.forbidden = self.forbidden + '\n' + word_str
 
         return word_str.capitalize()
 
-def _select_syllable(counts, end_count):
-    if len(counts) == 0: return None  #no elements to choose from
 
-    #"counts" holds cumulative counts, so take the last element in the list
-    #(and 2nd in that tuple) to get the sum of all counts
+def _select_syllable(counts, end_count):
+    if len(counts) == 0:
+        return None  # no elements to choose from
+
+    # "counts" holds cumulative counts, so take the last element in the list
+    # (and 2nd in that tuple) to get the sum of all counts
     chosen = random.randint(0, counts[-1][1] + end_count)
 
     for (syl, count) in counts:
@@ -141,22 +162,23 @@ def _select_syllable(counts, end_count):
             return syl
     return None
 
+
 def _load_sample(filename):
-    #get sample text
+    # get sample text
     with open(filename, 'r') as f:
         sample = ''.join(f.readlines()).lower()
 
-    #convert accented characters to non-accented characters
+    # convert accented characters to non-accented characters
     sample = locale.strxfrm(sample)
 
-    #remove all characters except letters from A to Z
+    # remove all characters except letters from A to Z
     a = ord('a')
     z = ord('z')
-    sample = ''.join([
-        c if (ord(c) >= a and ord(c) <= z) else ' '
-            for c in sample])
+    sample = ''.join([c if (ord(c) >= a and ord(c) <= z) else ' '
+                      for c in sample])
 
     return sample
+
 
 def main():
     args = parse_args()
@@ -167,17 +189,21 @@ def main():
     print(sep.join([generator.gen_word() for _ in range(args.count)]))
     return 0
 
+
 def parse_args():
-    default_count=5
+    default_count = 5
     epilog = 'Stay awesome, spacelings!'
     parser = ArgumentParser(description=__doc__, epilog=epilog)
-    parser.add_argument( '-c', '--count', default=default_count, dest='count',
-            type=int, help='How many names to generate. [default: %s]' %
-            default_count)
-    parser.add_argument( '-n', '--newline', default=False,
-            dest='newline', action='store_true', help='Use newlines to make '
-            'the output tall instead of wide.')
+    parser.add_argument(
+        '-c', '--count', default=default_count, dest='count',
+        type=int, help='How many names to generate. [default: %s]' %
+        default_count)
+    parser.add_argument(
+        '-n', '--newline', default=False,
+        dest='newline', action='store_true', help='Use newlines to make '
+        'the output tall instead of wide.')
     return parser.parse_args()
+
 
 LANG_STR = """un,ul,ua,nh,nc,oc,ge,fo,um,ed,fa,yn,ab,ik,bi,tu,rr,ja,av,wa,ti,od,pi,vi,gu,zi,di,ai,br,il,be,ne,gr,he,ss,ck,at,ir,im,lh,pr,go,io,ou,id,ho,va,rz,rt,ce,it,mi,ac,ve,za,ol,ba,ci,so,pe,ek,ew,ga,ur,ka,si,lo,ec,ha,li,zy,ze,ca,ak,me,mo,ri,sa,ei,pa,ni,om,ns,tr,us,wi,is,ch,sz,ic,le,na,po,on,ko,am,no,el,ad,ow,ws,em,ia,co,ie,la,nd,st,in,se,to,ro,cz,al,nt,da,ta,re,ue,en,ma,or,te,qu,es,ar,do,er,de,an,sk,as,ra,os,ki,slo,tka,ajd,azi,gla,iek,lav,lod,rti,uco,vai,var,ves,bed,bic,dal,ego,fan,fro,iol,sce,tus,uid,atr,lag,nal,nau,omb,tid,tou,gur,kas,koz,nus,raj,rez,rme,ycz,zym,bla,erb,erv,ite,kop,kuc,mul,ntu,rci,tir,uli,uto,wol,zys,div,edi,ide,koc,lej,oci,ona,usc,uta,chu,cob,kra,mic,ngu,ote,rak,rud,vas,aje,alu,amp,enf,erg,iem,jew,mel,via,bac,dis,far,had,kot,lgu,luc,ucz,vor,zio,ain,bur,ceb,did,mag,mia,one,ord,rmo,ryn,aka,alm,cav,ilu,kaw,onh,red,ebe,epo,iam,jak,log,nav,ock,pon,rro,unc,ank,bat,dem,kub,ouv,pad,sla,aco,alk,ask,chn,edz,els,erm,med,nhe,niu,nko,owa,scu,van,chi,gun,ixa,ize,lma,nat,omi,ors,rga,ure,zem,cre,ejo,gri,iej,lto,pes,ral,spo,zni,don,ial,kus,ova,rni,son,ude,mis,ouc,ous,sam,cap,ces,fim,fin,ger,ilo,rko,rot,sik,sni,sus,wen,zyc,cur,dom,etr,fre,odz,cab,iad,ret,uga,cad,eda,obi,oce,sab,vel,cel,eix,ili,lad,nin,rai,zik,mes,nun,rid,shi,sit,was,aws,ior,iss,jun,leg,lka,nsa,ped,rno,tru,adz,bin,gam,ler,lor,nem,sub,szu,abr,bri,mei,roz,sek,swi,mba,ndr,orz,vis,fic,fri,nom,onc,rig,rin,stu,inf,mur,ono,pit,zal,arn,awi,gre,kul,orq,pen,ena,nov,ocz,vir,alc,alg,atu,erz,ied,jas,law,nad,ong,pac,pra,diz,eio,eng,nis,oli,pou,rba,tig,rel,rod,uba,ace,emi,gas,grz,hei,lko,rar,unt,dec,gol,lat,prz,aci,emb,ncz,nfi,dam,edr,iko,ila,mpa,oto,ses,sua,ako,kon,met,ner,ovo,uit,arg,bus,cri,han,has,mou,nge,aus,dow,nim,sol,esi,iar,jar,nes,sco,zel,ang,pol,cen,ori,ric,rza,sci,sej,tel,trz,ych,asa,ato,ene,kur,rqu,rtu,arr,bas,bia,cla,lei,mon,uas,api,fei,ies,sca,woj,bem,egr,lta,osi,ubi,ari,emo,hal,lim,mpr,nar,ryc,tud,eni,eve,lac,nek,tek,zka,esa,nca,sar,dro,foi,reg,ack,egu,fra,orm,dra,gad,gro,her,imi,seg,mac,mig,mil,war,ate,kol,nga,poi,spa,tri,ane,hum,inc,int,pin,ham,kal,mui,omp,zen,bro,fam,mun,ual,uel,abi,apa,ave,krz,uda,pei,sko,zki,ecz,eme,rim,tko,alo,ein,iet,iuk,lcz,jan,rat,ris,ago,eia,cam,raz,val,vin,iga,win,elh,eza,kor,rav,eva,kar,eis,fal,lis,sal,gal,ius,oni,tav,aga,amb,gor,ndi,awa,cio,ech,ede,gie,olo,udo,zes,ban,cin,roc,wia,ico,imo,tow,zin,esz,lik,zer,olh,rab,rom,sti,usi,zar,fil,pri,ami,bel,vid,alh,eta,lek,mpo,ogo,ota,den,deu,gar,lev,mer,anc,ens,bor,eli,rde,rys,vam,dur,abe,bie,rus,dar,ers,ing,orr,rac,faz,tin,aze,eno,erc,ini,als,mie,orn,arm,sad,edo,lec,vos,eci,zuk,enc,gue,ien,nce,ars,car,sim,cos,enh,hos,kos,nci,obe,ois,rda,zia,bre,del,len,low,pal,czk,how,ich,our,sso,ysz,har,lon,erd,lak,sob,wal,bal,elo,ese,cid,dan,ime,mat,tad,pos,cas,isz,cie,gua,oda,ons,can,ode,tom,eja,pan,san,ilh,alt,spe,uer,ete,lan,pod,ssi,eri,rto,ame,ern,gos,ian,rre,ard,lic,ola,hor,rta,los,rma,tur,sza,ans,aro,oro,czu,usa,arz,nic,ess,mad,rna,tal,ole,nik,sas,tam,ust,nho,odo,gan,aba,sia,oss,sos,dei,ula,uan,dia,nti,sin,ron,che,pas,dor,szy,uma,tor,ast,les,oma,osz,ima,ata,ega,row,igo,qui,rem,zie,zko,anh,ren,uem,min,ero,usz,osa,sie,mal,pel,emp,ios,rek,ssa,ana,tod,aqu,ind,ino,lew,arc,ica,obr,und,asi,sen,ias,inh,och,szk,pro,seu,ntr,utr,eus,omo,out,fer,pie,rio,ert,sem,ore,cer,cia,lus,lho,rcz,ber,nas,wie,zek,iro,oso,uch,tar,ani,bar,ser,amo,lar,ten,ece,ome,ali,acz,esc,ira,now,pre,lha,rad,lsk,tre,sse,lin,tas,ick,ist,bra,rec,tem,der,cor,ina,mai,asz,ven,nia,las,rsk,ita,ach,eit,tro,esp,cze,zak,dad,rze,szc,sze,zcz,ver,ier,nie,uro,cza,sto,rzy,mor,qua,ont,art,eck,nha,gra,ost,zew,cho,eir,iel,are,gen,ram,ere,iec,ond,ade,mos,ora,tos,ass,ale,ido,rra,rte,yns,nos,ort,lhe,ais,cha,tes,ama,ura,nda,for,ele,ria,ida,kie,per,zyn,das,ano,men,owi,ito,err,ras,dzi,zyk,iak,ela,str,mas,mar,ala,ava,nta,rei,con,par,tan,era,ste,iew,end,ada,ews,man,res,ros,ter,ran,ewi,tra,dos,des,nto,czy,ara,nde,ins,sta,por,kow,ado,com,cki,ant,wic,icz,est,ndo,and,nte,nsk,ent,ows,wsk,que,ski
 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,139,141,142,143,145,146,147,148,149,150,152,153,154,155,156,158,159,160,161,162,163,164,165,166,167,168,169,170,173,174,175,176,178,179,180,182,183,184,186,187,188,189,190,191,192,193,194,195,197,198,199,200,201,203,204,205,207,208,209,210,212,213,214,215,216,217,218,219,221,222,223,224,225,226,227,228,229,230,231,232,234,235,236,237,238,239,241,242,243,244,245,246,247,249,252,253,254,255,256,257,258,259,262,264,266,270,271,272,273,274,277,278,279,280,281,282,283,284,286,288,289,290,291,292,293,295,296,297,298,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,320,321,322,324,326,328,329,330,331,332,333,334,335,336,337,338,339,340,341,342,343,344,345,346,347,348,349,350,352,353,354,356,357,358,359,360,361,362,363,364,365,366,367,368,371,372,373,374,375,377,378,379,380,381,382,383,384,385,387,388,390,391,392,393,394,395,396,399,400,401,402,403,404,405,406,408,409,410,411,412,413,414,415,416,417,419,420,421,422,423,425,426,427,428,429,430,432,433,436,437,438,439,440,441,442,443,444,447,448,449,450,451,452,453,454,455,456,457,460,461,463,464,465,466,467,468,469,470,471,472,473,475,476,477,478,481,482,483,484,485,486,488,489,490,491,492,493,494,495,496,498,499,500,501,503,504,505,506,508,510,511,513,514,515,516,517,519,520,521,522,523,524,525,526,527,528,529,530,531,532,533,534,535,536,537,538,539,540,541,542,543,544,545,547,548,549,550,553,554,555,556,557,558,559,562,563,564,565,566,569,570,571,572,573,575,576,577,578,580,581,583,585,586,587,588,589,590,591,593,594,595,596,597,598,600,601,603,604,606,607,608,609,610,611,612,613,614,616,617,618,619,620,621,623,624,625,626,627,628,629,631,633,634,635,636,637,638,639,640,641,642,643,644,645,647,648,649,650,651,653,655,656,657,658,659,660,661,662,663,664,665,666,668,669,671,672,673,676,677,678,679,681,682,683,684,687,688,689,690,691,692,694,695,696,697,699,700,701,702,703,704,705,706,708,709,710,711,712,713,714,716,717,718,720,722,724,725,726,727,728,730,731,732,733,734,736,737,738,739,740,741,742,743,744,746,747,748,749,751,752,753,754,755,756,757,758,759,760,761,762,763,764,765,767,768,769,770,771,772,773,774,776,777,778,779,780,781,782,783,784,785,786,787,788,789,790,791,792,793,795,796,797,799,800,801,802,804,805,806,807,808,809,810,811,812,813,814,815,816,817,818,819,820,821,822,823,824,825,827,828,829,830,832,835,836,837,838,839,840,841,842,843,844,845,846,847,848,849,850,851,852,853,854,855,856,857,858,859,860,862,863,865,866,867,868,869,870,871,872,873,874,875,876,877,878,879,880,881,882,883,884,885,886,887,888,889,890,891,892,893,894,895,896,897,898,899,900,902,904,905,906,907,908,909,910,912,913,914,915,916,917,918,919,921,922,923,924,926,927,928,929,930,931,932,933,937,938,939,940,941,942,943,944,945,946,947,948,949,950,951,952,953,954,955,957,958,959,960,961,963,964,965,966,967,968,970,971,972,973,974,975,977,978,980,981,982,983,984,985,986,987,988,990,991,993,994,995,996,997,998,1000,1001,1003,1005,1006,1008,1009,1011,1012
