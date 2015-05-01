@@ -18,7 +18,7 @@ from functools import partial
 from logging import debug
 
 from . import ui
-from lib.model.building import get_all_abbr
+from lib.model.building import get_all_building_abbr
 
 
 class CommandMixin(object):
@@ -130,7 +130,7 @@ class Planet(CommandMixin):
             parser.add_argument('building', help='Name of building type to '
                                 'pass to the command %s (if supported, '
                                 'PLANET must be supplied first)'
-                                % str(get_all_abbr()),
+                                % str(get_all_building_abbr()),
                                 default=None, nargs='?')
 
             (args, params) = parser.parse_known_args(line.split(' '))
