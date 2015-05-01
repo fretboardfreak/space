@@ -40,13 +40,6 @@ class System(object):
             self.__class__.__name__, self.size, self.sun_brightness,
             self.planets)
 
-    def show(self, coords=None):
-        msg = "%s planet system"
-        if coords is not None:
-            msg += " at %s" % coords
-        msg += "\n[%s]" % ', '.join([p.show() for p in self.planets])
-        return msg
-
     def __getstate__(self):
         return (self.size, self.sun_brightness, self.planets)
 

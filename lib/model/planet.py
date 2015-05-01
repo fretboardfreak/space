@@ -18,7 +18,6 @@ from logging import debug
 
 from lib.error import ModelObjectError
 from lib.namegen import NameGen
-from lib.rst import indent
 
 from .resources import Resources
 from .building import ALL_BUILDINGS, get_building
@@ -124,30 +123,6 @@ class Planet(object):
                     self.__class__.__name__, self.name, self.emperor, self.sun,
                     self.electricity, '\n'.join(resources),
                     '\n'.join(buildings), self.research, self.last_update))
-
-    def show(self, verbose=None, rates=None):
-        if rates is None:
-            rates = True
-        details = []
-        self.update()
-        if verbose:
-            rates = True
-            sun = 'Sun: dist: {}  brightness: {}'.format(self.sun_distance,
-                                                         self.sun_brightness)
-            details.append(sun)
-        if rates:
-            res = '\n'.join(['- {}: {} ({})'.format(
-                name, self.resources[name], self.rates[name])
-                for name in self.resources])
-        else:
-            res = indent(str(self.resources), '- ')
-        details.append(indent(res, '  '))
-
-        bldngs = '\n'.join(['- {}'.format(str(bld))
-                            for bld in self.buildings.values()])
-        details.append(bldngs)
-        return "Planet {}, owner {}\n{}".format(self.name, self.emperor,
-                                                '\n'.join(details))
 
     @property
     def ore(self):

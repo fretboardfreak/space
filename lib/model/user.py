@@ -15,7 +15,6 @@
 from logging import debug
 
 from lib.error import ObjectNotFound
-from lib.rst import indent
 
 
 class User(object):
@@ -34,20 +33,6 @@ class User(object):
     def __str__(self):
         return "{} name: {}\nplanets: {}".format(
             self.__class__.__name__, self.name, self.planets)
-
-    def show_planets(self, verbose=None):
-        debug("showing user %s's planets: verbose=%s" %
-              (self.name, verbose))
-        planets = ['Planets:']
-        for coord, planet in self.planets.iteritems():
-                planets.append(' %s: %s' % (coord, planet.show(verbose)))
-        return '\n'.join(planets)
-
-    def show(self, verbose=None):
-        debug('showing user %s: verbose %s' % (self.name, verbose))
-        planets = indent(self.show_planets(verbose), '    ')
-        return ("User: %s\n%s" %
-                (self.name, planets))
 
     def __getstate__(self):
         return (self.name, self.planets)

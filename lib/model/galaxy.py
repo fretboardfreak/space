@@ -15,8 +15,6 @@
 from collections import defaultdict
 from logging import debug
 
-from lib.rst import indent
-
 from .system import System
 from .coord import SystemCoord
 
@@ -45,14 +43,6 @@ class Galaxy(object):
                              for coord, system in self._systems.items()])
         systems.replace('\n', '\n    ')  # indent the systems a bit
         return '{}: systems:\n{}'.format(self.__class__.__name__, systems)
-
-    def show(self):
-        systems = []
-        debug('showing the galaxy...')
-        for c, s in self._systems.iteritems():
-            sys = indent(s.show(), '  ')[2:]
-            systems.append('%s %s' % (c, sys))
-        return 'Galaxy:\n%s' % indent('\n'.join(systems), '  ')
 
     def __getstate__(self):
         return (dict(self._systems),)
