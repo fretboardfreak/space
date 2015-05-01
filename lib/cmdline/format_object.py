@@ -12,37 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Object Formatter: Format game model objects for the UI."""
+"""format_object: Format game model objects for the cmdline UI."""
 
 from logging import debug
 from textwrap import indent
 
 
-def fmt_galaxy(galaxy):
+def galaxy(galaxy):
     systems = []
     debug('showing the galaxy...')
     for c, s in galaxy._systems.iteritems():
-        sys = indent(fmt_system(s), '  ')[2:]
-        systems.append('%s %s' % (c, sys))
-    return 'Galaxy:\n%s' % indent('\n'.join(systems), '  ')
+        sys = indent(system(s), '  ')[2:]
+        systems.append('{} {}'.format(c, sys))
+    return 'Galaxy:\n{}'.format(indent('\n'.join(systems), '  '))
 
 
-def fmt_user(user, verbose=None):
-    debug('showing user %s: verbose %s' % (user.name, verbose))
-    planets = indent(fmt_users_planets(user, verbose), '    ')
+def user(user, verbose=None):
+    debug('showing user {}: verbose {}'.format(user.name, verbose))
+    planets = indent(user_planets(user, verbose), '    ')
     return ("User: %s\n%s" % (user.name, planets))
 
 
-def fmt_users_planets(user, verbose=None):
-    debug("showing user %s's planets: verbose=%s" %
-          (user.name, verbose))
+def user_planets(user, verbose=None):
+    debug("showing user {}'s planets: verbose={}".format(user.name, verbose))
     planets = ['Planets:']
-    for coord, planet in user.planets.iteritems():
-            planets.append(' %s: %s' % (coord, fmt_planet(planet, verbose)))
+    for coord, planet in user.planets.items():
+            planets.append(' {}: {}'.format(coord, planet(planet, verbose)))
     return '\n'.join(planets)
 
 
-def fmt_planet(planet, verbose=None, rates=None):
+def planet(planet, verbose=None, rates=None):
     if rates is None:
         rates = True
     details = []
@@ -67,9 +66,9 @@ def fmt_planet(planet, verbose=None, rates=None):
                                             '\n'.join(details))
 
 
-def fmt_system(system, coords=None):
+def system(system, coords=None):
     msg = "%s planet system"
     if coords is not None:
         msg += " at %s" % coords
-    msg += "\n[%s]" % ', '.join([fmt_planet(p) for p in system.planets])
+    msg += "\n[%s]" % ', '.join([planet(p) for p in system.planets])
     return msg
