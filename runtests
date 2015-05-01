@@ -14,7 +14,7 @@ CMD="nosetests-3.4 --exe --detailed-errors --processes=-1 "
 
 if [[ $# -eq 0 ]]; then
     exec $CMD --verbosity=2 2>&1 | \
-        sed '/ \.\.\. SKIP: base class, not a real test/d' | \
+        sed '/ \.\.\. SKIP: base class/d' | \
         sed '/ \.\.\. ok/d' | \
         sed 's/ \.\.\. S/\n    S/'
 else
