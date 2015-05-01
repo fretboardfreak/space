@@ -19,6 +19,8 @@ from textwrap import indent
 from lib.model import User, Galaxy, Coord
 from lib.error import ObjectNotFound
 
+from . import format_object
+
 
 def input_bool(msg):
     debug('getting a boolean from the user')
@@ -69,12 +71,12 @@ def dbg_print_state(engine):
 
 def show_planets(engine, verbose=None):
     debug('showing planets')
-    print(engine.state.user.show_planets(verbose))
+    print(format_object.user_planets(engine.state.user, verbose))
 
 
 def show_user(engine, verbose=None):
     debug('showing user')
-    print(engine.state.user.show(verbose))
+    print(format_object.user(engine.state.user, verbose))
 
 
 def _show_available_buildings(engine, planet, verbose=None):
@@ -113,7 +115,9 @@ def start_new_game(engine):
         engine.state.galaxy = Galaxy()
 
         # create new user
-        system_callback = lambda coords: engine.state.galaxy.system(coords)
+        def system_callback(coords):
+            engine.state.galaxy.system(coords)
+
         user_info = newgame_get_user_info(system_callback)
         engine.state.user = User(*user_info)
     finally:
@@ -136,7 +140,6 @@ def newgame_get_user_info(system_query_cb):
     home_coords.system = (sys_x, sys_y)
 
     system = system_query_cb(home_coords)
-    # TODO: replace this ugliness with a System.show_planets method
     planet_num_qry = ('That system has %s planets. Which one did you say '
                       'was yours?\n%s\nplanet=' %
                       (len(system.planets),
