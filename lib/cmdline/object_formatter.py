@@ -15,7 +15,7 @@
 """Object Formatter: Format game model objects for the UI."""
 
 from logging import debug
-from lib.rst import indent
+from textwrap import indent
 
 
 def fmt_galaxy(galaxy):

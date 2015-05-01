@@ -14,10 +14,10 @@
 
 import sys
 from logging import debug
+from textwrap import indent
 
 from lib.model import User, Galaxy, Coord
 from lib.error import ObjectNotFound
-from lib.rst import indent
 
 
 def input_bool(msg):
