@@ -54,7 +54,7 @@ class TestPep8(SpaceTest):
             print(self.err_msg.format('\n'.join(self.errors)))
             self.fail()
 
-    def tst_style(self, path, checker):
+    def check_style(self, path, checker):
         for path in self.gather_filepaths(path):
             checker(path)
         self.fail_on_errors()
@@ -63,24 +63,20 @@ class TestPep8(SpaceTest):
         return os.path.join(os.getcwd(), path)
 
     def test_tests_pep8(self):
-        self.tst_style(self.get_path('tests'), self.run_pep8)
+        self.check_style(self.get_path('tests'), self.run_pep8)
 
     def test_lib_pep8(self):
-        # TODO: Add the remainder of the lib package to this test as things get
-        # refactored.
-        self.tst_style(self.get_path('lib/model'), self.run_pep8)
-        self.tst_style(self.get_path('lib/namegen.py'), self.run_pep8)
-        self.tst_style(self.get_path('lib/rst.py'), self.run_pep8)
+        self.check_style(self.get_path('lib'), self.run_pep8)
 
     def test_space_pep8(self):
         self.run_pep8(self.get_path('space'))
         self.fail_on_errors()
 
     def test_tests_pyflakes(self):
-        self.tst_style(self.get_path('tests'), self.run_pyflakes)
+        self.check_style(self.get_path('tests'), self.run_pyflakes)
 
     def test_lib_pyflakes(self):
-        self.tst_style(self.get_path('lib'), self.run_pyflakes)
+        self.check_style(self.get_path('lib'), self.run_pyflakes)
 
     def test_space_pyflakes(self):
         self.run_pyflakes(self.get_path('space'))

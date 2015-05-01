@@ -73,12 +73,12 @@ class Debug(CommandMixin):
     def do_dbg(self, line):
         print_state = partial(ui.dbg_print_state, self.engine)
         try:
-            parser = ArgumentParser(prog='dbg',
-                                    description=self.help_dbg(True))
+            parser = ArgumentParser(
+                prog='dbg', description=self.help_dbg(True))
             parser.add_argument(
-                    '-ps', '--print-state', action='store_const',
-                    dest='action', const=print_state,
-                    help='print full game state')
+                '-ps', '--print-state', action='store_const',
+                dest='action', const=print_state,
+                help='print full game state')
             (args, unrecognized) = parser.parse_known_args(line.split(' '))
             if args.action is None:
                 print_state()

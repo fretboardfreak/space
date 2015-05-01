@@ -14,6 +14,7 @@
 
 from logging import debug
 
+
 class ObjectNotFound(Exception):
     def __init__(self, name=None):
         msg = 'Object Not Found'
