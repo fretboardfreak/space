@@ -42,11 +42,11 @@ class TestPep8(SpaceTest):
         except subprocess.CalledProcessError as err:
             self.errors.append(err.output.strip())
 
-    def run_pep8(self, path):
-        return self._run_cmd(['pep8', path])
+    def run_pep8(self, paths):
+        return self._run_cmd(['pep8'] + paths)
 
-    def run_pyflakes(self, path):
-        return self._run_cmd(['pyflakes', path])
+    def run_pyflakes(self, paths):
+        return self._run_cmd(['pyflakes'] + paths)
 
     def fail_on_errors(self):
         self.errors = [err for err in self.errors if err is not None]
@@ -54,30 +54,10 @@ class TestPep8(SpaceTest):
             print(self.err_msg.format('\n'.join(self.errors)))
             self.fail()
 
-    def check_style(self, path, checker):
-        for path in self.gather_filepaths(path):
-            checker(path)
-        self.fail_on_errors()
-
-    def get_path(self, path):
-        return os.path.join(os.getcwd(), path)
-
-    def test_tests_pep8(self):
-        self.check_style(self.get_path('tests'), self.run_pep8)
-
-    def test_lib_pep8(self):
-        self.check_style(self.get_path('lib'), self.run_pep8)
-
-    def test_space_pep8(self):
-        self.run_pep8(self.get_path('space'))
-        self.fail_on_errors()
-
-    def test_tests_pyflakes(self):
-        self.check_style(self.get_path('tests'), self.run_pyflakes)
-
-    def test_lib_pyflakes(self):
-        self.check_style(self.get_path('lib'), self.run_pyflakes)
-
-    def test_space_pyflakes(self):
-        self.run_pyflakes(self.get_path('space'))
+    def test_style(self):
+        paths = (self.gather_filepaths('space') +
+                 self.gather_filepaths('lib') +
+                 self.gather_filepaths('tests'))
+        self.run_pep8(paths)
+        self.run_pyflakes(paths)
         self.fail_on_errors()
