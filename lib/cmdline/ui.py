@@ -14,10 +14,9 @@
 
 import sys
 from logging import debug
-from textwrap import indent
 
 from lib.model import User, Galaxy, Coord
-from lib.error import ObjectNotFound, UserInputError
+from lib.error import UserInputError
 
 RETRY_ATTEMPTS = 3
 
@@ -69,32 +68,6 @@ def input_int(msg, minimum=None, maximum=None):
         raise UserInputError('Failed to receive an int from the user '
                              'after {} tries.'.format(RETRY_ATTEMPTS))
     return num
-
-
-def _show_available_buildings(engine, planet, verbose=None):
-    try:
-        coord, planet = engine.state.user.get_planet(planet)
-    except ObjectNotFound as e:
-        print("Could not find that planet")
-        if verbose:
-            print(e)
-        return
-    avail = planet.get_available_buildings()
-    msg = "%s: %s\n" % (coord, planet.name)
-    msg += ''.join(['\n  - %s: %s\n%s' %
-                    (bld.name, lvl,
-                     indent(str(bld(lvl).requirements.resources), '    - '))
-                    for bld, lvl in avail])
-    return msg
-
-
-def show_available_buildings(engine, planet, verbose=None):
-    if planet is None:
-        msg = [_show_available_buildings(engine, plnt.name, verbose)
-               for plnt in engine.state.user.planets.itervalues()]
-        print('\n'.join(msg))
-        return
-    print(_show_available_buildings(engine, planet, verbose))
 
 
 def start_new_game(engine):

@@ -104,9 +104,9 @@ class Debug(CommandMixin):
 class Planet(CommandMixin):
     def __build(self, args):
         if args.building is None:
-            ui.show_available_buildings(engine=self.engine,
-                                        planet=args.planet,
-                                        verbose=args.verbose)
+            format_object.print_object(
+                format_object.planet_available_buildings, self.engine,
+                args.planet, args.verbose)
             return
         coord, planet = self.engine.state.user.get_planet(args.planet)
         if planet.build(args.building):

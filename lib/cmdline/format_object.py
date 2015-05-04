@@ -17,6 +17,8 @@
 from logging import debug
 from textwrap import indent
 
+from lib.error import ObjectNotFound
+
 
 def print_object(fmt_func, *args, **kwargs):
     print(fmt_func(*args, **kwargs))
@@ -68,6 +70,31 @@ def planet(planet, verbose=None, rates=None):
     details.append(bldngs)
     return "Planet {}, owner {}\n{}".format(planet.name, planet.emperor,
                                             '\n'.join(details))
+
+
+def _planet_available_buildings(engine, planet, verbose=None):
+    try:
+        coord, planet = engine.state.user.get_planet(planet)
+    except ObjectNotFound as e:
+        print("Could not find that planet")
+        if verbose:
+            print(e)
+        return
+    avail = planet.get_available_buildings()
+    msg = "%s: %s\n" % (coord, planet.name)
+    msg += ''.join(['\n  - %s: %s\n%s' %
+                    (bld.name, lvl,
+                     indent(str(bld(lvl).requirements.resources), '    - '))
+                    for bld, lvl in avail])
+    return msg
+
+
+def planet_available_buildings(engine, planet, verbose=None):
+    if planet is None:
+        msg = [_planet_available_buildings(engine, plnt.name, verbose)
+               for plnt in engine.state.user.planets.itervalues()]
+        return '\n'.join(msg)
+    return _planet_available_buildings(engine, planet, verbose)
 
 
 def system(system, coords=None):
