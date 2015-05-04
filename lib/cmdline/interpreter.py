@@ -74,18 +74,20 @@ class Show(CommandMixin):
 
 
 class Debug(CommandMixin):
+    def __print_state(self):
+        print(self.engine.state)
+
     def do_dbg(self, line):
-        print_state = partial(print, self.engine.state)
         try:
             parser = ArgumentParser(
                 prog='dbg', description=self.help_dbg(True))
             parser.add_argument(
                 '-ps', '--print-state', action='store_const',
-                dest='action', const=print_state,
+                dest='action', const=self.print_state,
                 help='print full game state')
             (args, unrecognized) = parser.parse_known_args(line.split(' '))
             if args.action is None:
-                print_state()
+                self.print_state()
             else:
                 args.action()
         except SystemExit:
