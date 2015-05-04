@@ -38,20 +38,20 @@ class BaseInputMethodTest(SpaceTest):
         self.valid_input = []
         self.invalid_input = []
 
-    def skip_base_test(self):
+    def skip_base_class(self):
         if self.__class__.__name__ == 'BaseInputMethodTest':
             self.skipTest('base class, not valid test')
 
     @patch('builtins.input')
     def test_valid_input(self, mock_input):
-        self.skip_base_test()
+        self.skip_base_class()
         mock_input.side_effect = self.valid_input
         for _ in self.valid_input:
             self.test_func(self.message)
 
     @patch('builtins.input')
     def test_invalid_input(self, mock_input):
-        self.skip_base_test()
+        self.skip_base_class()
         for invalid in self.invalid_input:
             mock_input.return_value = invalid
             self.assertRaises(UserInputError, self.test_func, self.message)
