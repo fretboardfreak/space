@@ -12,11 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
 from logging import debug
 
-from lib.model import User, Galaxy, Coord
 from lib.error import UserInputError
+from lib import model
 
 RETRY_ATTEMPTS = 3
 
@@ -70,31 +69,12 @@ def input_int(msg, minimum=None, maximum=None):
     return num
 
 
-def start_new_game(engine):
-    msg = 'Do you want to start a new game?'
-    input_bool(msg) or sys.exit(0)
-    debug('Creating a new game')
-
-    try:
-        # create new galaxy
-        engine.state.galaxy = Galaxy()
-
-        # create new user
-        def system_callback(coords):
-            engine.state.galaxy.system(coords)
-
-        user_info = newgame_get_user_info(system_callback)
-        engine.state.user = User(*user_info)
-    finally:
-        engine.save()
-
-
-def newgame_get_user_info(system_query_cb):
+def get_new_game_info(system_query_cb):
     debug('Querying user for new game info...')
     name = input_text("Great another wanna be space emperor! "
                       "What's your name then? ")
 
-    home_coords = Coord()
+    home_coords = model.Coord()
     sec_x = input_int('Ok, now we need to find your home planet. '
                       'Enter the sector coords:\nx=')
     sec_y = input_int('y=')

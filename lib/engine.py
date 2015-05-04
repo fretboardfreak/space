@@ -15,7 +15,7 @@
 import pickle
 from logging import debug
 
-from .model import GameState
+from .model import GameState, Galaxy, User
 
 
 class SpaceEngine(object):
@@ -32,3 +32,19 @@ class SpaceEngine(object):
         debug('Saving game')
         with open(self.state.save_file, 'wb') as fd:
             pickle.dump(self.state, fd)
+
+    def _system_callback(self, coords):
+        return self.state.galaxy.system(coords)
+
+    def new_game(self, new_game_info_cb):
+        """Set up a new game.
+
+        :param new_game_info_cb: UI callable that will retrieve info from the
+            user and return a tuple of (username, home_planet_coords,
+            home_planet)
+        """
+        try:
+            self.state.galaxy = Galaxy()
+            self.state.user = User(*new_game_info_cb(self._system_callback))
+        finally:
+            self.save()

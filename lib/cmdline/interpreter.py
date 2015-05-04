@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
 from argparse import ArgumentParser
 from cmd import Cmd
 from functools import partial
@@ -19,7 +20,7 @@ from logging import debug
 
 from . import ui
 from . import format_object
-from lib.model.building import get_all_building_abbr
+from lib import model
 
 
 class CommandMixin(object):
@@ -137,7 +138,7 @@ class Planet(CommandMixin):
             parser.add_argument('building', help='Name of building type to '
                                 'pass to the command %s (if supported, '
                                 'PLANET must be supplied first)'
-                                % str(get_all_building_abbr()),
+                                % str(model.get_all_building_abbr()),
                                 default=None, nargs='?')
 
             (args, params) = parser.parse_known_args(line.split(' '))
@@ -180,10 +181,16 @@ class SpaceCmdInterpreter(Cmd, Quit, Debug, Show, Planet, User):
                 self.engine.load()
             except IOError:
                 debug('No save game, starting new game...')
-                ui.start_new_game(self.engine)
+                self.start_new_game()
             debug('Starting interpreter...')
             self.cmdloop()
         except (KeyboardInterrupt, SystemExit):
             debug('Recieved Interrupt.')
         finally:
             self.engine.save()
+
+    def start_new_game(self):
+        msg = 'Do you want to start a new game?'
+        ui.input_bool(msg) or sys.exit(0)
+        debug('Creating a new game')
+        self.engine.new_game(ui.get_new_game_info)
