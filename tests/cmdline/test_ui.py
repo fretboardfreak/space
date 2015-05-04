@@ -12,12 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from unittest.mock import patch
+from random import randint
+from unittest.mock import Mock, patch
 
 from tests.base import SpaceTest
 
 from lib.error import UserInputError
 import lib.cmdline.ui as UI
+from lib import model
 
 
 VALID_BOOL_INPUT = ['y', 'n', 'Y', 'N', 'yes', 'no', 'YES', 'NO']
@@ -80,3 +82,25 @@ class TestInputText(BaseInputMethodTest):
         self.valid_input = (VALID_BOOL_INPUT + VALID_INT_INPUT +
                             INVALID_BOOL_INPUT + INVALID_INT_INPUT)
         self.invalid_input = INVALID_TEXT_INPUT
+
+
+class TestNewGame(SpaceTest):
+    def setUp(self):
+        self.input_integer = [randint(0, 100) for _ in range(4)]
+        self.chosen_planet_index = 0
+        self.input_integer.append(self.chosen_planet_index)
+        self.input_text = 'Emperor Name'
+        self.system = model.System()
+
+    @patch('lib.cmdline.ui.input_text')
+    @patch('lib.cmdline.ui.input_int')
+    def test_get_new_game_info(self, mock_input_int, mock_input_text):
+        mock_input_int.side_effect = self.input_integer
+        mock_input_text.return_value = self.input_text
+        system_callback = Mock(return_value=self.system)
+        result = UI.get_new_game_info(system_callback)
+        self.assertEqual(result[0], self.input_text)
+        self.assertIsInstance(result[1], model.Coord)
+        self.assertIsInstance(result[2], model.Planet)
+        self.assertEqual(result[2],
+                         self.system.planets[self.chosen_planet_index])
