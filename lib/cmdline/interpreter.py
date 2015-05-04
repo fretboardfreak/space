@@ -18,6 +18,7 @@ from functools import partial
 from logging import debug
 
 from . import ui
+from . import format_object
 from lib.model.building import get_all_building_abbr
 
 

@@ -17,51 +17,58 @@ from logging import debug
 from textwrap import indent
 
 from lib.model import User, Galaxy, Coord
-from lib.error import ObjectNotFound
+from lib.error import ObjectNotFound, UserInputError
 
-from . import format_object
+RETRY_ATTEMPTS = 3
 
 
 def input_bool(msg):
     debug('getting a boolean from the user')
     msg = str(msg) + ' (y|n) '
-    for attempt in range(3):
+    for attempt in range(RETRY_ATTEMPTS):
         x = input(msg).strip().lower()
         if x.startswith('y'):
             return True
         elif x.startswith('n'):
-            break
-        if attempt == 1:
-            print("(>'-')>")
-    print("<('-'<)")
-    return False
+            return False
+        debug('  {} cannot be interpreted as a boolean, tries '
+              'remaining {}'.format(RETRY_ATTEMPTS - attempt))
+    else:
+        raise UserInputError('Failed to receive a boolean from the user '
+                             'after {} tries.'.format(RETRY_ATTEMPTS))
 
 
 def input_text(msg):
     debug('getting some text from the user')
-    while True:
+    for _ in range(RETRY_ATTEMPTS):
         name = input(msg)
         if name.isalpha():
             return name
+    else:
+        raise UserInputError('Failed to receive a string from the user '
+                             'after {} tries.'.format(RETRY_ATTEMPTS))
 
 
-def input_int(msg, min=None, max=None):
+def input_int(msg, minimum=None, maximum=None):
     debug('getting an int from the user')
-    while True:
-        while True:
-            num = input(msg)
-            try:
-                num = int(num)
-                break
-            except:
-                pass
-        if min is not None and num < min:
-            print("too small (minimum=%s)" % min)
+    for _ in range(RETRY_ATTEMPTS):
+        num = input(msg)
+        try:
+            num = int(num)
+            break
+        except:
+            debug('  {} is not a number.'.format(num))
             continue
-        if max is not None and num > max:
-            print("too large (maximum=%s)" % max)
+        if minimum is not None and num < minimum:
+            debug("too small (minimum=%s)" % minimum)
             continue
-        return num
+        if maximum is not None and num > maximum:
+            debug("too large (maximum=%s)" % maximum)
+            continue
+    else:
+        raise UserInputError('Failed to receive an int from the user '
+                             'after {} tries.'.format(RETRY_ATTEMPTS))
+    return num
 
 
 def _show_available_buildings(engine, planet, verbose=None):
