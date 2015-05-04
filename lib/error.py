@@ -27,3 +27,7 @@ class ObjectNotFound(Exception):
 
 class ModelObjectError(Exception):
     pass
+
+
+class UserInputError(Exception):
+    pass
