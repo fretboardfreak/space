@@ -24,13 +24,13 @@ def input_bool(msg):
     debug('getting a boolean from the user')
     msg = str(msg) + ' (y|n) '
     for attempt in range(RETRY_ATTEMPTS):
-        x = input(msg).strip().lower()
-        if x.startswith('y'):
+        value = input(msg).strip().lower()
+        if value.startswith('y'):
             return True
-        elif x.startswith('n'):
+        elif value.startswith('n'):
             return False
         debug('  {} cannot be interpreted as a boolean, tries '
-              'remaining {}'.format(RETRY_ATTEMPTS - attempt))
+              'remaining {}'.format(value, RETRY_ATTEMPTS - attempt))
     else:
         raise UserInputError('Failed to receive a boolean from the user '
                              'after {} tries.'.format(RETRY_ATTEMPTS))
@@ -40,7 +40,7 @@ def input_text(msg):
     debug('getting some text from the user')
     for _ in range(RETRY_ATTEMPTS):
         name = input(msg)
-        if name.isalpha():
+        if hasattr(name, 'isprintable') and name.isprintable():
             return name
     else:
         raise UserInputError('Failed to receive a string from the user '
