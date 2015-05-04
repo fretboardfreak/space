@@ -64,21 +64,6 @@ def input_int(msg, min=None, max=None):
         return num
 
 
-def dbg_print_state(engine):
-    debug('dbg: printing the game state')
-    print(engine.state)
-
-
-def show_planets(engine, verbose=None):
-    debug('showing planets')
-    print(format_object.user_planets(engine.state.user, verbose))
-
-
-def show_user(engine, verbose=None):
-    debug('showing user')
-    print(format_object.user(engine.state.user, verbose))
-
-
 def _show_available_buildings(engine, planet, verbose=None):
     try:
         coord, planet = engine.state.user.get_planet(planet)
