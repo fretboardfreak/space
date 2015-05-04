@@ -39,8 +39,11 @@ class Quit(CommandMixin):
 
 class Show(CommandMixin):
     def do_show(self, line):
-        show_planets = partial(ui.show_planets, self.engine)
-        show_user = partial(ui.show_user, self.engine)
+        show_planets = partial(format_object.print_object,
+                               format_object.user_planets,
+                               self.engine.state.user)
+        show_user = partial(format_object.print_object, format_object.user,
+                            self.engine.state.user)
         try:
             parser = ArgumentParser(prog='show',
                                     description=self.help_show(True))
@@ -71,7 +74,7 @@ class Show(CommandMixin):
 
 class Debug(CommandMixin):
     def do_dbg(self, line):
-        print_state = partial(ui.dbg_print_state, self.engine)
+        print_state = partial(print, self.engine.state)
         try:
             parser = ArgumentParser(
                 prog='dbg', description=self.help_dbg(True))
@@ -111,7 +114,8 @@ class Planet(CommandMixin):
 
     def __show_planets(self, args):
         if args.planet in [None, '']:
-            ui.show_planets(self.engine, args.verbose)
+            format_object.print_object(format_object.user_planets,
+                                       self.engine.state.user, args.verbose)
             return
         coord, planet = self.engine.state.user.get_planet(args.planet)
         print(planet.show(verbose=args.verbose))

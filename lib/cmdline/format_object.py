@@ -18,6 +18,10 @@ from logging import debug
 from textwrap import indent
 
 
+def print_object(fmt_func, *args, **kwargs):
+    print(fmt_func(*args, **kwargs))
+
+
 def galaxy(galaxy):
     systems = []
     debug('showing the galaxy...')
