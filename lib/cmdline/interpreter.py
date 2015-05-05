@@ -78,10 +78,10 @@ class Debug(CommandMixin):
     def __print_state(self):
         print(self.engine.state)
 
-    def do_dbg(self, line):
+    def do_debug(self, line):
         try:
             parser = ArgumentParser(
-                prog='dbg', description=self.help_dbg(True))
+                prog='dbg', description=self.help_debug(True))
             parser.add_argument(
                 '-ps', '--print-state', action='store_const',
                 dest='action', const=self.print_state,
@@ -95,11 +95,12 @@ class Debug(CommandMixin):
             pass
         return False
 
-    def help_dbg(self, no_print=None):
+    def help_debug(self, no_print=None):
         hlp = "Provides access to some debugging commands."
         if no_print:
             return hlp
         print(hlp)
+    do_dbg = do_debug
 
 
 class Planet(CommandMixin):
