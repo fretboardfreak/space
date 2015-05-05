@@ -186,6 +186,9 @@ class SpaceCmdInterpreter(Cmd, Quit, Debug, Show, Planet, User):
             self.cmdloop()
         except (KeyboardInterrupt, SystemExit):
             debug('Recieved Interrupt.')
+        except Exception:
+            debug('Received Unknown Exception, exiting...',
+                  exc_info=True, stack_info=True)
         finally:
             self.engine.save()
 
