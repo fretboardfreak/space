@@ -119,11 +119,11 @@ class TestBuildingModule(SpaceTest):
         self.assertTrue(bld.are_requirements_met(site))
 
     def test_are_requirements_met_buildings(self):
-        self.skipTest('NYI: Need to have buildings with building '
+        self.skipTest('NI: Need to have buildings with building '
                       'requirements to test.')
 
     def test_are_requirements_met_research(self):
-        self.skipTest('NYI: Need to have buildings with research '
+        self.skipTest('NI: Need to have buildings with research '
                       'requirements to test.')
 
 
