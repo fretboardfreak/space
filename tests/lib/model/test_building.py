@@ -21,8 +21,8 @@ from .base import (LibModelTest, ModelObjectTest, StateMixinTest,
                    EqualityMixinTest)
 
 from lib.error import ObjectNotFound
-from lib.model import resources
 from lib.model import building
+from lib import model
 
 
 class TestLibModelBuilding(LibModelTest):
@@ -112,7 +112,7 @@ class TestBuildingModule(SpaceTest):
     def test_are_requirements_met_resources(self):
         site = Mock()
         bld = building.Mine
-        site.resources = resources.Resources()
+        site.resources = model.Resources()
         self.assertFalse(bld.are_requirements_met(site, level=1))
 
         site.resources.ore = 11
@@ -132,15 +132,15 @@ class TestBuildingRequirements(ModelObjectTest, StateMixinTest):
         return building.BuildingRequirements()
 
     def get_tst_state(self):
-        return (resources.Resources(ore=3, metal=11), {'Mine', 3}, {})
+        return (model.Resources(ore=3, metal=11), {'Mine', 3}, {})
 
     def setUp(self):
         self.object = self.get_new_instance()
-        self.expected_attrs = {'resources': resources.Resources,
+        self.expected_attrs = {'resources': model.Resources,
                                'research': dict,
                                'buildings': dict}
         self.classname_in_repr = True
-        self.expected_state = (resources.Resources, dict, dict)
+        self.expected_state = (model.Resources, dict, dict)
 
     def test_repr(self):
         super().test_repr()
@@ -169,11 +169,11 @@ class TestBuildingBaseClass(ModelObjectTest, StateMixinTest,
         self.sun_cb = lambda: 1  # must return int > 0
         self.level = random.randint(0, self.max_level)
         self.expected_state = (int, Callable)
-        self.expected_attrs = {'level': int, 'modifier': resources.Resources,
+        self.expected_attrs = {'level': int, 'modifier': model.Resources,
                                'electricity': (float, int),
                                'requirements': building.BuildingRequirements,
                                'sun_cb': Callable}
-        self.expected_modifier_type = resources.Resources
+        self.expected_modifier_type = model.Resources
         self.expected_electricity_type = [int, float]
         self.expected_requirements_type = building.BuildingRequirements
         self.object = self.get_new_instance()
