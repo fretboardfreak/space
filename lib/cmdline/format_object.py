@@ -27,7 +27,7 @@ def print_object(fmt_func, *args, **kwargs):
 def galaxy(_galaxy):
     systems = []
     debug('showing the galaxy...')
-    for c, s in _galaxy._systems.iteritems():
+    for c, s in _galaxy._systems.items():
         sys = indent(system(s), '  ')[2:]
         systems.append('{} {}'.format(c, sys))
     return 'Galaxy:\n{}'.format(indent('\n'.join(systems), '  '))
@@ -90,6 +90,8 @@ def _planet_available_buildings(_engine, _planet, verbose=None):
 
 
 def planet_available_buildings(_engine, _planet, verbose=None):
+    # TODO: refactor this so that the planet object is passed in rather than
+    # the planet name and the whole engine
     if _planet is None:
         msg = [_planet_available_buildings(_engine, plnt.name, verbose)
                for plnt in _engine.state.user.planets.values()]
