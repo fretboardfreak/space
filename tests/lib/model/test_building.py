@@ -110,7 +110,7 @@ class TestBuildingModule(SpaceTest):
             self.assertIsInstance(test_val, building_type)
 
     def test_are_requirements_met_resources(self):
-        site = Mock()
+        site = Mock(spec=model.Planet)
         bld = building.Mine
         site.resources = model.Resources()
         self.assertFalse(bld.are_requirements_met(site, level=1))

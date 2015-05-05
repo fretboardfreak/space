@@ -92,8 +92,8 @@ class TestNewGame(SpaceTest):
         self.input_text = 'Emperor Name'
         self.system = model.System()
 
-    @patch('lib.cmdline.ui.input_text')
-    @patch('lib.cmdline.ui.input_int')
+    @patch('lib.cmdline.ui.input_text', autospec=True)
+    @patch('lib.cmdline.ui.input_int', autospec=True)
     def test_get_new_game_info(self, mock_input_int, mock_input_text):
         mock_input_int.side_effect = self.input_integer
         mock_input_text.return_value = self.input_text

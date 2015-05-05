@@ -90,8 +90,8 @@ def get_new_game_info(system_query_cb):
                       (len(system.planets),
                        '\n'.join([' %s. %s' % (i, p.name) for i, p in
                                   enumerate(system.planets)])))
-    planet_num = input_int(planet_num_qry, min=0,
-                           max=len(system.planets) - 1)
+    planet_num = input_int(planet_num_qry, minimum=0,
+                           maximum=len(system.planets) - 1)
     home_coords.planet = planet_num
     home_planet = system.planets[planet_num]
     home_planet.resources.ore = 25
