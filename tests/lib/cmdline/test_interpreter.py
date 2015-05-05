@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from unittest.mock import Mock
+import collections
+from unittest.mock import Mock, patch
 from itertools import chain
 
 from tests.base import SpaceTest
@@ -22,11 +23,35 @@ from lib.engine import SpaceEngine
 
 
 class TestInterpreterModule(SpaceTest):
+    def setUp(self):
+        self.mock_engine = Mock(spec=SpaceEngine)
+
     def test_command_mixin(self):
-        mock_engine = Mock(spec=SpaceEngine)
-        cm = interpreter.CommandMixin(mock_engine)
+        cm = interpreter.CommandMixin(self.mock_engine)
         self.assertTrue(hasattr(cm, 'engine'))
-        self.assertEqual(cm.engine, mock_engine)
+        self.assertEqual(cm.engine, self.mock_engine)
+
+    @patch('sys.exit', autospec=True)
+    @patch('lib.cmdline.ui.input_bool', autospec=True)
+    def test_start_new_game(self, mock_input_bool, mock_exit):
+        mock_input_bool.return_value = False
+        sci = interpreter.SpaceCmdInterpreter(self.mock_engine)
+        sci.start_new_game()
+        self.assertTrue(mock_input_bool.called)
+        self.assertTrue(mock_exit.called)
+
+        mock_input_bool.return_value = True
+        sci.start_new_game()
+        self.assertTrue(self.mock_engine.new_game.called)
+        self.assertIsInstance(self.mock_engine.new_game.call_args[0][0],
+                              collections.Callable)
+
+    def test_start(self):
+        self.skipTest('NI')
+        # save file loads
+        # no save file -> start new game called
+        # cmdloop clean exit -> engine saved
+        # cmdloop error -> engine saved
 
 
 class BaseCommandTest(SpaceTest):
