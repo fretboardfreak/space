@@ -120,6 +120,12 @@ class Resources(UserDict):
             copy[attr] = self[attr]
         return copy
 
+    def __getstate__(self):
+        return (self.__dict__,)
+
+    def __setstate__(self, state):
+        self.__dict__ = state[0]
+
 
 # Add properties to the Resources class for each resource in ALL_RESOURCES
 for res in ALL_RESOURCES:
