@@ -24,64 +24,64 @@ def print_object(fmt_func, *args, **kwargs):
     print(fmt_func(*args, **kwargs))
 
 
-def galaxy(galaxy):
+def galaxy(_galaxy):
     systems = []
     debug('showing the galaxy...')
-    for c, s in galaxy._systems.iteritems():
+    for c, s in _galaxy._systems.iteritems():
         sys = indent(system(s), '  ')[2:]
         systems.append('{} {}'.format(c, sys))
     return 'Galaxy:\n{}'.format(indent('\n'.join(systems), '  '))
 
 
-def user(user, verbose=None):
-    debug('showing user {}: verbose {}'.format(user.name, verbose))
-    planets = indent(user_planets(user, verbose), '    ')
-    return ("User: %s\n%s" % (user.name, planets))
+def user(_user, verbose=None):
+    debug('showing user {}: verbose {}'.format(_user.name, verbose))
+    planets = indent(user_planets(_user, verbose), '    ')
+    return ("User: %s\n%s" % (_user.name, planets))
 
 
-def user_planets(user, verbose=None):
-    debug("showing user {}'s planets: verbose={}".format(user.name, verbose))
+def user_planets(_user, verbose=None):
+    debug("showing user {}'s planets: verbose={}".format(_user.name, verbose))
     planets = ['Planets:']
-    for coord, planet in user.planets.items():
-            planets.append(' {}: {}'.format(coord, planet(planet, verbose)))
+    for _coord, _planet in _user.planets.items():
+            planets.append(' {}: {}'.format(_coord, planet(_planet, verbose)))
     return '\n'.join(planets)
 
 
-def planet(planet, verbose=None, rates=None):
+def planet(_planet, verbose=None, rates=None):
     if rates is None:
         rates = True
     details = []
-    planet.update()
+    _planet.update()
     if verbose:
         rates = True
-        sun = 'Sun: dist: {}  brightness: {}'.format(planet.sun_distance,
-                                                     planet.sun_brightness)
+        sun = 'Sun: dist: {}  brightness: {}'.format(_planet.sun_distance,
+                                                     _planet.sun_brightness)
         details.append(sun)
     if rates:
         res = '\n'.join(['- {}: {} ({})'.format(
-            name, planet.resources[name], planet.rates[name])
-            for name in planet.resources])
+            name, _planet.resources[name], _planet.rates[name])
+            for name in _planet.resources])
     else:
-        res = indent(str(planet.resources), '- ')
+        res = indent(str(_planet.resources), '- ')
     details.append(indent(res, '  '))
 
     bldngs = '\n'.join(['- {}'.format(str(bld))
-                        for bld in planet.buildings.values()])
+                        for bld in _planet.buildings.values()])
     details.append(bldngs)
-    return "Planet {}, owner {}\n{}".format(planet.name, planet.emperor,
+    return "Planet {}, owner {}\n{}".format(_planet.name, _planet.emperor,
                                             '\n'.join(details))
 
 
-def _planet_available_buildings(engine, planet, verbose=None):
+def _planet_available_buildings(_engine, _planet, verbose=None):
     try:
-        coord, planet = engine.state.user.get_planet(planet)
+        _coord, _planet = _engine.state.user.get_planet(_planet)
     except ObjectNotFound as e:
         print("Could not find that planet")
         if verbose:
             print(e)
         return
-    avail = planet.get_available_buildings()
-    msg = "%s: %s\n" % (coord, planet.name)
+    avail = _planet.get_available_buildings()
+    msg = "%s: %s\n" % (_coord, _planet.name)
     msg += ''.join(['\n  - %s: %s\n%s' %
                     (bld.name, lvl,
                      indent(str(bld(lvl).requirements.resources), '    - '))
@@ -89,17 +89,17 @@ def _planet_available_buildings(engine, planet, verbose=None):
     return msg
 
 
-def planet_available_buildings(engine, planet, verbose=None):
-    if planet is None:
-        msg = [_planet_available_buildings(engine, plnt.name, verbose)
-               for plnt in engine.state.user.planets.itervalues()]
+def planet_available_buildings(_engine, _planet, verbose=None):
+    if _planet is None:
+        msg = [_planet_available_buildings(_engine, plnt.name, verbose)
+               for plnt in _engine.state.user.planets.values()]
         return '\n'.join(msg)
-    return _planet_available_buildings(engine, planet, verbose)
+    return _planet_available_buildings(_engine, _planet, verbose)
 
 
-def system(system, coords=None):
+def system(_system, _coord=None):
     msg = "%s planet system"
-    if coords is not None:
-        msg += " at %s" % coords
-    msg += "\n[%s]" % ', '.join([planet(p) for p in system.planets])
+    if _coord is not None:
+        msg += " at %s" % _coord
+    msg += "\n[%s]" % ', '.join([planet(p) for p in _system.planets])
     return msg
