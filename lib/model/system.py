@@ -46,6 +46,14 @@ class System(object):
     def __setstate__(self, state):
         (self.size, self.sun_brightness, self.planets) = state
 
+    def __eq__(self, other):
+        return (self.size == other.size and
+                self.sun_brightness == other.sun_brightness and
+                self.planets == other.planets)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     @classmethod
     def get_brightness_bounds(cls, size):
         size_scale = 7
