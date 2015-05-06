@@ -30,7 +30,7 @@ class Planet(object):
                               hydrocarbon=4e5, deuterium=2e5)
 
     def __init__(self, sun_brightness=None, sun_distance=None):
-        self.name = NameGen().gen_word()
+        self.name = NameGen().gen_word(no_repeat=True)
         self.emperor = None
         self.resources = Resources()
         self.last_update = time()
