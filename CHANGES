@@ -1,0 +1,13 @@
+Space Changelog
+===============
+
+Completed Trello Lists can be found at:
+
+    https://trello.com/b/NESdK97q/space-changelog
+
+
+:version: 0.1
+:date: 2015-05-06
+- first public release
+- all python 3
+- decent unit test coverage
