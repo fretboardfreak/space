@@ -15,6 +15,7 @@
 import collections
 from unittest.mock import Mock, patch
 from itertools import chain
+from cmd import Cmd
 
 from tests.base import SpaceTest
 
@@ -46,12 +47,34 @@ class TestInterpreterModule(SpaceTest):
         self.assertIsInstance(self.mock_engine.new_game.call_args[0][0],
                               collections.Callable)
 
-    def test_start(self):
-        self.skipTest('NI')
-        # save file loads
-        # no save file -> start new game called
-        # cmdloop clean exit -> engine saved
-        # cmdloop error -> engine saved
+    def get_interpreter_instance(self):
+        sci = interpreter.SpaceCmdInterpreter(self.mock_engine)
+        sci.cmdloop = Mock(spec=Cmd.cmdloop)
+        sci.start_new_game = Mock(spec=sci.start_new_game)
+        return sci
+
+    def test_start_save_file_loads(self):
+        sci = self.get_interpreter_instance()
+        sci.start()
+        self.assertTrue(self.mock_engine.load.called)
+        self.assertTrue(sci.cmdloop.called)
+        self.assertTrue(self.mock_engine.save.called)
+        self.assertFalse(sci.start_new_game.called)
+
+    def test_start_no_save_file(self):
+        self.mock_engine.load.side_effect = IOError('foobar')
+        sci = self.get_interpreter_instance()
+        sci.start()
+        self.assertTrue(self.mock_engine.load.called)
+        self.assertTrue(sci.cmdloop.called)
+        self.assertTrue(self.mock_engine.save.called)
+        self.assertTrue(sci.start_new_game.called)
+
+    def test_start_cmdloop_error(self):
+        sci = self.get_interpreter_instance()
+        sci.start()
+        sci.cmdloop.side_effect = Exception('foobar')
+        self.assertTrue(self.mock_engine.save.called)
 
 
 class BaseCommandTest(SpaceTest):
