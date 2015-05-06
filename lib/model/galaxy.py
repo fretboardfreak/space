@@ -31,7 +31,7 @@ class Galaxy(object):
     def planet(self, coord):
         system = self.system(coord)
         debug('looking up planet: %s' % coord)
-        return system.planets[coord.planet]
+        return system.planets[int(coord.planet)]
 
     def __repr__(self):
         systems = ','.join(['{}: {}'.format(coord, repr(system))

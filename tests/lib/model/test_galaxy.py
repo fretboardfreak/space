@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from random import randint
+
 from .base import LibModelTest, ModelObjectTest, StateMixinTest
 
-# from lib import model
+from lib import model
 from lib.model import galaxy
 
 
@@ -37,7 +39,17 @@ class TestGalaxy(ModelObjectTest, StateMixinTest):
         return ({},)
 
     def test_system(self):
-        self.skipTest('NI')
+        coord = model.Coord(1.3, 1.2, 4)
+        galaxy = self.get_new_instance()
+        system = galaxy.system(coord)
+        system_coord = model.SystemCoord(1.3, 1.2)
+        self.assertEqual(system, galaxy._systems[system_coord])
 
     def test_planet(self):
-        self.skipTest('NI')
+        system_coord = model.SystemCoord(7.6, 4.6)
+        galaxy = self.get_new_instance()
+        system = galaxy.system(system_coord)
+        planet_index = randint(0, system.size - 1)
+        coord = model.Coord(system_coord.x, system_coord.y, planet_index)
+        planet = galaxy.planet(coord)
+        self.assertEqual(planet, system.planets[planet_index])
