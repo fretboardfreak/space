@@ -110,10 +110,25 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
                       'behaviour here. Deferring tests for now.')
 
     def test_build(self):
-        self.skipTest('NI')
-        # no-blding -> lvl 1 vs lvl x -> lvl x+1
-        # building reqs met vs not met (resources, bldings, research)
-        # costs removed from planet
+        # Skipping this test because Resource subtraction still seems to have
+        # some problems.
+        self.skipTest('Broken: resource subtraction is causes problems here.')
+        result = self.object.build('Mine')
+        self.assertFalse(result)
+        self.assertEqual(len(self.object.buildings), 0)
+
+        res_amt = 100
+        self.object.resources.ore = res_amt
+        self.object.resources.metal = res_amt
+        building_type = 'Mine'
+        result = self.object.build(building_type)
+        self.assertTrue(result)
+        self.assertEqual(len(self.object.buildings), 1)
+        print('buildings {}'.format(self.object.buildings))
+        self.assertTrue(building_type in self.object.buildings)
+        self.assertIsInstance(self.object.buildings[building_type], model.Mine)
+        self.assertLess(self.object.resources.ore, res_amt)
+        self.assertLess(self.object.resources.metal, res_amt)
 
     def test_get_available_buildings(self):
         expected = [

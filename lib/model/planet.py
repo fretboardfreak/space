@@ -72,15 +72,15 @@ class Planet(object):
                                       self.max_resources[res])
         self.last_update = new_t
 
-    def _build_building(self, building, level=None):
+    def _build_building(self, building_name, level=None):
         self.update()
-        building = get_building(building)
+        building = get_building(building_name)
         if building.are_requirements_met(self, level):
             debug('Constructing {} level {} on planet {}'.format(
                 building, level, self.name))
             new_blding = building(level)
             self.resources -= new_blding.requirements.resources
-            self.buildings[building] = new_blding
+            self.buildings[building_name] = new_blding
             return True
         else:
             debug('Construction attempt failed on planet {}, not enough'
