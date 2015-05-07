@@ -30,7 +30,7 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
     def setUp(self):
         self.sun_brightness = 555
         self.sun_distance = 3
-        self.expected_state = (str, (str, type(None)), model.Resources,
+        self.expected_state = (str, (str, type(None)), tuple,
                                (int, float), dict, int, int)
         self.classname_in_repr = True
         self.expected_attrs = {
@@ -47,7 +47,8 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
         return planet.Planet(self.sun_brightness, self.sun_distance)
 
     def get_tst_state(self):
-        return ('name', 'emperor', model.Resources(), 123456, {}, 555, 3)
+        return ('name', 'emperor', model.Resources().__getstate__(),
+                123456, {}, 555, 3)
 
     def set_expected_attrs_for_representation(self):
         self.expected_attrs = {
