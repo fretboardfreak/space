@@ -35,7 +35,8 @@ class TestSystem(ModelObjectTest, StateMixinTest):
         return system.System()
 
     def get_tst_state(self):
-        return (10, 500, [model.Planet(sun_brightness=500, sun_distance=dist)
+        return (10, 500, [model.Planet(sun_brightness=500,
+                                       sun_distance=dist).__getstate__()
                           for dist in range(1, 11)])
 
     def test_size_in_valid_range(self):
