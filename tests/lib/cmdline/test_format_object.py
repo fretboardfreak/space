@@ -64,8 +64,7 @@ class TestFormatGalaxy(BaseFormatMethodTest):
 class TestFormatUser(BaseFormatMethodTest):
     def setUp(self):
         self.func = format_object.user
-        self.test_obj = model.User('username', model.Coord(0, 0, 0),
-                                   model.Planet(500, 1))
+        self.test_obj = model.User('username', model.Coord(0, 0, 0))
         self.has_verbose_opt = True
 
 

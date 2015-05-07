@@ -42,8 +42,7 @@ def user(_user, verbose=None):
 def user_planets(_user, verbose=None):
     debug("showing user {}'s planets: verbose={}".format(_user.name, verbose))
     planets = ['Planets:']
-    for _coord, _planet in _user.planets.items():
-            planets.append(' {}: {}'.format(_coord, planet(_planet, verbose)))
+    planets.extend(' {}'.format(_coord) for _coord in _user.planets)
     return '\n'.join(planets)
 
 
