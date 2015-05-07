@@ -46,5 +46,7 @@ class SpaceEngine(object):
         try:
             self.state.galaxy = Galaxy()
             self.state.user = User(*new_game_info_cb(self._system_callback))
+            home_planet = self.state.galaxy.planet(self.state.user.planets[0])
+            home_planet.emperor = self.state.user.name
         finally:
             self.save()
