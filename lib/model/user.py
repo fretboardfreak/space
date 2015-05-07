@@ -14,17 +14,16 @@
 
 from logging import debug
 
-from lib.error import ObjectNotFound
+from . import Planet
 
 
 class User(object):
-    def __init__(self, name, home_planet_coords=None, home_planet=None):
+    def __init__(self, name, home_planet_coords=None):
         debug('Creating new user object %s' % name)
         self.name = name
-        self.planets = {}
+        self.planets = []
         if home_planet_coords is not None:
-            self.planets = {home_planet_coords: home_planet}
-            home_planet.emperor = self.name
+            self.planets.append(home_planet_coords)
 
     def __repr__(self):
         return "{}(name: {}, planets: {})".format(
@@ -35,14 +34,9 @@ class User(object):
             self.__class__.__name__, self.name, self.planets)
 
     def __getstate__(self):
-        return (self.name, self.planets)
+        planets = [coord.__getstate__() for coord in self.planets]
+        return (self.name, planets)
 
     def __setstate__(self, state):
-        (self.name, self.planets) = state
-
-    def get_planet(self, name):
-        debug('retrieving planet %s' % name)
-        for coord, planet in self.planets.items():
-            if planet.name.lower() == name.lower():
-                return (coord, planet)
-        raise ObjectNotFound(name)
+        (self.name, planets) = state
+        self.planets = [Planet().__setstate__(pl) for pl in planets]
