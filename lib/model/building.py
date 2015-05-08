@@ -20,6 +20,30 @@ from lib.error import ObjectNotFound
 from .resources import Resources
 
 
+def get_all_building_names():
+    return [cls.name for cls in ALL_BUILDINGS]
+
+
+def get_all_building_abbr():
+    return [cls.abbr for cls in ALL_BUILDINGS]
+
+
+def get_building(building_name, level=None):
+    if isinstance(building_name, type):
+        building_name = building_name.__name__
+    debug('getting building type %s, lvl %s' % (building_name, level))
+    for building in ALL_BUILDINGS:
+        if (building.__name__.lower() == building_name.lower() or
+                building.name.lower() == building_name.lower() or
+                building.abbr.lower() == building_name.lower()):
+            if level is None:
+                return building
+            else:
+                return building(level)
+    else:
+        raise ObjectNotFound(name=building_name)
+
+
 class BuildingRequirements(object):
     def __init__(self, resources=None, research=None, buildings=None):
         self.resources = resources
@@ -172,28 +196,5 @@ class SolarPowerPlant(Building):
                                 metal=50+(6*self.level)))
 
 
+
 ALL_BUILDINGS = [Mine, SolarPowerPlant]
-
-
-def get_all_building_names():
-    return [cls.name for cls in ALL_BUILDINGS]
-
-
-def get_all_building_abbr():
-    return [cls.abbr for cls in ALL_BUILDINGS]
-
-
-def get_building(building_name, level=None):
-    if isinstance(building_name, type):
-        building_name = building_name.__name__
-    debug('getting building type %s, lvl %s' % (building_name, level))
-    for building in ALL_BUILDINGS:
-        if (building.__name__.lower() == building_name.lower() or
-                building.name.lower() == building_name.lower() or
-                building.abbr.lower() == building_name.lower()):
-            if level is None:
-                return building
-            else:
-                return building(level)
-    else:
-        raise ObjectNotFound(name=building_name)
