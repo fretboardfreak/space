@@ -162,7 +162,8 @@ class Planet(object):
 
     @property
     def electricity(self):
-        return sum([bld.electricity for bld in self.buildings.values()])
+        return sum([bld.electricity(self.sun)
+                    for bld in self.buildings.values()])
 
     @property
     def research(self):

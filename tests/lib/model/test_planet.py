@@ -172,7 +172,8 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
         elec_per_bld = 10
         for bld_num in range(num_blds):
             bldng = Building()
-            bldng._electricity = elec_per_bld
+            bldng.electricity = Mock(spec=Building.electricity,
+                                     return_value=elec_per_bld)
             self.object.buildings[bld_num] = bldng
         self.assertEqual(self.object.electricity, num_blds * elec_per_bld)
 
