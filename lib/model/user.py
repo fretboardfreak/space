@@ -14,7 +14,7 @@
 
 from logging import debug
 
-from . import Planet
+from . import Coord
 
 
 class User(object):
@@ -39,4 +39,4 @@ class User(object):
 
     def __setstate__(self, state):
         (self.name, planets) = state
-        self.planets = [Planet().__setstate__(pl) for pl in planets]
+        self.planets = [Coord().__setstate__(pl) for pl in planets]
