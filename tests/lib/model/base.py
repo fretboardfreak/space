@@ -80,9 +80,12 @@ class ModelObjectTest(SpaceTest):
 
     def test_attrs(self):
         for attr in self.expected_attrs:
-            self.assertIn(attr, dir(self.object))
+            self.assertIn(attr, dir(self.object),
+                          "Attr {} is missing.".format(attr))
+            expected_type = self.expected_attrs[attr]
             self.assertIsInstance(getattr(self.object, attr),
-                                  self.expected_attrs[attr])
+                                  expected_type, "Attr {} is not of type "
+                                  "{}".format(attr, expected_type))
 
 
 class StateMixinTest(object):
