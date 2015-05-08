@@ -83,11 +83,6 @@ class Building(object):
             self.level = 1
         else:
             self.level = level
-        # requirements for construction
-        self._requirements = BuildingRequirements()
-
-        # per time unit production values
-        self._modifier = Resources(ore=self.level)
 
     def __getstate__(self):
         return (self.level,)
@@ -98,7 +93,7 @@ class Building(object):
     @property
     def modifier(self):
         """The building's per time unit resource production."""
-        return self._modifier
+        return Resources(ore=self.level)
 
     def electricity(self, sun_energy):
         """The building's per time unit electricity production/consumption."""
@@ -106,7 +101,7 @@ class Building(object):
 
     @property
     def requirements(self):
-        return self._requirements
+        return BuildingRequirements()
 
     def __repr__(self):
         return ("{}(level: {}, modifier: {}, "
@@ -167,31 +162,34 @@ class Mine(Building):
     name = 'Mine'
     abbr = 'Mn'
 
-    def __init__(self, level=None):
-        super().__init__(level)
-        self._modifier = Resources(ore=2*self.level,
-                                   metal=0.25*self.level)
-        self._requirements = BuildingRequirements(
-            resources=Resources(ore=10+(2*(-1+self.level)),
-                                metal=-10+(5*(1+self.level))))
+    @property
+    def modifier(self):
+        return Resources(ore=2*self.level, metal=0.25*self.level)
 
     def electricity(self, sun_energy):
         return -1 * pow(self.level, 2)
+
+    @property
+    def requirements(self):
+        return BuildingRequirements(resources=Resources(
+            ore=10+(2*(-1+self.level)), metal=-10+(5*(1+self.level))))
 
 
 class SolarPowerPlant(Building):
     name = 'Solar Power Plant'
     abbr = 'SPP'
 
-    def __init__(self, level=None):
-        super().__init__(level)
-        self._modifier = Resources()
-        self._requirements = BuildingRequirements(
-            resources=Resources(ore=10+(5*self.level),
-                                metal=50+(6*self.level)))
+    @property
+    def modifier(self):
+        return Resources()
 
     def electricity(self, sun_energy):
         return 10 * abs(log10(sun_energy)) * self.level
+
+    @property
+    def requirements(self):
+        return BuildingRequirements(resources=Resources(
+            ore=10+(5*self.level), metal=50+(6*self.level)))
 
 
 ALL_BUILDINGS = [Mine, SolarPowerPlant]
