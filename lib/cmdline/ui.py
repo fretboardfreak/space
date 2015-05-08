@@ -93,10 +93,7 @@ def get_new_game_info(system_query_cb):
     planet_num = input_int(planet_num_qry, minimum=0,
                            maximum=len(system.planets) - 1)
     home_coords.planet = planet_num
-    home_planet = system.planets[planet_num]
-    home_planet.resources.ore = 25
-    home_planet.resources.metal = 60
-    print("We've given you some building materials to get you started. "
+    print("Okay, here's some building materials to get you started. "
           "Use them wisely, that's all the new recruits get from us!")
 
-    return (name, home_coords, home_planet)
+    return (name, home_coords)

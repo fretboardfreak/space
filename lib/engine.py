@@ -15,7 +15,7 @@
 import pickle
 from logging import debug
 
-from .model import GameState, Galaxy, User
+from .model import GameState, Galaxy, User, Coord
 
 
 class SpaceEngine(object):
@@ -46,7 +46,17 @@ class SpaceEngine(object):
         try:
             self.state.galaxy = Galaxy()
             self.state.user = User(*new_game_info_cb(self._system_callback))
-            home_planet = self.state.galaxy.planet(self.state.user.planets[0])
-            home_planet.emperor = self.state.user.name
+            system = self.state.galaxy.system(self.state.user.planets[0])
+            planet = system.planets[int(self.state.user.planets[0].planet)]
+            planet.resources.ore = 25
+            planet.resources.metal = 60
+            planet.emperor = self.state.user.name
         finally:
             self.save()
+
+    def mock_new_game_info_cb(self, system_callback):
+        """Mock callback for creating test gamestates"""
+        coord, name = Coord(), "emperor nim"
+        # the callback side effect creates a system object
+        self._system_callback(coord)
+        return (name, coord)

@@ -101,6 +101,3 @@ class TestNewGame(SpaceTest):
         result = UI.get_new_game_info(system_callback)
         self.assertEqual(result[0], self.input_text)
         self.assertIsInstance(result[1], model.Coord)
-        self.assertIsInstance(result[2], model.Planet)
-        self.assertEqual(result[2],
-                         self.system.planets[self.chosen_planet_index])
