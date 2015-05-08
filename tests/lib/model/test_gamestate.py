@@ -26,6 +26,11 @@ class TestLibModelCoord(LibModelTest):
 
 class TestGameState(ModelObjectTest, StateMixinTest):
     def setUp(self):
+        self.user = model.User('nim', model.Coord())
+        self.galaxy = model.Galaxy()
+        system = self.galaxy.system(self.user.planets[0])
+        planet = system.planets[int(self.user.planets[0].planet)]
+        planet.emperor = self.user.name
         super().setUp()
         self.expected_state = (str, (tuple, type(None)), (tuple, type(None)))
         self.classname_in_repr = True
@@ -35,7 +40,18 @@ class TestGameState(ModelObjectTest, StateMixinTest):
 
     def get_new_instance(self):
         self.tmp_file = NamedTemporaryFile()
-        return gamestate.GameState(save_file=self.tmp_file.name)
+        state = gamestate.GameState(save_file=self.tmp_file.name)
+        state.user = self.user
+        state.galaxy = self.galaxy
+        return state
 
     def get_tst_state(self):
-        return ('save_file', None, None)
+        return ('save_file', self.user.__getstate__(),
+                self.galaxy.__getstate__())
+
+    def test_state_contents(self):
+        """
+        Recursively iterate through the state and verify only iterables or
+        primitives are used.
+        """
+        self.skipTest('NI')
