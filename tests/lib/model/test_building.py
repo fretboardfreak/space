@@ -159,33 +159,22 @@ class TestBuildingRequirements(ModelObjectTest, StateMixinTest):
 class TestBuildingBaseClass(ModelObjectTest, StateMixinTest,
                             EqualityMixinTest):
     def get_new_instance(self, level=None):
-        return building.Building(level=level, sun_cb=self.sun_cb)
+        return building.Building(level=level)
 
     def get_tst_state(self):
-        return (self.level, self.sun_cb)
+        return (self.level,)
 
     def setUp(self):
         self.max_level = 1000  # max level to consider for these tests
-        self.sun_cb = lambda: 1  # must return int > 0
+        self.sun_energy = 1  # must return int > 0
         self.level = random.randint(0, self.max_level)
         self.expected_state = (int, Callable)
         self.expected_attrs = {'level': int, 'modifier': model.Resources,
-                               'electricity': (float, int),
-                               'requirements': building.BuildingRequirements,
-                               'sun_cb': Callable}
+                               'requirements': building.BuildingRequirements}
         self.expected_modifier_type = model.Resources
-        self.expected_electricity_type = [int, float]
         self.expected_requirements_type = building.BuildingRequirements
         self.object = self.get_new_instance()
         self.classname_in_repr = True
-
-    def test_repr(self):
-        self.expected_attrs.pop('sun_cb')
-        super().test_repr()
-
-    def test_str(self):
-        self.expected_attrs.pop('sun_cb')
-        super().test_str()
 
     def get_equal_tst_values(self):
         self.object = self.get_new_instance(self.level)
@@ -206,9 +195,7 @@ class TestBuildingBaseClass(ModelObjectTest, StateMixinTest,
                               self.expected_modifier_type)
 
     def test_electricity(self):
-        self.assertTrue(any([isinstance(self.object.electricity, _typ)
-                             for _typ in self.expected_electricity_type]))
-        self.assertGreaterEqual(self.object.electricity, 0)
+        self.assertGreaterEqual(self.object.electricity(self.sun_energy), 0)
 
     def test_requirements(self):
         self.assertIsInstance(self.object.requirements,
@@ -229,7 +216,7 @@ class TestBuildingBaseClass(ModelObjectTest, StateMixinTest,
 
 class TestMine(TestBuildingBaseClass):
     def get_new_instance(self, level=None):
-        return building.Mine(level=level, sun_cb=self.sun_cb)
+        return building.Mine(level=level)
 
     def setUp(self):
         super().setUp()
@@ -237,14 +224,13 @@ class TestMine(TestBuildingBaseClass):
         self.negative_equality_logic = False
 
     def test_electricity(self):
-        self.assertLessEqual(self.object.electricity, 0)
+        self.assertLessEqual(self.object.electricity(self.sun_energy), 0)
 
     def predict_avg(self):
         low = self.get_new_instance(self.level)
         high = self.get_new_instance(self.level+1)
         retval = ((high.level - low.level) +
-                  (high.electricity - low.electricity) +
-                  (high.modifier.trade_value - low.modifier.trade_value)) / 3.0
+                  (high.modifier.trade_value - low.modifier.trade_value)) / 2.0
         return retval
 
     def get_non_equal_tst_values(self):
@@ -264,10 +250,11 @@ class TestMine(TestBuildingBaseClass):
 
 class TestSolarPowerPlant(TestBuildingBaseClass):
     def get_new_instance(self, level=None):
-        return building.SolarPowerPlant(level=level, sun_cb=self.sun_cb)
+        return building.SolarPowerPlant(level=level)
 
     def test_electricity(self):
         for level in range(1000):
             self.level = level
             test_spp = self.get_non_equal_tst_values()
-            self.assertLessEqual(self.object.electricity, test_spp.electricity)
+            self.assertLessEqual(self.object.electricity(self.sun_energy),
+                                 test_spp.electricity(self.sun_energy))

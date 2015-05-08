@@ -78,56 +78,52 @@ class BuildingRequirements(object):
 
 
 class Building(object):
-    def __init__(self, level=None, sun_cb=None):
+    def __init__(self, level=None):
         if level is None:
             self.level = 1
         else:
             self.level = level
-        self.sun_cb = sun_cb
         # requirements for construction
         self._requirements = BuildingRequirements()
 
         # per time unit production values
         self._modifier = Resources(ore=self.level)
-        self._electricity = 0
 
     def __getstate__(self):
-        return (self.level, self.sun_cb)
+        return (self.level,)
 
     def __setstate__(self, state):
-        (self.level, self.sun_cb) = state
+        (self.level,) = state
 
     @property
     def modifier(self):
         """The building's per time unit resource production."""
         return self._modifier
 
-    @property
-    def electricity(self):
+    def electricity(self, sun_energy):
         """The building's per time unit electricity production/consumption."""
-        return self._electricity
+        return 0
 
     @property
     def requirements(self):
         return self._requirements
 
     def __repr__(self):
-        return ("{}(level: {}, modifier: {}, electricity: {}, "
+        return ("{}(level: {}, modifier: {}, "
                 "requirements: {})".format(
                     self.__class__.__name__, self.level, repr(self.modifier),
-                    self.electricity, repr(self.requirements)))
+                    repr(self.requirements)))
 
     def __str__(self):
-        return ("{}: level: {}\n  - electricity: {}\n  - modifier: {}\n"
+        return ("{}: level: {}\n  - modifier: {}\n"
                 "  - requirements: {})".format(
-                    self.__class__.__name__, self.level, self.electricity,
+                    self.__class__.__name__, self.level,
                     repr(self.modifier),
                     str(self.requirements).replace('\n', '\n' + ' ' * 8)))
 
     def __eq__(self, other):
         return (self.modifier == other.modifier and
-                self.level == other.level and
-                self.electricity == other.electricity)
+                self.level == other.level)
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -136,8 +132,7 @@ class Building(object):
         """Calculate an evenly weighted average of the atributes."""
         mod = self.modifier.trade_value - other.modifier.trade_value
         lev = self.level - other.level
-        elec = self.electricity - other.electricity
-        avg = (lev + elec + mod) / 3.0
+        avg = (lev + mod) / 2.0
         return avg
 
     def __lt__(self, other):
@@ -172,29 +167,31 @@ class Mine(Building):
     name = 'Mine'
     abbr = 'Mn'
 
-    def __init__(self, level=None, sun_cb=None):
-        super().__init__(level, sun_cb)
+    def __init__(self, level=None):
+        super().__init__(level)
         self._modifier = Resources(ore=2*self.level,
                                    metal=0.25*self.level)
-        self._electricity = -1 * pow(self.level, 2)
         self._requirements = BuildingRequirements(
             resources=Resources(ore=10+(2*(-1+self.level)),
                                 metal=-10+(5*(1+self.level))))
+
+    def electricity(self, sun_energy):
+        return -1 * pow(self.level, 2)
 
 
 class SolarPowerPlant(Building):
     name = 'Solar Power Plant'
     abbr = 'SPP'
 
-    def __init__(self, level=None, sun_cb=None):
-        super().__init__(level, sun_cb)
+    def __init__(self, level=None):
+        super().__init__(level)
         self._modifier = Resources()
-        if self.sun_cb:
-            self._electricity = 10 * abs(log10(self.sun_cb())) * self.level
         self._requirements = BuildingRequirements(
             resources=Resources(ore=10+(5*self.level),
                                 metal=50+(6*self.level)))
 
+    def electricity(self, sun_energy):
+        return 10 * abs(log10(sun_energy)) * self.level
 
 
 ALL_BUILDINGS = [Mine, SolarPowerPlant]
