@@ -41,3 +41,16 @@ class TestEngine(SpaceTest):
         self.engine.load()
 
         self.assertTrue(orig_state, hash(self.engine.state))
+
+    def test_save(self):
+        self.skipTest('NI')
+
+    def test_system_callback(self):
+        self.skipTest('NI')
+
+    def test_new_game(self):
+        self.skipTest('NI')
+
+    def test_mock_new_game_info_cb(self):
+        self.skipTest('NI: check that interface and return values are '
+                      'consistent between the original and the mock methods.')
