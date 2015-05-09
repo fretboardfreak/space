@@ -13,10 +13,12 @@
 # limitations under the License.
 
 from tempfile import NamedTemporaryFile
-from .base import LibModelTest, ModelObjectTest, StateMixinTest
+from collections import Iterable
 
 from lib import model
 from lib.model import gamestate
+
+from .base import LibModelTest, ModelObjectTest, StateMixinTest
 
 
 class TestLibModelCoord(LibModelTest):
@@ -49,9 +51,41 @@ class TestGameState(ModelObjectTest, StateMixinTest):
         return ('save_file', self.user.__getstate__(),
                 self.galaxy.__getstate__())
 
+    def recurse_objects(self, state, frame):
+        """Recursively yield every item in state."""
+        print('STARTING FRAME {}'.format(frame))
+        frame += 1
+        try:
+            for obj in state:
+                print("obj {} is type {}".format(obj, type(obj)))
+                if isinstance(obj, str):  # don't iterate over strings
+                    print('  yielding a string')
+                    yield obj
+                elif isinstance(obj, dict):
+                    print('  recursing over dict...')
+                    for key, value in obj.items():
+                        yield key
+                        print('  descending into dict value')
+                        for sub_obj in self.recurse_objects(value, frame):
+                            yield sub_obj
+                elif isinstance(obj, Iterable):
+                    print('  recursing...')
+                    for sub_obj in self.recurse_objects(obj, frame):
+                        yield sub_obj
+                else:
+                    print('  yielding the obj')
+                    yield obj
+        except:
+            yield state
+
     def test_state_contents(self):
         """
         Recursively iterate through the state and verify only iterables or
         primitives are used.
         """
-        self.skipTest('NI')
+        valid_types = (int, float, str, type(None), tuple)
+        for obj in self.recurse_objects(self.object.__getstate__(), 0):
+            self.assertIsInstance(obj, valid_types)
+            if isinstance(obj, tuple):  # dict keys
+                for sub_obj in obj:
+                    self.assertIsInstance(obj, valid_types)
