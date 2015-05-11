@@ -19,6 +19,10 @@ class SpaceTest(unittest.TestCase):
 
     """Common base class for Space tests."""
 
+    def __init__(self, methodName='runTest'):
+        super().__init__(methodName)
+        self.warnings_to_errors = False
+
     def shortDescription(self):
         """
         Prevent nosetests from using test docstring instead of method and

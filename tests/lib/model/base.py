@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from warnings import warn
+from collections import Callable
+
 from tests.base import SpaceTest
 
 
@@ -79,6 +82,20 @@ class ModelObjectTest(SpaceTest):
         self.assert_attrs_in_string(string)
 
     def test_attrs(self):
+        actual = set([attr for attr in dir(self.object)
+                     if not attr.startswith('_') and
+                     not isinstance(getattr(self.object, attr),
+                                    (property, classmethod, Callable,))])
+        if self.warnings_to_errors:
+            self.assertEqual(set(self.expected_attrs.keys()), actual)
+        else:
+            unexpected = actual.difference(set(self.expected_attrs.keys()))
+            missing = set(self.expected_attrs.keys()).difference(actual)
+            if len(unexpected) > 0 or len(missing) > 0:
+                msg = ("{}: Missing Attrs: {} Unexpected Attrs: "
+                       "{}".format(self.object.__class__.__name__,
+                                   missing, unexpected))
+                warn(msg)
         for attr in self.expected_attrs:
             self.assertIn(attr, dir(self.object),
                           "Attr {} is missing.".format(attr))
