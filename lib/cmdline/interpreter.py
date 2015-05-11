@@ -180,7 +180,7 @@ class SpaceCmdInterpreter(Cmd, Quit, Debug, Show, Planet, User):
             try:
                 debug('Trying to load the saved game...')
                 self.engine.load()
-            except IOError:
+            except FileNotFoundError:
                 debug('No save game, starting new game...')
                 self.start_new_game()
             debug('Starting interpreter...')

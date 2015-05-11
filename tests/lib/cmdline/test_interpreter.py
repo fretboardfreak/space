@@ -62,7 +62,7 @@ class TestInterpreterModule(SpaceTest):
         self.assertFalse(sci.start_new_game.called)
 
     def test_start_no_save_file(self):
-        self.mock_engine.load.side_effect = IOError('foobar')
+        self.mock_engine.load.side_effect = FileNotFoundError('foobar')
         sci = self.get_interpreter_instance()
         sci.start()
         self.assertTrue(self.mock_engine.load.called)

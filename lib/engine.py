@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import pickle
+import os
 from logging import debug
 
 from .model import GameState, Galaxy, User, Coord
@@ -25,6 +26,9 @@ class SpaceEngine(object):
     def load(self):
         '''Load game state directly. Useful when used on the interpreter'''
         debug('Loading saved game')
+        if not os.path.exists(self.state.save_file):
+            debug('No save file to load.')
+            raise FileNotFoundError('No save file to load.')
         with open(self.state.save_file, 'rb') as sf:
             self.state = pickle.load(sf)
 
