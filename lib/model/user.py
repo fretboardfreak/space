@@ -19,11 +19,12 @@ from . import Coord
 
 class User(object):
     def __init__(self, name, home_planet_coords=None):
-        debug('Creating new user object %s' % name)
         self.name = name
         self.planets = []
         if home_planet_coords is not None:
             self.planets.append(home_planet_coords)
+        debug('Created new user {} with home planet {}'.format(
+            self.name, ' '.join(repr(pl) for pl in self.planets)))
 
     def __repr__(self):
         return "{}(name: {}, planets: {})".format(
