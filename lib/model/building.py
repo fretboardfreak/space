@@ -78,6 +78,9 @@ class BuildingRequirements(object):
 
 
 class Building(object):
+    name = 'Building'
+    abbr = 'BLDNG'
+
     def __init__(self, level=None):
         if level is None:
             self.level = 1

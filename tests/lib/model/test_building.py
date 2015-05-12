@@ -170,11 +170,24 @@ class TestBuildingBaseClass(ModelObjectTest, StateMixinTest,
         self.level = random.randint(0, self.max_level)
         self.expected_state = (int, Callable)
         self.expected_attrs = {'level': int, 'modifier': model.Resources,
-                               'requirements': building.BuildingRequirements}
+                               'requirements': building.BuildingRequirements,
+                               'name': str, 'abbr': str}
         self.expected_modifier_type = model.Resources
         self.expected_requirements_type = building.BuildingRequirements
         self.object = self.get_new_instance()
         self.classname_in_repr = True
+
+    def filter_presentation_attrs(self):
+        self.expected_attrs.pop('name')
+        self.expected_attrs.pop('abbr')
+
+    def test_str(self):
+        self.filter_presentation_attrs()
+        super().test_str()
+
+    def test_repr(self):
+        self.filter_presentation_attrs()
+        super().test_repr()
 
     def get_equal_tst_values(self):
         self.object = self.get_new_instance(self.level)
