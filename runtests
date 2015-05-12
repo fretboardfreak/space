@@ -15,7 +15,8 @@ CMD="nosetests-3.4 --exe --detailed-errors --processes=-1 "
 if [[ $# -eq 0 ]]; then
     exec $CMD --verbosity=2 2>&1 | \
         sed -e '/ \.\.\. SKIP: base class/d' -e '/ \.\.\. ok/d' \
-            -e 's/ \.\.\. S/\n    S/'
+            -e 's/ \.\.\. S/\n    S/' -e '/UserWarning/d' -e '/WARNING/d' \
+            -e '/warn/d'
 else
     exec $CMD $@
 fi
