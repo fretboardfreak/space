@@ -126,7 +126,7 @@ class DebugTest(BaseCommandTest):
 class PlanetTest(BaseCommandTest):
     def setUp(self):
         super().setUp()
-        self.command_class = interpreter.Planet
+        self.command_class = commands.Planet
         self.alias_commands = ['do_p', 'do_pl']
 
 
