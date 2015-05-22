@@ -25,17 +25,6 @@ from lib import model
 from . import commands
 
 
-class Quit(commands.CommandMixin):
-    def do_quit(self, line):
-        self.engine.save()
-        return True
-
-    def help_quit(self):
-        print("Quit the program")
-    do_q = do_quit
-    do_EOF = do_quit
-
-
 class Show(commands.CommandMixin):
     def do_show(self, line):
         show_planets = partial(format_object.print_object,

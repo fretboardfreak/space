@@ -105,7 +105,7 @@ class BaseCommandTest(SpaceTest):
 class QuitTest(BaseCommandTest):
     def setUp(self):
         super().setUp()
-        self.command_class = interpreter.Quit
+        self.command_class = commands.Quit
         self.alias_commands = ['do_q', 'do_EOF']
 
 

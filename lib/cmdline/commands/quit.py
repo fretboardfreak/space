@@ -13,6 +13,14 @@
 # limitations under the License.
 
 from .base import CommandMixin
-from .quit import Quit
 
-__all__ = [CommandMixin, Quit]
+
+class Quit(CommandMixin):
+    def do_quit(self, line):
+        self.engine.save()
+        return True
+
+    def help_quit(self):
+        print("Quit the program")
+    do_q = do_quit
+    do_EOF = do_quit
