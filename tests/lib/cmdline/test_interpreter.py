@@ -119,7 +119,7 @@ class ShowTest(BaseCommandTest):
 class DebugTest(BaseCommandTest):
     def setUp(self):
         super().setUp()
-        self.command_class = interpreter.Debug
+        self.command_class = commands.Debug
         self.alias_commands = []
 
 

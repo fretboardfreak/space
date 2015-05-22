@@ -24,35 +24,6 @@ from lib import model
 from . import commands
 
 
-class Debug(commands.CommandMixin):
-    def __print_state(self):
-        print(self.engine.state)
-
-    def do_debug(self, line):
-        try:
-            parser = ArgumentParser(
-                prog='dbg', description=self.help_debug(True))
-            parser.add_argument(
-                '-ps', '--print-state', action='store_const',
-                dest='action', const=self.print_state,
-                help='print full game state')
-            (args, unrecognized) = parser.parse_known_args(line.split(' '))
-            if args.action is None:
-                self.print_state()
-            else:
-                args.action()
-        except SystemExit:
-            pass
-        return False
-
-    def help_debug(self, no_print=None):
-        hlp = "Provides access to some debugging commands."
-        if no_print:
-            return hlp
-        print(hlp)
-    do_dbg = do_debug
-
-
 class Planet(commands.CommandMixin):
     def __build(self, args):
         if args.building is None:
@@ -117,8 +88,8 @@ class User(commands.CommandMixin):
     do_u = do_user
 
 
-class SpaceCmdInterpreter(Cmd, commands.Quit, Debug, commands.Show, Planet,
-                          User):
+class SpaceCmdInterpreter(Cmd, commands.Quit, commands.Debug, commands.Show,
+                          Planet, User):
     def __init__(self, engine):
         super(SpaceCmdInterpreter, self).__init__()
         self.engine = engine

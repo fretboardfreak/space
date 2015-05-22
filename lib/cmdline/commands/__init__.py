@@ -15,5 +15,6 @@
 from .base import CommandMixin
 from .quit import Quit
 from .show import Show
+from .debug import Debug
 
-__all__ = [CommandMixin, Quit, Show]
+__all__ = [CommandMixin, Quit, Show, Debug]
