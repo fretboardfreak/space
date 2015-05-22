@@ -112,7 +112,7 @@ class QuitTest(BaseCommandTest):
 class ShowTest(BaseCommandTest):
     def setUp(self):
         super().setUp()
-        self.command_class = interpreter.Show
+        self.command_class = commands.Show
         self.alias_commands = ['do_sh', 'do_s']
 
 
