@@ -20,6 +20,7 @@ from cmd import Cmd
 from tests.base import SpaceTest
 
 import lib.cmdline.commands as commands
+from lib.cmdline.commands.base import CommandMixin
 import lib.cmdline.interpreter as interpreter
 from lib.engine import SpaceEngine
 
@@ -29,7 +30,7 @@ class TestInterpreterModule(SpaceTest):
         self.mock_engine = Mock(spec=SpaceEngine)
 
     def test_command_mixin(self):
-        cm = commands.CommandMixin(self.mock_engine)
+        cm = CommandMixin(self.mock_engine)
         self.assertTrue(hasattr(cm, 'engine'))
         self.assertEqual(cm.engine, self.mock_engine)
 
@@ -80,7 +81,7 @@ class TestInterpreterModule(SpaceTest):
 
 class BaseCommandTest(SpaceTest):
     def setUp(self):
-        self.command_class = commands.CommandMixin
+        self.command_class = CommandMixin
         self.alias_commands = []
         self.mock_engine = Mock(spec=SpaceEngine)
 

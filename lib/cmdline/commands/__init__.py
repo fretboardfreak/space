@@ -12,11 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base import CommandMixin
 from .quit import Quit
 from .show import Show
 from .debug import Debug
 from .planet import Planet
 from .user import User
 
-__all__ = [CommandMixin, Quit, Show, Debug, Planet, User]
+__all__ = [Quit, Show, Debug, Planet, User]
