@@ -133,5 +133,5 @@ class PlanetTest(BaseCommandTest):
 class UserTest(BaseCommandTest):
     def setUp(self):
         super().setUp()
-        self.command_class = interpreter.User
+        self.command_class = commands.User
         self.alias_commands = ['do_u']

@@ -13,10 +13,13 @@
 # limitations under the License.
 
 from .base import CommandMixin
-from .quit import Quit
-from .show import Show
-from .debug import Debug
-from .planet import Planet
-from .user import User
 
-__all__ = [CommandMixin, Quit, Show, Debug, Planet, User]
+
+class User(CommandMixin):
+    def do_user(self, line):
+        # TODO: implement change name
+        print('Not implemented yet')
+
+    def help_user(self):
+        print("Access to user admin tasks")
+    do_u = do_user

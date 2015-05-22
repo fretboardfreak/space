@@ -20,18 +20,8 @@ from . import ui
 from . import commands
 
 
-class User(commands.CommandMixin):
-    def do_user(self, line):
-        # TODO: implement change name
-        print('Not implemented yet')
-
-    def help_user(self):
-        print("Access to user admin tasks")
-    do_u = do_user
-
-
 class SpaceCmdInterpreter(Cmd, commands.Quit, commands.Debug, commands.Show,
-                          commands.Planet, User):
+                          commands.Planet, commands.User):
     def __init__(self, engine):
         super(SpaceCmdInterpreter, self).__init__()
         self.engine = engine
