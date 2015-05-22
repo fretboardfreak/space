@@ -14,13 +14,10 @@
 
 import collections
 from unittest.mock import Mock, patch
-from itertools import chain
 from cmd import Cmd
 
 from tests.base import SpaceTest
 
-import lib.cmdline.commands as commands
-from lib.cmdline.commands.base import CommandMixin
 import lib.cmdline.interpreter as interpreter
 from lib.engine import SpaceEngine
 
@@ -28,11 +25,6 @@ from lib.engine import SpaceEngine
 class TestInterpreterModule(SpaceTest):
     def setUp(self):
         self.mock_engine = Mock(spec=SpaceEngine)
-
-    def test_command_mixin(self):
-        cm = CommandMixin(self.mock_engine)
-        self.assertTrue(hasattr(cm, 'engine'))
-        self.assertEqual(cm.engine, self.mock_engine)
 
     @patch('sys.exit', autospec=True)
     @patch('lib.cmdline.ui.input_bool', autospec=True)
@@ -77,62 +69,3 @@ class TestInterpreterModule(SpaceTest):
         sci.start()
         sci.cmdloop.side_effect = Exception('foobar')
         self.assertTrue(self.mock_engine.save.called)
-
-
-class BaseCommandTest(SpaceTest):
-    def setUp(self):
-        self.command_class = CommandMixin
-        self.alias_commands = []
-        self.mock_engine = Mock(spec=SpaceEngine)
-
-    def skip_base_class(self):
-        if self.__class__.__name__ == 'BaseCommandTest':
-            self.skipTest('base class, not valid test')
-
-    def get_instance(self):
-        return self.command_class(self.mock_engine)
-
-    def test_required_methods(self):
-        self.skip_base_class()
-        required_methods = [meth.format(self.command_class.__name__.lower())
-                            for meth in ['do_{}', 'help_{}']]
-        inst = self.get_instance()
-        for method in chain(required_methods, self.alias_commands):
-            self.assertTrue(hasattr(inst, method), 'Class {} is missing '
-                            'method {}'.format(self.command_class.__name__,
-                                               method))
-
-
-class QuitTest(BaseCommandTest):
-    def setUp(self):
-        super().setUp()
-        self.command_class = commands.Quit
-        self.alias_commands = ['do_q', 'do_EOF']
-
-
-class ShowTest(BaseCommandTest):
-    def setUp(self):
-        super().setUp()
-        self.command_class = commands.Show
-        self.alias_commands = ['do_sh', 'do_s']
-
-
-class DebugTest(BaseCommandTest):
-    def setUp(self):
-        super().setUp()
-        self.command_class = commands.Debug
-        self.alias_commands = []
-
-
-class PlanetTest(BaseCommandTest):
-    def setUp(self):
-        super().setUp()
-        self.command_class = commands.Planet
-        self.alias_commands = ['do_p', 'do_pl']
-
-
-class UserTest(BaseCommandTest):
-    def setUp(self):
-        super().setUp()
-        self.command_class = commands.User
-        self.alias_commands = ['do_u']
