@@ -22,13 +22,10 @@ from . import ui
 from . import format_object
 from lib import model
 
-
-class CommandMixin(object):
-    def __init__(self, engine):
-        self.engine = engine
+from . import commands
 
 
-class Quit(CommandMixin):
+class Quit(commands.CommandMixin):
     def do_quit(self, line):
         self.engine.save()
         return True
@@ -39,7 +36,7 @@ class Quit(CommandMixin):
     do_EOF = do_quit
 
 
-class Show(CommandMixin):
+class Show(commands.CommandMixin):
     def do_show(self, line):
         show_planets = partial(format_object.print_object,
                                format_object.user_planets,
@@ -74,7 +71,7 @@ class Show(CommandMixin):
     do_s = do_show
 
 
-class Debug(CommandMixin):
+class Debug(commands.CommandMixin):
     def __print_state(self):
         print(self.engine.state)
 
@@ -103,7 +100,7 @@ class Debug(CommandMixin):
     do_dbg = do_debug
 
 
-class Planet(CommandMixin):
+class Planet(commands.CommandMixin):
     def __build(self, args):
         if args.building is None:
             format_object.print_object(
@@ -157,7 +154,7 @@ class Planet(CommandMixin):
     do_pl = do_planet
 
 
-class User(CommandMixin):
+class User(commands.CommandMixin):
     def do_user(self, line):
         # TODO: implement change name
         print('Not implemented yet')
@@ -167,7 +164,7 @@ class User(CommandMixin):
     do_u = do_user
 
 
-class SpaceCmdInterpreter(Cmd, Quit, Debug, Show, Planet, User):
+class SpaceCmdInterpreter(Cmd, commands.Quit, Debug, Show, Planet, User):
     def __init__(self, engine):
         super(SpaceCmdInterpreter, self).__init__()
         self.engine = engine
