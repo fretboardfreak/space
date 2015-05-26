@@ -45,17 +45,18 @@ class Galaxy(object):
         return '{}: systems:\n{}'.format(self.__class__.__name__, systems)
 
     def __getstate__(self):
-        systems = {}
+        systems = []
         for coord in dict(self._systems):
-            systems[coord.__getstate__()] = self._systems[coord].__getstate__()
+            systems.append((coord.__getstate__(),
+                            self._systems[coord].__getstate__()))
         return (systems,)
 
     def __setstate__(self, state):
         systems = state[0]
         self._systems = defaultdict(System)
-        for system in systems:
+        for coord_state, system_state in systems:
             coord = SystemCoord()
-            coord.__setstate__(system)
+            coord.__setstate__(coord_state)
             sys_obj = System()
-            sys_obj.__setstate__(systems[system])
+            sys_obj.__setstate__(system_state)
             self._systems[coord] = sys_obj

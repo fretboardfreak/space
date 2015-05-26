@@ -28,7 +28,7 @@ class TestLibModelGalaxy(LibModelTest):
 class TestGalaxy(ModelObjectTest, StateMixinTest):
     def setUp(self):
         super().setUp()
-        self.expected_state = (dict,)
+        self.expected_state = (list,)
         self.classname_in_repr = True
         self.expected_attrs = {}
 
@@ -36,7 +36,7 @@ class TestGalaxy(ModelObjectTest, StateMixinTest):
         return galaxy.Galaxy()
 
     def get_tst_state(self):
-        return ({},)
+        return ([],)
 
     def test_system(self):
         coord = model.Coord(1.3, 1.2, 4)
