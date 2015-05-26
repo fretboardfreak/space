@@ -13,13 +13,19 @@
 # limitations under the License.
 
 from argparse import ArgumentParser
+import code
 
 from .base import CommandMixin
 
 
 class Debug(CommandMixin):
-    def __print_state(self):
+    def print_state(self):
         print(self.engine.state)
+
+    def interactive(self):
+        local = {"__name__": "__debug_console__", "__doc__": None,
+                 "engine": self.engine}
+        code.interact(local=local)
 
     def do_debug(self, line):
         try:
@@ -29,6 +35,9 @@ class Debug(CommandMixin):
                 '-ps', '--print-state', action='store_const',
                 dest='action', const=self.print_state,
                 help='print full game state')
+            parser.add_argument(
+                '-i', '--interactive', action='store_const',
+                dest='action', const=self.interactive)
             (args, unrecognized) = parser.parse_known_args(line.split(' '))
             if args.action is None:
                 self.print_state()
