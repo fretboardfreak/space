@@ -49,8 +49,7 @@ class Planet(object):
 
     def __getstate__(self):
         resources = self.resources.__getstate__()
-        buildings = dict(zip([(bld, self.buildings[bld].__getstate__())
-                              for bld in self.buildings]))
+        buildings = [(blding, blding.level) for blding in self.buildings]
         return (self.name, self.emperor, resources, self.last_update,
                 buildings, self.sun_brightness, self.sun_distance)
 
@@ -59,9 +58,8 @@ class Planet(object):
          buildings, self.sun_brightness, self.sun_distance) = state
         self.resources = Resources().__setstate__(resources)
         self.buildings = {}
-        for bld in buildings:
-            bld_state = buildings[bld]
-            self.buildings[bld] = get_building(bld)().__setstate__(bld_state)
+        for bld, level in buildings:
+            self.buildings[bld] = get_building(bld)(level)
 
     @property
     def rates(self):
