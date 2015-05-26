@@ -156,13 +156,9 @@ class TestBuildingRequirements(ModelObjectTest, StateMixinTest):
         self.assertEqual(2, string.count('\n'))
 
 
-class TestBuildingBaseClass(ModelObjectTest, StateMixinTest,
-                            EqualityMixinTest):
+class TestBuildingBaseClass(ModelObjectTest, EqualityMixinTest):
     def get_new_instance(self, level=None):
         return building.Building(level=level)
-
-    def get_tst_state(self):
-        return (self.level,)
 
     def setUp(self):
         self.max_level = 1000  # max level to consider for these tests
