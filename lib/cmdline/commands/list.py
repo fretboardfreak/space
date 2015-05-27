@@ -19,36 +19,35 @@ from .. import format_object
 from .base import CommandMixin
 
 
-class Show(CommandMixin):
-    def do_show(self, line):
-        show_planets = partial(format_object.print_object,
+class List(CommandMixin):
+    def do_list(self, line):
+        list_planets = partial(format_object.print_object,
                                format_object.user_planets,
                                self.engine.state.user)
-        show_user = partial(format_object.print_object, format_object.user,
+        list_user = partial(format_object.print_object, format_object.user,
                             self.engine.state.user)
         try:
-            parser = ArgumentParser(prog='show',
-                                    description=self.help_show(True))
+            parser = ArgumentParser(prog='list',
+                                    description=self.help_list(True))
             parser.add_argument('-p', '--planets', action='store_const',
-                                dest='subject', const=show_planets)
+                                dest='subject', const=list_planets)
             parser.add_argument('-u', '--user', action='store_const',
-                                dest='subject', const=show_user)
+                                dest='subject', const=list_user)
             parser.add_argument('-v', '--verbose', action='store_true',
                                 dest='verbose', default=False)
 
             (args, params) = parser.parse_known_args(line.split(' '))
             setattr(args, 'params', params)
             if args.subject is None:  # no arguments
-                args.subject = show_planets
+                args.subject = list_planets
             args.subject(verbose=args.verbose)
         except SystemExit:
             pass
         return False
 
-    def help_show(self, no_print=None):
-        msg = "Show various things. Use 'show --help' for more."
+    def help_list(self, no_print=None):
+        msg = "Show various things. Use 'list --help' for more."
         if no_print:
             return msg
         print(msg)
-    do_sh = do_show
-    do_s = do_show
+    do_ls = do_list

@@ -13,9 +13,9 @@
 # limitations under the License.
 
 from .quit import Quit
-from .show import Show
+from .list import List
 from .debug import Debug
 from .planet import Planet
 from .user import User
 
-__all__ = [Quit, Show, Debug, Planet, User]
+__all__ = [Quit, List, Debug, Planet, User]
