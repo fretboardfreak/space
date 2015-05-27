@@ -75,3 +75,26 @@ for the tests to work correctly.
 
 In general tests should try to use actual code where possible to ensure changes
 meet interface expectations that dependent code might have.
+
+----
+
+Design Notes
+============
+
+Command Line Interface
+----------------------
+
+The user is the ruler of an empire of planets. He/She needs to be able to
+manage the development of each planet while also performing exploratory and
+military type space activities too.
+
+To minimize the amount of typing most commands will use a "currently focused
+object" concept. Each planet and ship squadron will be a focus-able object. To
+leverage a familiar command concept the linux ``cd`` and ``ls`` could be used
+here.
+
+- debug : access to debugging tools and game internals
+- quit  : save and exit the game
+- ls    : list focus-able entitites like planets or squadrons
+- cd    : change focussed object
+- show  : like list except show prints the details of the objects too
