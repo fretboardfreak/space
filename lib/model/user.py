@@ -40,4 +40,8 @@ class User(object):
 
     def __setstate__(self, state):
         (self.name, planets) = state
-        self.planets = [Coord().__setstate__(pl) for pl in planets]
+        self.planets = []
+        for pl in planets:
+            coord = Coord()
+            coord.__setstate__(pl)
+            self.planets.append(coord)
