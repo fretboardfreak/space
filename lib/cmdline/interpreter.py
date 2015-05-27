@@ -52,6 +52,9 @@ class SpaceCmdInterpreter(Cmd, Quit, Debug, List):
                 self.debug_post_mortem()
 
     def start_new_game(self):
+        if self.debug and ui.input_bool('Create test game state?'):
+            self.engine.new_game(self.engine.mock_new_game_info_cb)
+            return
         msg = 'Do you want to start a new game?'
         ui.input_bool(msg) or sys.exit(0)
         debug('Creating a new game')
