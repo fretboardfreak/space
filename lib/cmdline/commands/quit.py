@@ -17,7 +17,6 @@ from .base import CommandMixin
 
 class Quit(CommandMixin):
     def do_quit(self, line):
-        self.engine.save()
         return True
 
     def help_quit(self):
