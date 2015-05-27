@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pickle
+import json
 import os
 from logging import debug
 
@@ -29,13 +29,13 @@ class SpaceEngine(object):
         if not os.path.exists(self.state.save_file):
             debug('No save file to load.')
             raise FileNotFoundError('No save file to load.')
-        with open(self.state.save_file, 'rb') as sf:
-            self.state = pickle.load(sf)
+        with open(self.state.save_file, 'r') as sf:
+            self.state.__setstate__(json.load(sf))
 
     def save(self):
         debug('Saving game')
-        with open(self.state.save_file, 'wb') as fd:
-            pickle.dump(self.state, fd)
+        with open(self.state.save_file, 'w') as fd:
+            json.dump(self.state.__getstate__(), fd)
 
     def _system_callback(self, coords):
         return self.state.galaxy.system(coords)

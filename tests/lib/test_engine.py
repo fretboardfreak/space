@@ -12,30 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pickle
+import json
 import tempfile
 
 from tests.base import SpaceTest
 
 import lib.engine as engine
-
-
-class MockGameState(object):
-    def __init__(self, *args, **kwargs):
-        self.save_file = None
+import lib.model as model
 
 
 class TestEngine(SpaceTest):
 
     def setUp(self):
         self.save_file = tempfile.NamedTemporaryFile()
-        engine.GameState = MockGameState
+        engine.GameState = model.GameState
         self.engine = engine.SpaceEngine(self.save_file)
         self.engine.state.save_file = self.save_file.name
 
     def test_load(self):
         orig_state = hash(self.engine.state)
-        pickle.dump(self.engine.state, self.save_file.file)
+        with open(self.save_file.name, "w") as fout:
+            json.dump(self.engine.state.__getstate__(), fout)
         self.save_file.file.seek(0)
 
         self.engine.load()
