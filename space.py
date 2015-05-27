@@ -36,7 +36,7 @@ def main():
     print('logging to %s started' % args.log_file)
     logging.debug('logging to %s started' % args.log_file)
     engine = SpaceEngine(args.save_file)
-    SpaceCmdInterpreter(engine).start()
+    SpaceCmdInterpreter(engine, args.debug).start()
 
 
 def parse_args():
@@ -49,6 +49,9 @@ def parse_args():
     parser.add_argument(
         '-l', '--log-file', default='runlog', dest='log_file',
         help='The filename to store game logs.')
+    parser.add_argument(
+        '-d', '--debug', action='store_true', default=False, dest='debug',
+        help='Enable debugging features.')
     return parser.parse_args()
 
 

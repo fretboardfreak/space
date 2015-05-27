@@ -21,12 +21,13 @@ from .commands import Quit, Debug, List
 
 
 class SpaceCmdInterpreter(Cmd, Quit, Debug, List):
-    def __init__(self, engine):
+    def __init__(self, engine, debug=None):
         super(SpaceCmdInterpreter, self).__init__()
         self.engine = engine
         self.prompt = 'space> '
         self.doc_header = 'Space Commands'
         self.undoc_header = 'Alias Commands'
+        self.debug = False if debug is None else debug
 
     def start(self):
         try:
@@ -43,11 +44,20 @@ class SpaceCmdInterpreter(Cmd, Quit, Debug, List):
         except Exception:
             debug('Received Unknown Exception, exiting...',
                   exc_info=True, stack_info=True)
+            self.debug_post_mortem()
         finally:
-            self.engine.save()
+            try:
+                self.engine.save()
+            except:
+                self.debug_post_mortem()
 
     def start_new_game(self):
         msg = 'Do you want to start a new game?'
         ui.input_bool(msg) or sys.exit(0)
         debug('Creating a new game')
         self.engine.new_game(ui.get_new_game_info)
+
+    def debug_post_mortem(self):
+        if self.debug:
+            import pdb
+            pdb.post_mortem()
