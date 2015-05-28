@@ -65,7 +65,7 @@ def planet(_planet, verbose=None, rates=None):
     details.append(indent(res, '  '))
 
     bldngs = '\n'.join(['- {}'.format(str(bld))
-                        for bld in _planet.buildings.values()])
+                        for bld in _planet.buildings])
     details.append(bldngs)
     return "Planet {}, owner {}\n{}".format(_planet.name, _planet.emperor,
                                             '\n'.join(details))

@@ -30,8 +30,8 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
     def setUp(self):
         self.sun_brightness = 555
         self.sun_distance = 3
-        self.expected_state = (str, (str, type(None)), tuple,
-                               (int, float), list, int, int)
+        self.expected_state = (str, (str, type(None)), int, int, tuple, list,
+                               float)
         self.classname_in_repr = True
         self.expected_attrs = {
             'max_resources': model.Resources, 'name': str,
@@ -40,15 +40,18 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
             'sun_distance': int, 'rates': model.Resources,
             'ore': int, 'thorium': int, 'metal': int, 'hydrocarbon': int,
             'deuterium': int, 'sun': float, 'electricity': int,
-            'research': dict, 'buildings': dict}
+            'research': dict, 'buildings': list}
+        self.ignored_attrs = ['building'  # property getter with an argument
+                              ]
         super().setUp()
 
     def get_new_instance(self):
-        return planet.Planet(self.sun_brightness, self.sun_distance)
+        return planet.Planet(sun_brightness=self.sun_brightness,
+                             sun_distance=self.sun_distance)
 
     def get_tst_state(self):
-        return ('name', 'emperor', model.Resources().__getstate__(),
-                123456, [], 555, 3)
+        return ('name', 'emperor', 555, 3, model.Resources().__getstate__(),
+                [], 123456)
 
     def set_expected_attrs_for_representation(self):
         self.expected_attrs = {
@@ -71,8 +74,7 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
 
     def test_rates(self):
         for lvl in range(10):
-            self.object.buildings[lvl] = Building(lvl)
-            self.object.buildings[lvl].level = lvl
+            self.object.buildings.append(Building(lvl))
         self.assertEqual(self.object.rates,
                          model.Resources(ore=sum(range(10))))
 
@@ -80,7 +82,7 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
         planet.time = Mock(return_value=110.0)
         self.object.last_update = 100.0
         time_diff = 10.0
-        self.object.buildings['bld'] = Building(1)
+        self.object.buildings.append(Building(1))
         expected_rate = 1  # Building defaults to 1 ore per time unit
         return time_diff, expected_rate
 
@@ -127,7 +129,7 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
         self.assertEqual(len(self.object.buildings), 1)
         print('buildings {}'.format(self.object.buildings))
         self.assertTrue(building_type in self.object.buildings)
-        self.assertIsInstance(self.object.buildings[building_type], model.Mine)
+        self.assertIsInstance(self.object.building(building_type), model.Mine)
         self.assertLess(self.object.resources.ore, res_amt)
         self.assertLess(self.object.resources.metal, res_amt)
 
@@ -141,7 +143,7 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
         for bld, lvl, resources in expected:
             self.object.resources = resources
             if lvl > 1:
-                self.object.buildings[bld] = bld(lvl - 1)
+                self.object.buildings = [bld(lvl - 1)]
             avail = self.object.get_available_buildings()
             self.assertIn((bld, lvl), avail)
 
@@ -174,9 +176,11 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
             bldng = Building()
             bldng.electricity = Mock(spec=Building.electricity,
                                      return_value=elec_per_bld)
-            self.object.buildings[bld_num] = bldng
+            self.object.buildings.append(bldng)
         self.assertEqual(self.object.electricity, num_blds * elec_per_bld)
 
     def test_sun_distance_invalid(self):
         self.assertRaises(ModelObjectError,
-                          planet.Planet, self.sun_brightness, 0)
+                          planet.Planet,
+                          sun_brightness=self.sun_brightness,
+                          sun_distance=0)

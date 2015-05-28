@@ -48,9 +48,8 @@ class System(object):
         (self.size, self.sun_brightness, planets) = state
         self.planets = []
         for pl in planets:
-            planet = Planet()
-            planet.__setstate__(pl)
-            self.planets.append(self.planets)
+            planet = Planet(*pl)
+            self.planets.append(planet)
 
     def __eq__(self, other):
         return (self.size == other.size and

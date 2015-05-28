@@ -29,42 +29,67 @@ class Planet(object):
     max_resources = Resources(ore=15e6, metal=10e6, thorium=1e6,
                               hydrocarbon=4e5, deuterium=2e5)
 
-    def __init__(self, sun_brightness=None, sun_distance=None):
-        self.name = NameGen().gen_word(no_repeat=True)
-        self.emperor = None
-        self.resources = Resources()
-        self.last_update = time()
+    def __init__(self, name=None, emperor=None, sun_brightness=None,
+                 sun_distance=None, resources=None, buildings=None,
+                 last_update=None):
+        self.name = name
+        if self.name is None:
+            self.name = NameGen().gen_word(no_repeat=True)
+
+        self.emperor = emperor
+
+        self.resources = resources
+        if self.resources is None:
+            self.resources = Resources()
+        elif not isinstance(self.resources, Resources):
+            # state tuple not object
+            tmp = Resources()
+            tmp.__setstate__(self.resources)
+            self.resources = tmp
+
         self.sun_brightness = sun_brightness
         if sun_distance is not None and sun_distance <= 0:
             raise ModelObjectError(
                 'Planet: Sun Distance must be greater than 0.')
         self.sun_distance = sun_distance
 
-        # keys will be the building classname
-        self.buildings = dict()
-        debug('Constructing new Planet: name={}, sun_dist={}, '
+        self.buildings = buildings
+        if self.buildings is None:
+            self.buildings = []
+        elif (len(self.buildings) > 0 and
+              not isinstance(self.buildings[0], tuple(ALL_BUILDINGS))):
+            self.load_buildings(self.buildings)
+
+        self.last_update = last_update
+        if self.last_update is None:
+            self.last_update = time()
+
+        debug('Planet object initialized: name={}, sun_dist={}, '
               ' sun_brightness={}, resources={}'.format(
                   self.name, self.sun_distance, self.sun_brightness,
-                  self.resources))
+                  repr(self.resources)))
 
     def __getstate__(self):
         resources = self.resources.__getstate__()
-        buildings = [(blding, blding.level) for blding in self.buildings]
-        return (self.name, self.emperor, resources, self.last_update,
-                buildings, self.sun_brightness, self.sun_distance)
+        buildings = [(blding.abbr, blding.level) for blding in self.buildings]
+        return (self.name, self.emperor, self.sun_brightness,
+                self.sun_distance, resources, buildings, self.last_update)
 
     def __setstate__(self, state):
-        (self.name, self.emperor, resources, self.last_update,
-         buildings, self.sun_brightness, self.sun_distance) = state
+        (self.name, self.emperor, self.sun_brightness,
+         self.sun_distance, resources, buildings, self.last_update) = state
         self.resources = Resources().__setstate__(resources)
-        self.buildings = {}
+        self.load_buildings(buildings)
+
+    def load_buildings(self, buildings):
+        self.buildings = []
         for bld, level in buildings:
-            self.buildings[bld] = get_building(bld)(level)
+            self.buildings.append(get_building(bld)(level))
 
     @property
     def rates(self):
         rates = Resources()
-        for bld in self.buildings.values():
+        for bld in self.buildings:
             rates += bld.modifier
         return rates
 
@@ -86,7 +111,10 @@ class Planet(object):
                 building, level, self.name))
             new_blding = building(level)
             self.resources -= new_blding.requirements.resources
-            self.buildings[building_name] = new_blding
+            # Remove existing building if exists
+            self.buildings = [blding for blding in self.buildings
+                              if blding.name != building_name]
+            self.buildings.append(new_blding)
             return True
         else:
             debug('Construction attempt failed on planet {}, not enough'
@@ -94,7 +122,7 @@ class Planet(object):
             return False
 
     def build(self, building):
-        existing = self.buildings.get(building, None)
+        existing = self.building(building)
         level = 1 if not existing else existing.level + 1
         return self._build_building(building, level)
 
@@ -103,7 +131,7 @@ class Planet(object):
               '{}'.format(self.name))
         avail = []
         for building in ALL_BUILDINGS:
-            existing = self.buildings.get(building, None)
+            existing = self.building(building)
             level = 1 if not existing else existing.level + 1
             if building.are_requirements_met(self, level):
                 avail.append((building, level))
@@ -122,7 +150,7 @@ class Planet(object):
         resources = ['  {}: {} ({})'.format(name, self.resources[name],
                                             self.rates[name])
                      for name in self.resources]
-        buildings = ['  {}'.format(bld) for bld in self.buildings.values()]
+        buildings = ['  {}'.format(bld) for bld in self.buildings]
         return ("{}: {}, Emperor: {},\nSun: {}, Electricity: {}\n"
                 "Resources:\n{}\nBuildings:\n{}\nResearch: {}\n"
                 "Last Update: {}".format(
@@ -161,8 +189,14 @@ class Planet(object):
     @property
     def electricity(self):
         return sum([bld.electricity(self.sun)
-                    for bld in self.buildings.values()])
+                    for bld in self.buildings])
 
     @property
     def research(self):
         return dict()
+
+    def building(self, building_type):
+        bld_cls = get_building(building_type)
+        for building in self.buildings:
+            if isinstance(building, bld_cls):
+                return building
