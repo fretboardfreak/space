@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from logging import info
 from argparse import ArgumentParser
 import code
 
+from lib.engine import SpaceEngine
 from .base import CommandMixin
 
 
@@ -27,6 +29,11 @@ class Debug(CommandMixin):
                  "engine": self.engine}
         code.interact(local=local)
 
+    def new_state(self):
+        info('Creating new test state...')
+        self.engine = SpaceEngine(self.engine.state.save_file)
+        self.engine.new_game(self.engine.mock_new_game_info_cb)
+
     def do_debug(self, line):
         try:
             parser = ArgumentParser(
@@ -38,6 +45,9 @@ class Debug(CommandMixin):
             parser.add_argument(
                 '-i', '--interactive', action='store_const',
                 dest='action', const=self.interactive)
+            parser.add_argument(
+                '-n', '--new-state', action='store_const',
+                dest='action', const=self.new_state)
             (args, unrecognized) = parser.parse_known_args(line.split(' '))
             if args.action is None:
                 self.print_state()
