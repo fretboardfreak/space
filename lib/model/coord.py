@@ -50,14 +50,14 @@ class BaseCoord(object):
         self.y = '.'.join([str(self.y).split('.')[0], sys_y])
 
     def __eq__(self, other):
-        return all([getattr(self, attr) == getattr(other, attr)
-                    for attr in self._eq_attrs])
+        return all(getattr(self, attr) == getattr(other, attr)
+                   for attr in self._eq_attrs)
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def __hash__(self):
-        return hash(tuple([getattr(self, attr) for attr in self._eq_attrs]))
+        return hash(tuple(getattr(self, attr) for attr in self._eq_attrs))
 
 
 class Coord(BaseCoord):

@@ -174,8 +174,8 @@ def _load_sample(filename):
     # remove all characters except letters from A to Z
     a = ord('a')
     z = ord('z')
-    sample = ''.join([c if (ord(c) >= a and ord(c) <= z) else ' '
-                      for c in sample])
+    sample = ''.join(c if (ord(c) >= a and ord(c) <= z) else ' '
+                     for c in sample)
 
     return sample
 
@@ -186,7 +186,7 @@ def main():
     sep = ', '
     if args.newline:
         sep = '\n'
-    print(sep.join([generator.gen_word() for _ in range(args.count)]))
+    print(sep.join(generator.gen_word() for _ in range(args.count)))
     return 0
 
 

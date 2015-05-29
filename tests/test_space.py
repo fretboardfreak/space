@@ -98,5 +98,5 @@ class TestSpace(SpaceTest):
         space.main()
         self.assertTrue(mock_engine.called)
         self.assertTrue(mock_interpreter.called)
-        self.assertTrue(any([True for call in mock_interpreter.mock_calls
-                             if 'start' in call[0]]))
+        self.assertTrue(any(True for call in mock_interpreter.mock_calls
+                            if 'start' in call[0]))

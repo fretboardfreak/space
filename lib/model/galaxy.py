@@ -34,13 +34,13 @@ class Galaxy(object):
         return system.planets[int(coord.planet)]
 
     def __repr__(self):
-        systems = ','.join(['{}: {}'.format(coord, repr(system))
-                            for coord, system in self._systems.items()])
+        systems = ','.join('{}: {}'.format(coord, repr(system))
+                           for coord, system in self._systems.items())
         return "{}(systems: [{}])".format(self.__class__.__name__, systems)
 
     def __str__(self):
-        systems = '\n'.join(['{}: {}'.format(coord, str(system))
-                             for coord, system in self._systems.items()])
+        systems = '\n'.join('{}: {}'.format(coord, str(system))
+                            for coord, system in self._systems.items())
         systems.replace('\n', '\n    ')  # indent the systems a bit
         return '{}: systems:\n{}'.format(self.__class__.__name__, systems)
 

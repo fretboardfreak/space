@@ -65,7 +65,7 @@ class ModelObjectTest(SpaceTest):
         for attr in self.expected_attrs:
             attr = attr.replace('_', ' ')
             patterns = ['{}:{}'.format(attr, sep) for sep in (' ', '\n')]
-            self.assertTrue(any([pat in lower for pat in patterns]),
+            self.assertTrue(any(pat in lower for pat in patterns),
                             "Expected Attr {} is missing from model "
                             "{}".format(attr, type(self.object)))
 
@@ -82,10 +82,10 @@ class ModelObjectTest(SpaceTest):
         self.assert_attrs_in_string(string)
 
     def test_attrs(self):
-        actual = set([attr for attr in dir(self.object)
+        actual = set(attr for attr in dir(self.object)
                      if not attr.startswith('_') and
                      not isinstance(getattr(self.object, attr),
-                                    (property, classmethod, Callable,))])
+                                    (property, classmethod, Callable,)))
         if self.warnings_to_errors:
             self.assertEqual(set(self.expected_attrs.keys()), actual)
         else:

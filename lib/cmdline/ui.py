@@ -88,8 +88,8 @@ def get_new_game_info(system_query_cb):
     planet_num_qry = ('That system has %s planets. Which one did you say '
                       'was yours?\n%s\nplanet=' %
                       (len(system.planets),
-                       '\n'.join([' %s. %s' % (i, p.name) for i, p in
-                                  enumerate(system.planets)])))
+                       '\n'.join(' %s. %s' % (i, p.name) for i, p in
+                                 enumerate(system.planets))))
     planet_num = input_int(planet_num_qry, minimum=0,
                            maximum=len(system.planets) - 1)
     home_coords.planet = planet_num

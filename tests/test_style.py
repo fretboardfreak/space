@@ -31,7 +31,7 @@ class TestPep8(SpaceTest):
         filepaths = []
         for path, dirs, files in os.walk(top):
             for filename in files:
-                if all([test(filename) for test in self.file_filters]):
+                if all(test(filename) for test in self.file_filters):
                     filepaths.append(os.path.join(path, filename))
         return filepaths
 
