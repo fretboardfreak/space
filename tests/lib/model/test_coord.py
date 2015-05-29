@@ -34,7 +34,8 @@ class BaseCoordTest(ModelObjectTest):
     def setUp(self):
         super().setUp()
         self.classname_in_repr = True
-        self.expected_attrs = {'x': str, 'y': str}
+        self.expected_attrs = {'x': str, 'y': str, 'system': tuple,
+                               'sector': tuple}
 
     def get_new_instance(self):
         return coord.BaseCoord(0, 0)
@@ -98,7 +99,8 @@ class TestCoord(BaseCoordTest):
     def setUp(self):
         super().setUp()
         self.classname_in_repr = True
-        self.expected_attrs = {'x': str, 'y': str, 'planet': str}
+        self.expected_attrs = {'x': str, 'y': str, 'system': tuple,
+                               'sector': tuple, 'planet': str}
 
     def get_new_instance(self):
         return coord.Coord(0, 0, 0)
@@ -150,7 +152,8 @@ class TestSystemCoord(BaseCoordTest):
     def setUp(self):
         super().setUp()
         self.classname_in_repr = True
-        self.expected_attrs = {'x': str, 'y': str}
+        self.expected_attrs = {'x': str, 'y': str, 'system': tuple,
+                               'sector': tuple}
 
     def get_new_instance(self):
         return coord.SystemCoord(0, 0)
