@@ -14,6 +14,7 @@
 
 from unittest.mock import Mock
 from itertools import chain
+from unittest import skip
 
 from tests.base import SpaceTest
 
@@ -24,11 +25,19 @@ from lib.engine import SpaceEngine
 class TestBase(SpaceTest):
     def setUp(self):
         self.mock_engine = Mock(spec=SpaceEngine)
+        self.cm = CommandMixin(self.mock_engine)
 
     def test_command_mixin(self):
-        cm = CommandMixin(self.mock_engine)
-        self.assertTrue(hasattr(cm, 'engine'))
-        self.assertEqual(cm.engine, self.mock_engine)
+        self.assertTrue(hasattr(self.cm, 'engine'))
+        self.assertEqual(self.cm.engine, self.mock_engine)
+
+    @skip('NI')
+    def test_command_mixin_do(self):
+        pass
+
+    @skip('NI')
+    def test_command_mixin_add_argument(self):
+        pass
 
 
 class BaseCommandTest(SpaceTest):
