@@ -5,6 +5,22 @@ Completed Trello Lists can be found at:
 
     https://trello.com/b/NESdK97q/space-changelog
 
+:version: 0.2
+:date: 2015-05-29
+- improved game model state to ensure save/load works correctly
+- use lists of tuples to represent dict values in state
+- converted save file format into JSON to make game inspection a little simpler
+- building and planet electricity calculations were improved to make the
+  electricity value a property of other state values.
+- added commands subpackage to the cmdline package
+- added debug option to space.py to trigger a PDB session when an error occurs
+- added "--interactive" option to the debug command to start a python
+  interpreter with access to the game internals
+- added "--new-state" option to the debug command to recreate a test game state
+- renamed "show" command to "list"
+- use generator comprehensions over list comprehensions where possible
+
+----
 
 :version: 0.1
 :date: 2015-05-06
