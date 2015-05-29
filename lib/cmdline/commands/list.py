@@ -13,41 +13,31 @@
 # limitations under the License.
 
 from argparse import ArgumentParser
-from functools import partial
 
 from .. import format_object
 from .base import CommandMixin
 
 
 class List(CommandMixin):
+    """List the objects that can be focussed on."""
+    def __list_planets(self, args):
+        format_object.print_object(format_object.user_planets,
+                                   self.engine.state.user)
+
+    def __setup_parser(self):
+        parser = ArgumentParser(prog='list', description=List.__doc__)
+        self._add_argument(parser, '-p', '--planets',
+                           const=self.__list_planets,
+                           help="[DEFAULT] List focussable planets.")
+        parser.add_argument('-v', '--verbose', action='store_true',
+                            dest='verbose', default=False)
+
+        return parser, self.__list_planets
+
     def do_list(self, line):
-        list_planets = partial(format_object.print_object,
-                               format_object.user_planets,
-                               self.engine.state.user)
-        list_user = partial(format_object.print_object, format_object.user,
-                            self.engine.state.user)
-        try:
-            parser = ArgumentParser(prog='list',
-                                    description=self.help_list(True))
-            parser.add_argument('-p', '--planets', action='store_const',
-                                dest='subject', const=list_planets)
-            parser.add_argument('-u', '--user', action='store_const',
-                                dest='subject', const=list_user)
-            parser.add_argument('-v', '--verbose', action='store_true',
-                                dest='verbose', default=False)
+        super(List, self)._do(line, self.__setup_parser)
 
-            (args, params) = parser.parse_known_args(line.split(' '))
-            setattr(args, 'params', params)
-            if args.subject is None:  # no arguments
-                args.subject = list_planets
-            args.subject(verbose=args.verbose)
-        except SystemExit:
-            pass
-        return False
+    def help_list(self):
+        print(List.__doc__)
 
-    def help_list(self, no_print=None):
-        msg = "Show various things. Use 'list --help' for more."
-        if no_print:
-            return msg
-        print(msg)
     do_ls = do_list
