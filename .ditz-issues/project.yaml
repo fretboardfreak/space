@@ -37,3 +37,12 @@ releases:
     - Curtis Sand <curtis@curtissand.com>
     - released
     - ""
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: v1.0
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2015-06-03 13:23:02.877206 Z
+    - Curtis Sand <curtis@curtissand.com>
+    - created
+    - Functional Command Line Interface
