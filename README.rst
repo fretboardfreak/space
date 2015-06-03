@@ -21,13 +21,33 @@ Bitbucket.
 - https://github.com/fretboardfreak/space
 - https://bitbucket.org/fret/space
 
-For planning and issue tracking I am using a public Trello board. I chose
-Trello over either of the issue tracker offerings of Github or Bitbucket
-because it gives me more freedom to fit the workflow I like to use.
+The code is predominantly written in python 3 and the python PEP8
+recommendation is followed to help ensure clean readable style.
 
-- https://trello.com/b/Oi1ucOMB/space
+For planning and issue tracking I am trying out the `PyDitz`_ project, which is
+a python fork of the original Ditz project.
 
-The code is predominantly written in python 3.
+.. note:: For installing pyditz I've cloned the mercurial repository and have
+          been using 0.9 in-development version.  To do this I cloned the repo,
+          installed the pre-requisites (now included in Space's
+          ``dev-requirements.txt`` file), and installed ditz with "python
+          setup.py install".  At the time of this writing you can also get
+          pyditz by installing version 0.8 from `PyPi`_.
+
+.. _PyDitz: https://bitbucket.org/zondo/pyditz
+.. _PyPI: https://pypi.python.org
+
+.. note:: Releases v0.1 and v0.2 were created before the project migrated to
+          ditz.  As such the content in the ``CHANGES`` change-log file and
+          export content from pyditz may appear different than later releases.
+
+.. topic:: deprecated as of 2015-06-03
+
+    For planning and issue tracking I am using a public Trello board. I chose
+    Trello over either of the issue tracker offerings of Github or Bitbucket
+    because it gives me more freedom to fit the workflow I like to use.
+
+    - https://trello.com/b/Oi1ucOMB/space
 
 Versioning
 ^^^^^^^^^^
