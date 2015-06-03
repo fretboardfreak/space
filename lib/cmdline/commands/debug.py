@@ -21,45 +21,39 @@ from .base import CommandMixin
 
 
 class Debug(CommandMixin):
-    def print_state(self):
+    """Provides access to some debugging features."""
+
+    def __print_state(self, args):
         print(self.engine.state)
 
-    def interactive(self):
+    def __interactive(self, args):
         local = {"__name__": "__debug_console__", "__doc__": None,
                  "engine": self.engine}
         code.interact(local=local)
 
-    def new_state(self):
+    def __new_state(self, args):
         info('Creating new test state...')
         self.engine = SpaceEngine(self.engine.state.save_file)
         self.engine.new_game(self.engine.mock_new_game_info_cb)
 
-    def do_debug(self, line):
-        try:
-            parser = ArgumentParser(
-                prog='dbg', description=self.help_debug(True))
-            parser.add_argument(
-                '-ps', '--print-state', action='store_const',
-                dest='action', const=self.print_state,
-                help='print full game state')
-            parser.add_argument(
-                '-i', '--interactive', action='store_const',
-                dest='action', const=self.interactive)
-            parser.add_argument(
-                '-n', '--new-state', action='store_const',
-                dest='action', const=self.new_state)
-            (args, unrecognized) = parser.parse_known_args(line.split(' '))
-            if args.action is None:
-                self.print_state()
-            else:
-                args.action()
-        except SystemExit:
-            pass
-        return False
+    def __setup_parser(self):
+        parser = ArgumentParser(prog='debug', description=Debug.__doc__)
+        self._add_argument(parser, '-ps', '--print-state',
+                           const=self.__print_state,
+                           help='[Default] print full game state.')
+        self._add_argument(parser, '-i', '--interactive',
+                           const=self.__interactive,
+                           help='Start interactive python session.')
+        self._add_argument(parser, '-n', '--new-state',
+                           const=self.__new_state,
+                           help='Create a new test state. Note: A new'
+                           ' state will override the existing one.')
+        return parser, self.__print_state
 
-    def help_debug(self, no_print=None):
-        hlp = "Provides access to some debugging commands."
-        if no_print:
-            return hlp
-        print(hlp)
+    def do_debug(self, line):
+        super(Debug, self)._do(line, self.__setup_parser)
+
+    def help_debug(self):
+        print(Debug.__doc__)
+
     do_dbg = do_debug
