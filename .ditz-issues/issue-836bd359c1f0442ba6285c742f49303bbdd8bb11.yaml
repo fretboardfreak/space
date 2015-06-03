@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: "Planet: implement tests for constructing a building"
+desc: The logic already exists, the test needs to be added.
+type: :task
+component: model
+release: 
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-06-03 12:17:10.464927 Z
+references: []
+
+id: 836bd359c1f0442ba6285c742f49303bbdd8bb11
+log_events: 
+- - 2015-06-03 12:17:10.466622 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""

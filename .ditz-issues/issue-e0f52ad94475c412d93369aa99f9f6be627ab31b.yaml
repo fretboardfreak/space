@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Use "current planet" concept on CLI
+desc: Commands will operate on the currently focussed planet. This should save some typing and create a slightly more intuitive interface.
+type: :feature
+component: front_end
+release: 
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-06-03 12:34:29.086262 Z
+references: []
+
+id: e0f52ad94475c412d93369aa99f9f6be627ab31b
+log_events: 
+- - 2015-06-03 12:34:29.088972 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""

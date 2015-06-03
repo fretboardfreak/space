@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: "Resources: add logic for absolute_value vs. trade_value representation"
+desc: A planet cannot have a negative amount of a tangible resource like Ore. The resources object currently enforces this.  However, for some calculations and to represent the cost of constructing a building there should be a flag to switch the Resources logic into a mode where negative values can be sensibly used.
+type: :feature
+component: model
+release: 
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-06-03 12:25:20.821155 Z
+references: []
+
+id: cff1f20cd0140647b8e03c52df2dd0123875d5a6
+log_events: 
+- - 2015-06-03 12:25:20.823443 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""

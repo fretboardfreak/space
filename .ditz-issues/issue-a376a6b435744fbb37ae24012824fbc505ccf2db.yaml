@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: "Resources: add logic for multiply and divide"
+desc: For representing costs of constructing things it would be handy to be able to use multiplication and/or division.
+type: :feature
+component: model
+release: 
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-06-03 12:29:23.522852 Z
+references: []
+
+id: a376a6b435744fbb37ae24012824fbc505ccf2db
+log_events: 
+- - 2015-06-03 12:29:23.525346 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""

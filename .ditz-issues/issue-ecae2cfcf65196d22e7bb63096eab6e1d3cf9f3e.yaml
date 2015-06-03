@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: "Building: remove double negative logic from Mine tests"
+desc: ""
+type: :bugfix
+component: model
+release: 
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-06-03 12:20:23.312437 Z
+references: []
+
+id: ecae2cfcf65196d22e7bb63096eab6e1d3cf9f3e
+log_events: 
+- - 2015-06-03 12:20:23.314758 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""

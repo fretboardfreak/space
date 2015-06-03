@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: parametrize building tests
+desc: There should be a way to loop through and verify some basic details for all the buildings and the possible levels they could have.
+type: :task
+component: model
+release: 
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-06-03 12:27:01.472813 Z
+references: []
+
+id: c4542bf397d36cb162e6215066eab2892cddab9e
+log_events: 
+- - 2015-06-03 12:27:01.475512 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""

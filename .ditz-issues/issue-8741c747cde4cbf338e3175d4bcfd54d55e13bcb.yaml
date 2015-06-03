@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: "Planet: add production ratio setting to fine tune behaviour of a planet"
+desc: An Emperor may need to micro-manage some of the facilities on a planet. For example if the planet cannot provide enough electricity to run everything at once, the emperor should be able to change the operating level of each unit (say in increments of 10%) to make best use of the resources available.
+type: :feature
+component: model
+release: 
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-06-03 12:32:27.411468 Z
+references: []
+
+id: 8741c747cde4cbf338e3175d4bcfd54d55e13bcb
+log_events: 
+- - 2015-06-03 12:32:27.414277 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""

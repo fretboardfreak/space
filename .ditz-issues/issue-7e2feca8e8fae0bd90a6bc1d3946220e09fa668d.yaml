@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: "Resources: context managers for absolute vs trade value representation"
+desc: ""
+type: :feature
+component: model
+release: 
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-06-03 12:25:52.282916 Z
+references: []
+
+id: 7e2feca8e8fae0bd90a6bc1d3946220e09fa668d
+log_events: 
+- - 2015-06-03 12:25:52.285292 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""
