@@ -113,8 +113,12 @@ object" concept. Each planet and ship squadron will be a focus-able object. To
 leverage a familiar command concept the linux ``cd`` and ``ls`` could be used
 here.
 
-- debug : access to debugging tools and game internals
-- quit  : save and exit the game
-- ls    : list focus-able entitites like planets or squadrons
-- cd    : change focussed object
-- show  : like list except show prints the details of the objects too
+- debug    : access to debugging tools and game internals
+- quit     : save and exit the game
+- ls       : list focus-able entitites like planets or squadrons
+- cd       : change focussed object
+- show     : like list except show prints the details of the objects too
+- user     : access to the user's profile and statistics
+- build    : direct construction activities
+- shipyard : direct shipyard activities
+- research : direct research activities
