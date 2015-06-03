@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: common tests for model objects
+desc: Write some common test code that can be used across all game model objects.
+type: :task
+component: model
+release: v0.1
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-06-03 10:11:36.312218 Z
+references: []
+
+id: 9b16829af77f1d1dd06dfae95ed25a50f0185b11
+log_events: 
+- - 2015-06-03 10:11:36.315942 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""
