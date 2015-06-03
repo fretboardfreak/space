@@ -1,22 +1,22 @@
 --- !ditz.rubyforge.org,2008-03-06/issue 
-title: common tests for model objects
-desc: Write some common test code that can be used across all game model objects.
-type: :task
-component: model
+title: run pep8/pyflakes on all files as part of tests
+desc: ""
+type: :feature
+component: space
 release: v0.1
 reporter: Curtis Sand <curtis@curtissand.com>
 status: :closed
 disposition: :fixed
-creation_time: 2015-06-03 10:11:36.312218 Z
+creation_time: 2015-06-03 10:42:04.811806 Z
 references: []
 
-id: 9b16829af77f1d1dd06dfae95ed25a50f0185b11
+id: 8436a2432e867141e18d77f821f6eb47e309a199
 log_events: 
-- - 2015-06-03 10:11:36.315942 Z
+- - 2015-06-03 10:42:04.817509 Z
   - Curtis Sand <curtis@curtissand.com>
   - created
   - ""
-- - 2015-06-03 10:18:25.086302 Z
+- - 2015-06-03 10:51:13.253045 Z
   - Curtis Sand <curtis@curtissand.com>
   - closed with disposition fixed
   - ""

@@ -1,31 +1,39 @@
---- !ditz.rubyforge.org,2008-03-06/project 
+--- !ditz.rubyforge.org,2008-03-06/project
 name: space
 version: "0.5"
-components: 
-- !ditz.rubyforge.org,2008-03-06/component 
+components:
+- !ditz.rubyforge.org,2008-03-06/component
   name: space
-- !ditz.rubyforge.org,2008-03-06/component 
+- !ditz.rubyforge.org,2008-03-06/component
   name: model
-- !ditz.rubyforge.org,2008-03-06/component 
+- !ditz.rubyforge.org,2008-03-06/component
   name: front_end
-- !ditz.rubyforge.org,2008-03-06/component 
+- !ditz.rubyforge.org,2008-03-06/component
   name: engine
-releases: 
-- !ditz.rubyforge.org,2008-03-06/release 
+releases:
+- !ditz.rubyforge.org,2008-03-06/release
   name: v0.1
-  status: :unreleased
-  release_time: 
-  log_events: 
+  status: :released
+  release_time: 2015-06-03 10:52:19.322361 Z
+  log_events:
   - - 2015-06-03 10:03:51.243168 Z
     - Curtis Sand <curtis@curtissand.com>
     - created
     - Python 3 support and unit test coverage.
-- !ditz.rubyforge.org,2008-03-06/release 
+  - - 2015-06-03 10:52:19.322505 Z
+    - Curtis Sand <curtis@curtissand.com>
+    - released
+    - ""
+- !ditz.rubyforge.org,2008-03-06/release
   name: v0.2
-  status: :unreleased
-  release_time: 
-  log_events: 
+  status: :released
+  release_time: 2015-06-03 11:48:13.480122 Z
+  log_events:
   - - 2015-06-03 10:04:19.569098 Z
     - Curtis Sand <curtis@curtissand.com>
     - created
     - Save State.
+  - - 2015-06-03 11:48:13.480219 Z
+    - Curtis Sand <curtis@curtissand.com>
+    - released
+    - ""

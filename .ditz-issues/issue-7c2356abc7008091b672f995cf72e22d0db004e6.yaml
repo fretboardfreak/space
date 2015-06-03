@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: command for accessing game internals via the interpreter
+desc: ""
+type: :feature
+component: front_end
+release: v0.2
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :closed
+disposition: :fixed
+creation_time: 2015-06-03 11:04:04.925405 Z
+references: []
+
+id: 7c2356abc7008091b672f995cf72e22d0db004e6
+log_events: 
+- - 2015-06-03 11:04:04.932408 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""
+- - 2015-06-03 11:46:00.317465 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - closed with disposition fixed
+  - ""

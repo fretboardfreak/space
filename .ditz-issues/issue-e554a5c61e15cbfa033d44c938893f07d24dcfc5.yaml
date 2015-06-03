@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: use generator comprehensions where possible
+desc: ""
+type: :task
+component: space
+release: v0.2
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :closed
+disposition: :fixed
+creation_time: 2015-06-03 11:03:40.942472 Z
+references: []
+
+id: e554a5c61e15cbfa033d44c938893f07d24dcfc5
+log_events: 
+- - 2015-06-03 11:03:40.949429 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""
+- - 2015-06-03 11:45:51.517690 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - closed with disposition fixed
+  - ""

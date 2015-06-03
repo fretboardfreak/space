@@ -1,22 +1,22 @@
 --- !ditz.rubyforge.org,2008-03-06/issue 
-title: common tests for model objects
-desc: Write some common test code that can be used across all game model objects.
+title: Engine missing tests
+desc: ""
 type: :task
-component: model
+component: engine
 release: v0.1
 reporter: Curtis Sand <curtis@curtissand.com>
 status: :closed
 disposition: :fixed
-creation_time: 2015-06-03 10:11:36.312218 Z
+creation_time: 2015-06-03 10:47:21.078726 Z
 references: []
 
-id: 9b16829af77f1d1dd06dfae95ed25a50f0185b11
+id: 50d7d14d31d99c814eb8e15bea7f4721263edaa0
 log_events: 
-- - 2015-06-03 10:11:36.315942 Z
+- - 2015-06-03 10:47:21.083896 Z
   - Curtis Sand <curtis@curtissand.com>
   - created
   - ""
-- - 2015-06-03 10:18:25.086302 Z
+- - 2015-06-03 10:52:07.522762 Z
   - Curtis Sand <curtis@curtissand.com>
   - closed with disposition fixed
   - ""

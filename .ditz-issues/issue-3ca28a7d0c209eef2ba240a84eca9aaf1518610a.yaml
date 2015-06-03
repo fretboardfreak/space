@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: "building: comparison tests make wrong assumption about value"
+desc: Some buildings have increased cost as they level up, some increase in value.  The assumption made by the tests is that the value is monotonically increasing. The tests need to be more flexible to deal with different building types.
+type: :bugfix
+component: model
+release: v0.1
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :closed
+disposition: :fixed
+creation_time: 2015-06-03 10:38:40.356469 Z
+references: []
+
+id: 3ca28a7d0c209eef2ba240a84eca9aaf1518610a
+log_events: 
+- - 2015-06-03 10:38:40.361746 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""
+- - 2015-06-03 10:50:01.223750 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - closed with disposition fixed
+  - ""

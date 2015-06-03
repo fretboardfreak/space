@@ -1,22 +1,22 @@
 --- !ditz.rubyforge.org,2008-03-06/issue 
-title: common tests for model objects
-desc: Write some common test code that can be used across all game model objects.
-type: :task
+title: factory methods or better constructors for restoring state
+desc: ""
+type: :bugfix
 component: model
-release: v0.1
+release: v0.2
 reporter: Curtis Sand <curtis@curtissand.com>
 status: :closed
 disposition: :fixed
-creation_time: 2015-06-03 10:11:36.312218 Z
+creation_time: 2015-06-03 11:02:12.298021 Z
 references: []
 
-id: 9b16829af77f1d1dd06dfae95ed25a50f0185b11
+id: 565764ff3ff7c1d7a479c5c6dcb9ef4845ee557b
 log_events: 
-- - 2015-06-03 10:11:36.315942 Z
+- - 2015-06-03 11:02:12.304182 Z
   - Curtis Sand <curtis@curtissand.com>
   - created
   - ""
-- - 2015-06-03 10:18:25.086302 Z
+- - 2015-06-03 11:45:20.431055 Z
   - Curtis Sand <curtis@curtissand.com>
   - closed with disposition fixed
   - ""

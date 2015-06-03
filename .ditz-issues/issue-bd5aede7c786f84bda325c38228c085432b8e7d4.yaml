@@ -1,22 +1,22 @@
 --- !ditz.rubyforge.org,2008-03-06/issue 
-title: common tests for model objects
-desc: Write some common test code that can be used across all game model objects.
+title: replace 3rd party mock with unittest.mock
+desc: ""
 type: :task
-component: model
+component: space
 release: v0.1
 reporter: Curtis Sand <curtis@curtissand.com>
 status: :closed
 disposition: :fixed
-creation_time: 2015-06-03 10:11:36.312218 Z
+creation_time: 2015-06-03 10:40:48.398976 Z
 references: []
 
-id: 9b16829af77f1d1dd06dfae95ed25a50f0185b11
+id: bd5aede7c786f84bda325c38228c085432b8e7d4
 log_events: 
-- - 2015-06-03 10:11:36.315942 Z
+- - 2015-06-03 10:40:48.404553 Z
   - Curtis Sand <curtis@curtissand.com>
   - created
   - ""
-- - 2015-06-03 10:18:25.086302 Z
+- - 2015-06-03 10:50:38.574426 Z
   - Curtis Sand <curtis@curtissand.com>
   - closed with disposition fixed
   - ""

@@ -1,22 +1,22 @@
 --- !ditz.rubyforge.org,2008-03-06/issue 
-title: common tests for model objects
-desc: Write some common test code that can be used across all game model objects.
-type: :task
+title: "planet: add buildings and research to state"
+desc: ""
+type: :bugfix
 component: model
-release: v0.1
+release: v0.2
 reporter: Curtis Sand <curtis@curtissand.com>
 status: :closed
 disposition: :fixed
-creation_time: 2015-06-03 10:11:36.312218 Z
+creation_time: 2015-06-03 11:02:40.937023 Z
 references: []
 
-id: 9b16829af77f1d1dd06dfae95ed25a50f0185b11
+id: 493fd130eea12ccbaba8f6ace7eafbca51b4e2f5
 log_events: 
-- - 2015-06-03 10:11:36.315942 Z
+- - 2015-06-03 11:02:40.943765 Z
   - Curtis Sand <curtis@curtissand.com>
   - created
   - ""
-- - 2015-06-03 10:18:25.086302 Z
+- - 2015-06-03 11:45:28.486393 Z
   - Curtis Sand <curtis@curtissand.com>
   - closed with disposition fixed
   - ""
