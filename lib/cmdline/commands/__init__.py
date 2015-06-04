@@ -15,7 +15,5 @@
 from .quit import Quit
 from .list import List
 from .debug import Debug
-from .planet import Planet
-from .user import User
 
-__all__ = [Quit, List, Debug, Planet, User]
+__all__ = [Quit, List, Debug]
