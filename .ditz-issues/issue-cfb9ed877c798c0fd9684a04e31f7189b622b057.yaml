@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: remove gamestate object
+desc: The engine and gamestate objects don't add value currently by being separated and add an additional level when accessing game objects. YAGNI principle says we should remove that extra layer for simplicity until there is a reason for it.
+type: :task
+component: model
+release: v1.0
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-06-07 10:21:23.563588 Z
+references: []
+
+id: cfb9ed877c798c0fd9684a04e31f7189b622b057
+log_events: 
+- - 2015-06-07 10:21:23.565342 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""
+- - 2015-06-07 10:22:48.859917 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - assigned to release v1.0 from unassigned
+  - ""
