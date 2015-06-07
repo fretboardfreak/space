@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: add pep257 compatible docstring documentation
+desc: Document the whole project using docstrings so that it can be exported into a manual of some sort.
+type: :task
+component: space
+release: 
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-06-07 15:23:49.451782 Z
+references: []
+
+id: 99c7ff679205b437d17a1633666afbf34a0494e2
+log_events: 
+- - 2015-06-07 15:23:49.453831 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""

@@ -5,8 +5,8 @@ type: :task
 component: front_end
 release: v1.0
 reporter: Curtis Sand <curtis@curtissand.com>
-status: :in_progress
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2015-06-03 13:13:46.765225 Z
 references: []
 
@@ -23,4 +23,8 @@ log_events:
 - - 2015-06-03 13:23:54.531137 Z
   - Curtis Sand <curtis@curtissand.com>
   - assigned to release v1.0 from unassigned
+  - ""
+- - 2015-06-07 15:25:58.499978 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - closed with disposition fixed
   - ""

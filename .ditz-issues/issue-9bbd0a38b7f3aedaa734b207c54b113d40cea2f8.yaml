@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: make project website
+desc: Create a full website with the ditz data, changelog, rendering of the README, and documentation.
+type: :task
+component: space
+release: 
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-06-07 15:22:33.772114 Z
+references: []
+
+id: 9bbd0a38b7f3aedaa734b207c54b113d40cea2f8
+log_events: 
+- - 2015-06-07 15:22:33.773399 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""
