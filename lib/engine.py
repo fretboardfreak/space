@@ -16,29 +16,52 @@ import json
 import os
 from logging import debug
 
-from .model import GameState, Galaxy, User, Coord
+from .model import Galaxy, User, Coord
 
 
 class SpaceEngine(object):
     def __init__(self, save_file):
-        self.state = GameState(save_file)
+        self.save_file = save_file
+        self.user = None
+        self.galaxy = None
+
+    def __repr__(self):
+        return "{}(save file: {}, user: {}, galaxy: {})".format(
+            self.__class__.__name__, self.save_file, repr(self.user),
+            repr(self.galaxy))
+
+    def __getstate__(self):
+        user_state = None if self.user is None else self.user.__getstate__()
+        gxy_state = None if self.galaxy is None else self.galaxy.__getstate__()
+        return (self.save_file, user_state, gxy_state)
+
+    def __setstate__(self, state):
+        (self.save_file, user_state, galaxy_state) = state
+        self.user = None
+        self.galaxy = None
+        if user_state is not None:
+            self.user = User(name='')
+            self.user.__setstate__(user_state)
+        if galaxy_state is not None:
+            self.galaxy = Galaxy()
+            self.galaxy.__setstate__(galaxy_state)
 
     def load(self):
         '''Load game state directly. Useful when used on the interpreter'''
         debug('Loading saved game')
-        if not os.path.exists(self.state.save_file):
+        if not os.path.exists(self.save_file):
             debug('No save file to load.')
             raise FileNotFoundError('No save file to load.')
-        with open(self.state.save_file, 'r') as sf:
-            self.state.__setstate__(json.load(sf))
+        with open(self.save_file, 'r') as sf:
+            self.__setstate__(json.load(sf))
 
     def save(self):
         debug('Saving game')
-        with open(self.state.save_file, 'w') as fd:
-            json.dump(self.state.__getstate__(), fd)
+        with open(self.save_file, 'w') as fd:
+            json.dump(self.__getstate__(), fd)
 
     def _system_callback(self, coords):
-        return self.state.galaxy.system(coords)
+        return self.galaxy.system(coords)
 
     def new_game(self, new_game_info_cb):
         """Set up a new game.
@@ -48,13 +71,13 @@ class SpaceEngine(object):
             home_planet)
         """
         try:
-            self.state.galaxy = Galaxy()
-            self.state.user = User(*new_game_info_cb(self._system_callback))
-            system = self.state.galaxy.system(self.state.user.planets[0])
-            planet = system.planets[int(self.state.user.planets[0].planet)]
+            self.galaxy = Galaxy()
+            self.user = User(*new_game_info_cb(self._system_callback))
+            system = self.galaxy.system(self.user.planets[0])
+            planet = system.planets[int(self.user.planets[0].planet)]
             planet.resources.ore = 25
             planet.resources.metal = 60
-            planet.emperor = self.state.user.name
+            planet.emperor = self.user.name
         finally:
             self.save()
 

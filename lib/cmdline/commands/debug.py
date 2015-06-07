@@ -24,7 +24,7 @@ class Debug(CommandMixin):
     """Provides access to some debugging features."""
 
     def __print_state(self, args):
-        print(self.engine.state)
+        print(self.engine)
 
     def __interactive(self, args):
         local = {"__name__": "__debug_console__", "__doc__": None,
@@ -33,7 +33,7 @@ class Debug(CommandMixin):
 
     def __new_state(self, args):
         info('Creating new test state...')
-        self.engine = SpaceEngine(self.engine.state.save_file)
+        self.engine = SpaceEngine(self.engine.save_file)
         self.engine.new_game(self.engine.mock_new_game_info_cb)
 
     def __setup_parser(self):

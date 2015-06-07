@@ -22,7 +22,7 @@ class List(CommandMixin):
     """List the objects that can be focussed on."""
     def __list_planets(self, args):
         format_object.print_object(format_object.user_planets,
-                                   self.engine.state.user)
+                                   self.engine.user)
 
     def __setup_parser(self):
         parser = ArgumentParser(prog='list', description=List.__doc__)

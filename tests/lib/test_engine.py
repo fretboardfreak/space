@@ -14,30 +14,28 @@
 
 import json
 import tempfile
+from collections import Iterable
 
 from tests.base import SpaceTest
 
 import lib.engine as engine
-import lib.model as model
 
 
-class TestEngine(SpaceTest):
-
+class TestSpaceEngine(SpaceTest):
     def setUp(self):
         self.save_file = tempfile.NamedTemporaryFile()
-        engine.GameState = model.GameState
-        self.engine = engine.SpaceEngine(self.save_file)
-        self.engine.state.save_file = self.save_file.name
+        self.object = engine.SpaceEngine(self.save_file)
+        self.object.save_file = self.save_file.name
 
     def test_load(self):
-        orig_state = hash(self.engine.state)
+        orig_state = hash(self.object)
         with open(self.save_file.name, "w") as fout:
-            json.dump(self.engine.state.__getstate__(), fout)
+            json.dump(self.object.__getstate__(), fout)
         self.save_file.file.seek(0)
 
-        self.engine.load()
+        self.object.load()
 
-        self.assertTrue(orig_state, hash(self.engine.state))
+        self.assertTrue(orig_state, hash(self.object))
 
     def test_save(self):
         self.skipTest('NI')
@@ -51,3 +49,42 @@ class TestEngine(SpaceTest):
     def test_mock_new_game_info_cb(self):
         self.skipTest('NI: check that interface and return values are '
                       'consistent between the original and the mock methods.')
+
+    def recurse_objects(self, state, frame):
+        """Recursively yield every item in state."""
+        print('STARTING FRAME {}'.format(frame))
+        frame += 1
+        try:
+            for obj in state:
+                print("obj {} is type {}".format(obj, type(obj)))
+                if isinstance(obj, str):  # don't iterate over strings
+                    print('  yielding a string')
+                    yield obj
+                elif isinstance(obj, dict):
+                    print('  recursing over dict...')
+                    for key, value in obj.items():
+                        yield key
+                        print('  descending into dict value')
+                        for sub_obj in self.recurse_objects(value, frame):
+                            yield sub_obj
+                elif isinstance(obj, Iterable):
+                    print('  recursing...')
+                    for sub_obj in self.recurse_objects(obj, frame):
+                        yield sub_obj
+                else:
+                    print('  yielding the obj')
+                    yield obj
+        except:
+            yield state
+
+    def test_state_contents(self):
+        """
+        Recursively iterate through the state and verify only iterables or
+        primitives are used.
+        """
+        valid_types = (int, float, str, type(None), tuple)
+        for obj in self.recurse_objects(self.object.__getstate__(), 0):
+            self.assertIsInstance(obj, valid_types)
+            if isinstance(obj, tuple):  # dict keys
+                for sub_obj in obj:
+                    self.assertIsInstance(obj, valid_types)

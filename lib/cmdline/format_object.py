@@ -73,7 +73,7 @@ def planet(_planet, verbose=None, rates=None):
 
 def _planet_available_buildings(_engine, _planet, verbose=None):
     try:
-        _coord, _planet = _engine.state.user.get_planet(_planet)
+        _coord, _planet = _engine.user.get_planet(_planet)
     except ObjectNotFound as e:
         print("Could not find that planet")
         if verbose:
@@ -93,7 +93,7 @@ def planet_available_buildings(_engine, _planet, verbose=None):
     # the planet name and the whole engine
     if _planet is None:
         msg = [_planet_available_buildings(_engine, plnt.name, verbose)
-               for plnt in _engine.state.user.planets.values()]
+               for plnt in _engine.user.planets.values()]
         return '\n'.join(msg)
     return _planet_available_buildings(_engine, _planet, verbose)
 
