@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: use model mixin tests to improve engine tests
+desc: ""
+type: :task
+component: engine
+release: v1.0
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-06-07 10:45:53.133929 Z
+references: []
+
+id: f222a516686f6372ac8d87420324f78a29177291
+log_events: 
+- - 2015-06-07 10:45:53.136616 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""
