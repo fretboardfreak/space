@@ -21,5 +21,7 @@ class Quit(CommandMixin):
 
     def help_quit(self):
         print("Quit the program")
+
     do_q = do_quit
     do_EOF = do_quit
+    do_exit = do_quit
