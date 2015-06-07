@@ -1,4 +1,4 @@
---- !ditz.rubyforge.org,2008-03-06/config 
+--- !ditz.rubyforge.org,2008-03-06/config
 name: Curtis Sand
 email: curtis@curtissand.com
-issue_dir: .ditz-issues
+issue_dir: ditz-issues
