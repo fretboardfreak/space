@@ -12,6 +12,54 @@ The project was started as a side project after a number of years of thinking
 about the concept. The concept may not be especially new but some of the design
 ideas were chosen due to frustrations found in similar games.
 
+Command Line Interface
+----------------------
+
+:added: v1.0 dev
+
+*Under Construction*
+
+The user is the ruler of an empire of planets. He/She needs to be able to
+manage the development of each planet while also performing exploratory and
+military type space activities too.
+
+To minimize the amount of typing most commands will use a "currently focused
+object" concept. Each planet and ship squadron will be a focus-able object. To
+leverage a familiar command concept the linux ``cd`` and ``ls`` commands will
+be used in a similar manner.
+
+:debug: access to debugging tools and game internals
+
+:quit: save and exit the game
+
+    - aliases: EOF (C-D), exit, q
+
+:ls [OBJECT]: list focus-able entitites like planets or squadrons
+
+    - aliases: list
+
+    - With no arguments list available focus-able objects. With identifier of a
+      focus-able object as an argument, act as an alias for show.
+
+:cd OBJECT: change focussed object
+
+    - aliases: focus
+
+:show [OBJECT]: like list except show prints the details of the objects too
+
+    - aliases: sh
+
+    - Show details of the current focused object. With an object identifier
+      argument show details of the given object.
+
+:user: access to the user's profile and statistics
+
+:build: direct construction activities
+
+:shipyard: direct shipyard activities
+
+:research: direct research activities
+
 Development
 -----------
 
@@ -90,30 +138,3 @@ for the tests to work correctly.
 
 In general tests should try to use actual code where possible to ensure changes
 meet interface expectations that dependent code might have.
-
-----
-
-Design Notes
-============
-
-Command Line Interface
-----------------------
-
-The user is the ruler of an empire of planets. He/She needs to be able to
-manage the development of each planet while also performing exploratory and
-military type space activities too.
-
-To minimize the amount of typing most commands will use a "currently focused
-object" concept. Each planet and ship squadron will be a focus-able object. To
-leverage a familiar command concept the linux ``cd`` and ``ls`` could be used
-here.
-
-- debug    : access to debugging tools and game internals
-- quit     : save and exit the game
-- ls       : list focus-able entitites like planets or squadrons
-- cd       : change focussed object
-- show     : like list except show prints the details of the objects too
-- user     : access to the user's profile and statistics
-- build    : direct construction activities
-- shipyard : direct shipyard activities
-- research : direct research activities
