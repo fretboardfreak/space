@@ -1,0 +1,9 @@
+#!/bin/bash
+
+DITZ=~/virt_envs/space/bin/pyditz
+
+if [[ $# -eq 0 ]]; then
+    exec $DITZ -i ditz/ditz-issues/ -u ditz/ditz.cfg -n
+else
+    exec $DITZ -u ditz/ditz.cfg $@
+fi
