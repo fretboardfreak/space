@@ -16,7 +16,6 @@ from logging import info
 from argparse import ArgumentParser
 import code
 
-from lib.engine import SpaceEngine
 from .base import CommandMixin
 
 
@@ -33,7 +32,8 @@ class Debug(CommandMixin):
 
     def __new_state(self, args):
         info('Creating new test state...')
-        self.engine = SpaceEngine(self.engine.save_file)
+        self.engine.user = None
+        self.engine.galaxy = None
         self.engine.new_game(self.engine.mock_new_game_info_cb)
 
     def __setup_parser(self):

@@ -16,12 +16,14 @@ import json
 import os
 from logging import debug
 
+from .cmdline.interpreter import SpaceCmdInterpreter
 from .model import Galaxy, User, Coord
 
 
 class SpaceEngine(object):
-    def __init__(self, save_file):
+    def __init__(self, save_file, opts=None):
         self.save_file = save_file
+        self.opts = opts
         self.user = None
         self.galaxy = None
 
@@ -87,3 +89,6 @@ class SpaceEngine(object):
         # the callback side effect creates a system object
         self._system_callback(coord)
         return (name, coord)
+
+    def run(self):
+        SpaceCmdInterpreter(self, self.opts.debug).start()

@@ -25,7 +25,6 @@ import logging
 from argparse import ArgumentParser
 
 from lib.engine import SpaceEngine
-from lib.cmdline.interpreter import SpaceCmdInterpreter
 
 
 def main():
@@ -35,8 +34,8 @@ def main():
         format='%(levelname)s [%(module)s|%(funcName)s] %(message)s')
     print('logging to %s started' % args.log_file)
     logging.debug('logging to %s started' % args.log_file)
-    engine = SpaceEngine(args.save_file)
-    SpaceCmdInterpreter(engine, args.debug).start()
+
+    SpaceEngine(args.save_file, opts=args).run()
 
 
 def parse_args():

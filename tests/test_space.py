@@ -91,12 +91,7 @@ class TestSpace(SpaceTest):
 
     @patch('space.parse_args', autospec=True)
     @patch('space.logging.basicConfig', autospec=True)
-    @patch('space.SpaceCmdInterpreter', autospec=True)
     @patch('space.SpaceEngine', autospec=True)
-    def test_main(self, mock_engine, mock_interpreter, mock_log_config,
-                  mock_parse_args):
+    def test_main(self, mock_engine,  mock_log_config, mock_parse_args):
         space.main()
         self.assertTrue(mock_engine.called)
-        self.assertTrue(mock_interpreter.called)
-        self.assertTrue(any(True for call in mock_interpreter.mock_calls
-                            if 'start' in call[0]))
