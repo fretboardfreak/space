@@ -3,10 +3,10 @@ title: move cmdline frontend logic into engine
 desc: the top level script should just parse the cmdline and start the engine
 type: :task
 component: engine
-release: 
+release: v1.0
 reporter: Curtis Sand <curtis@curtissand.com>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2015-06-07 10:57:46.518421 Z
 references: []
 
@@ -15,4 +15,12 @@ log_events:
 - - 2015-06-07 10:57:46.520506 Z
   - Curtis Sand <curtis@curtissand.com>
   - created
+  - ""
+- - 2015-06-08 12:26:30.950168 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - closed with disposition fixed
+  - ""
+- - 2015-06-08 12:30:17.421345 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - assigned to release v1.0 from unassigned
   - ""
