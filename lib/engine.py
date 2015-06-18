@@ -17,10 +17,10 @@ import os
 from logging import debug
 
 from .cmdline.interpreter import SpaceCmdInterpreter
-from .model import Galaxy, User, Coord
+from .model import Galaxy, User, Coord, ModelQueryMixin
 
 
-class SpaceEngine(object):
+class SpaceEngine(ModelQueryMixin):
     def __init__(self, save_file, opts=None):
         self.save_file = save_file
         self.opts = opts
@@ -86,8 +86,6 @@ class SpaceEngine(object):
     def mock_new_game_info_cb(self, system_callback):
         """Mock callback for creating test gamestates"""
         coord, name = Coord(), "emperor nim"
-        # the callback side effect creates a system object
-        self._system_callback(coord)
         return (name, coord)
 
     def run(self):
