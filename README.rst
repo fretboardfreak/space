@@ -36,21 +36,16 @@ be used in a similar manner.
 
 :ls [OBJECT]: list focus-able entitites like planets or squadrons
 
-    - aliases: list
+    - aliases: list, show, sh
 
-    - With no arguments list available focus-able objects. With identifier of a
-      focus-able object as an argument, act as an alias for show.
+    - With no arguments, print details of focussed object.
+      With object identifier argument, print details of identefied object.
+      With "-a|--available", print a list of objects that could be focussed on
+      using the "cd" commmand.
 
 :cd OBJECT: change focussed object
 
     - aliases: focus
-
-:show [OBJECT]: like list except show prints the details of the objects too
-
-    - aliases: sh
-
-    - Show details of the current focused object. With an object identifier
-      argument show details of the given object.
 
 :user: access to the user's profile and statistics
 
