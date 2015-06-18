@@ -104,3 +104,19 @@ def system(_system, _coord=None):
         msg += " at %s" % _coord
     msg += "\n[%s]" % ', '.join(planet(p) for p in _system.planets)
     return msg
+
+
+def planet_summary(planet_map):
+    """Summarize a list of planets and their coordinates.
+
+    To preserve order planet_map can be a list of 2 item tuples instead of a
+    dict.
+    """
+    line = "[{}]: {}: {}\n"
+    ret_val = ""
+    iterable = planet_map
+    if isinstance(planet_map, dict):
+        iterable = list(planet_map.items())
+    for num, (coord, planet) in enumerate(iterable):
+        ret_val += line.format(num, coord, planet.name)
+    return ret_val
