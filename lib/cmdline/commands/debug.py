@@ -22,15 +22,15 @@ from .base import CommandMixin
 class Debug(CommandMixin):
     """Provides access to some debugging features."""
 
-    def __print_state(self, args):
+    def __print_state(self, opts):
         print(self.engine)
 
-    def __interactive(self, args):
+    def __interactive(self, opts):
         local = {"__name__": "__debug_console__", "__doc__": None,
                  "engine": self.engine}
         code.interact(local=local)
 
-    def __new_state(self, args):
+    def __new_state(self, opts):
         info('Creating new test state...')
         self.engine.user = None
         self.engine.galaxy = None

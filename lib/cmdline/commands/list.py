@@ -20,13 +20,14 @@ from .base import CommandMixin
 
 class List(CommandMixin):
     """List the objects that can be focussed on."""
-    def __list_planets(self, args):
+    def __list_planets(self, opts):
         planets = list(self.engine.user_planets(self.engine.user))
         format_object.print_object(format_object.planet_summary, planets)
 
-    def __show_focussed(self, args):
+    def __show_focussed(self, opts):
+
         if not self.current_object:
-            self.__list_planets(args)
+            self.__list_planets(opts)
         print("Showing details of current object: Not Implemented")
 
     def __setup_parser(self):
@@ -36,7 +37,7 @@ class List(CommandMixin):
                            help="Print list of available objects.")
         parser.add_argument('-v', '--verbose', action='store_true',
                             dest='verbose', default=False)
-        parser.set_defaults(action=self.__list_planets)
+        parser.set_defaults(action=self.__show_focussed)
 
         return parser, self.__list_planets
 

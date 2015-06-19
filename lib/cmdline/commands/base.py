@@ -23,7 +23,7 @@ class CommandMixin(object):
 
         class Example(CommandMixin):
             '''Example command help documentation.'''
-            def __count(self, args):
+            def __count(self, opts):
                 pass  # some code goes here
 
             def __setup_parser(self):
@@ -45,17 +45,17 @@ class CommandMixin(object):
     def _do(self, line, setup_parser):
         """
         The parser object will set arg.action to a method which will perform
-        the action for this command. If args.action is None, the method
+        the action for this command. If opts.action is None, the method
         returned from "__setup_parser" will be called instead.
         """
         try:
             parser, default_action = setup_parser()
-            (args, params) = parser.parse_known_args(line.split(' '))
-            setattr(args, 'params', params)
-            if args.action is None:
-                default_action(args)
+            (opts, args) = parser.parse_known_args(line.split(' '))
+            setattr(opts, 'args', args)
+            if opts.action is None:
+                default_action(opts)
             else:
-                args.action(args)
+                opts.action(opts)
         except SystemExit:
             pass
         return False
