@@ -28,6 +28,11 @@ class SpaceCmdInterpreter(Cmd, Quit, Debug, List):
         self.doc_header = 'Space Commands'
         self.undoc_header = 'Alias Commands'
         self.debug = False if debug is None else debug
+        # TODO: create a "current_object" class with keys for the coordinate
+        # and for the focusable object. The state of this "current_object"
+        # should be passed into engine.save as persisted state for the front
+        # end.
+        self.current_object = None
 
     def start(self):
         try:

@@ -27,7 +27,7 @@ class Debug(CommandMixin):
 
     def __interactive(self, opts):
         local = {"__name__": "__debug_console__", "__doc__": None,
-                 "engine": self.engine}
+                 "engine": self.engine, 'current_object': self.current_object}
         code.interact(local=local)
 
     def __new_state(self, opts):
