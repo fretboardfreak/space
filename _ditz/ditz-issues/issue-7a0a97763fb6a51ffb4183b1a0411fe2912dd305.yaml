@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: include interpreter state in save file
+desc: Let the interpreter add its state to the save file by passing the state to the engine.save method.  Also, restore the interpreter state on load.
+type: :feature
+component: front_end
+release: v1.0
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-08-11 13:32:17.612707 Z
+references: []
+
+id: 7a0a97763fb6a51ffb4183b1a0411fe2912dd305
+log_events: 
+- - 2015-08-11 13:32:17.618624 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""

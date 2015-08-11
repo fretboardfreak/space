@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Include electricity in str of planets
+desc: ""
+type: :bugfix
+component: model
+release: v1.0
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-08-11 14:48:49.652279 Z
+references: []
+
+id: 17b2de308f9a073c1f064d1d0543a1fedf82543b
+log_events: 
+- - 2015-08-11 14:48:49.948301 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""

@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: unit test build command
+desc: ""
+type: :task
+component: front_end
+release: v1.0
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-08-11 14:53:52.180921 Z
+references: []
+
+id: 21dc59b7796b3382611f4644f63b672e43f8fb73
+log_events: 
+- - 2015-08-11 14:53:52.186966 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""
