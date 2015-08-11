@@ -5,8 +5,8 @@ type: :task
 component: model
 release: v1.0
 reporter: Curtis Sand <curtis@curtissand.com>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2015-06-08 09:23:57.194889 Z
 references: []
 
@@ -15,4 +15,8 @@ log_events:
 - - 2015-06-08 09:23:57.200933 Z
   - Curtis Sand <curtis@curtissand.com>
   - created
+  - ""
+- - 2015-08-11 10:51:48.263498 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - closed with disposition fixed
   - ""
