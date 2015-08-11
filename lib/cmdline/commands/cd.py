@@ -21,7 +21,7 @@ class Cd(CommandMixin):
     """Change the focussed object."""
     def __change_focussed(self, opts):
         if not opts.object:
-            print("No focussed object: Showing available objects:\n")
+            print("No object ID: Showing available objects:\n")
             self.do_list("-a")
             return
         for obj_id, obj in self.engine.get_object_id_map().items():
