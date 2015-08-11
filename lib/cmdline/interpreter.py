@@ -17,10 +17,10 @@ from cmd import Cmd
 from logging import debug
 
 from . import ui
-from .commands import Quit, Debug, List, Cd
+from .commands import Quit, Debug, List, Cd, Build
 
 
-class SpaceCmdInterpreter(Cmd, Quit, Debug, List, Cd):
+class SpaceCmdInterpreter(Cmd, Quit, Debug, List, Cd, Build):
     def __init__(self, engine, debug=None):
         super(SpaceCmdInterpreter, self).__init__()
         self.engine = engine
