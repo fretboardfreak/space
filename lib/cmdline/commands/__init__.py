@@ -15,5 +15,6 @@
 from .quit import Quit
 from .list import List
 from .debug import Debug
+from .cd import Cd
 
-__all__ = [Quit, List, Debug]
+__all__ = [Quit, List, Debug, Cd]
