@@ -18,7 +18,7 @@ import subprocess
 from .base import SpaceTest
 
 
-class TestPep8(SpaceTest):
+class TestStyle(SpaceTest):
     def setUp(self):
         self.errors = []
         self.file_filters = [lambda f: not f.startswith('.'),
