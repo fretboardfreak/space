@@ -21,14 +21,17 @@ from .base import CommandMixin
 class List(CommandMixin):
     """List the objects that can be focussed on."""
     def __list_planets(self, opts):
-        planets = list(self.engine.user_planets(self.engine.user))
+        planets = self.engine.get_focusable_objects()
         format_object.print_object(format_object.planet_summary, planets)
 
     def __show_focussed(self, opts):
-
         if not self.current_object:
+            print('No focussed object, listing all available...\n')
             self.__list_planets(opts)
-        print("Showing details of current object: Not Implemented")
+            return
+        # TODO: write a more generic formatter for focusable objects
+        format_object.print_object(format_object.planet,
+                                   self.current_object[1])
 
     def __setup_parser(self):
         parser = ArgumentParser(prog='list', description=List.__doc__)
