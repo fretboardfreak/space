@@ -15,6 +15,7 @@
 import json
 import tempfile
 from collections import Iterable
+from unittest.mock import Mock
 
 from tests.base import SpaceTest
 
@@ -88,3 +89,23 @@ class TestSpaceEngine(SpaceTest):
             if isinstance(obj, tuple):  # dict keys
                 for sub_obj in obj:
                     self.assertIsInstance(obj, valid_types)
+
+    def test_focusable_objects(self):
+        self.object.user = Mock()
+        self.object.user_planets = Mock(return_value=[])
+        ret_val = self.object.get_focusable_objects()
+        self.assertIsInstance(ret_val, list)
+        self.assertTrue(self.object.user_planets.called)
+
+    def test_get_object_id_map(self):
+        obj1, obj2 = Mock(), Mock()
+        obj1.name, obj2.name = 'obJ1', 'oBj2'
+        coord1, coord2 = 'coord1', 'coord2'
+        focusable_objs = [(coord1, obj1), (coord2, obj2)]
+        self.object.get_focusable_objects = Mock(return_value=focusable_objs)
+        id_map = self.object.get_object_id_map()
+        id_multiplier = 4  # exact, lowercase, uppercase, index
+        self.assertTrue(len(focusable_objs) * id_multiplier,
+                        len(id_map.keys()))
+        self.assertEqual(set([(coord1, obj1), (coord2, obj2)]),
+                         set(id_map.values()))
