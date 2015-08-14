@@ -46,31 +46,6 @@ def user_planets(_user, verbose=None):
     return '\n'.join(planets)
 
 
-def planet(_planet, verbose=None, rates=None):
-    if rates is None:
-        rates = True
-    details = []
-    _planet.update()
-    if verbose:
-        rates = True
-        sun = 'Sun: dist: {}  brightness: {}'.format(_planet.sun_distance,
-                                                     _planet.sun_brightness)
-        details.append(sun)
-    if rates:
-        res = '\n'.join('- {}: {} ({})'.format(
-            name, _planet.resources[name], _planet.rates[name])
-            for name in _planet.resources)
-    else:
-        res = indent(str(_planet.resources), '- ')
-    details.append(indent(res, '  '))
-
-    bldngs = '\n'.join('- {}'.format(str(bld))
-                       for bld in _planet.buildings)
-    details.append(bldngs)
-    return "Planet {}, owner {}\n{}".format(_planet.name, _planet.emperor,
-                                            '\n'.join(details))
-
-
 def _planet_available_buildings(_engine, _planet, verbose=None):
     try:
         _coord, _planet = _engine.user.get_planet(_planet)
@@ -102,7 +77,7 @@ def system(_system, _coord=None):
     msg = "%s planet system"
     if _coord is not None:
         msg += " at %s" % _coord
-    msg += "\n[%s]" % ', '.join(planet(p) for p in _system.planets)
+    msg += "\n[%s]" % ', '.join(str(p) for p in _system.planets)
     return msg
 
 

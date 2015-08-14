@@ -29,9 +29,7 @@ class List(CommandMixin):
             print('No focussed object, listing all available...\n')
             self.__list_planets(opts)
             return
-        # TODO: write a more generic formatter for focusable objects
-        format_object.print_object(format_object.planet,
-                                   self.current_object[1])
+        print(self.current_object[1])
 
     def __setup_parser(self):
         parser = ArgumentParser(prog='list', description=List.__doc__)
