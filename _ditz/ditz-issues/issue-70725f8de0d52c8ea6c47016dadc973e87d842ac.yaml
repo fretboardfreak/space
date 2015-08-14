@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: fix planet.build
+desc: When upgrading a building, instead of removing the old one and replacing it with a new one, it is just adding a new one right now.  For example, three "build mine" commands resulted in one lvl 1 mine and two lvl 2 mines being present on that planet.
+type: :bugfix
+component: model
+release: v1.0
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-08-14 09:08:39.246731 Z
+references: []
+
+id: 70725f8de0d52c8ea6c47016dadc973e87d842ac
+log_events: 
+- - 2015-08-14 09:08:39.252641 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""
