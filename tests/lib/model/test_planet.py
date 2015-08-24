@@ -113,9 +113,7 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
                       'behaviour here. Deferring tests for now.')
 
     def test_build(self):
-        # Skipping this test because Resource subtraction still seems to have
-        # some problems.
-        self.skipTest('Broken: resource subtraction is causes problems here.')
+        # not enough resources
         result = self.object.build('Mine')
         self.assertFalse(result)
         self.assertEqual(len(self.object.buildings), 0)
@@ -127,9 +125,25 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
         result = self.object.build(building_type)
         self.assertTrue(result)
         self.assertEqual(len(self.object.buildings), 1)
-        print('buildings {}'.format(self.object.buildings))
-        self.assertTrue(building_type in self.object.buildings)
+        self.assertEqual(self.object.building(building_type).level, 1)
         self.assertIsInstance(self.object.building(building_type), model.Mine)
+
+        result = self.object.build(building_type)
+        self.assertTrue(result)
+        self.assertEqual(len(self.object.buildings), 1)
+        self.assertEqual(self.object.building(building_type).level, 2)
+
+    def test_build_resource_subtraction(self):
+        # Skipping this test because Resource subtraction still seems to have
+        # some problems.
+        self.skipTest('Broken: resource subtraction is causes problems here.')
+        res_amt = 100
+        self.object.resources.ore = res_amt
+        self.object.resources.metal = res_amt
+        building_type = 'Mine'
+        result = self.object.build(building_type)
+        self.assertTrue(result)
+        self.assertEqual(len(self.object.buildings), 1)
         self.assertLess(self.object.resources.ore, res_amt)
         self.assertLess(self.object.resources.metal, res_amt)
 

@@ -113,7 +113,7 @@ class Planet(object):
             self.resources -= new_blding.requirements.resources
             # Remove existing building if exists
             self.buildings = [blding for blding in self.buildings
-                              if blding.name != building_name]
+                              if not isinstance(blding, building)]
             self.buildings.append(new_blding)
             return True
         else:
@@ -198,4 +198,5 @@ class Planet(object):
         bld_cls = get_building(building_type)
         for building in self.buildings:
             if isinstance(building, bld_cls):
+                debug('found existing {} building'.format(building))
                 return building
