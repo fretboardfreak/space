@@ -27,8 +27,8 @@ class Build(CommandMixin):
             print('No building type provided. Listing buildings that can '
                   'be constructed.\n')
             buildings = []
-            for bldng, level in self.current_object[1].get_available_buildings():
-                buildings.append("- {}: lvl {}".format(bldng.name, level))
+            for bld, level in self.current_object[1].get_available_buildings():
+                buildings.append("- {}: lvl {}".format(bld.name, level))
             print('  ' + '\n  '.join(buildings))
         else:
             result = self.current_object[1].build(opts.building_type)

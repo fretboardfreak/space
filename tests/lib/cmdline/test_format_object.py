@@ -74,14 +74,6 @@ class TestFormatUserPlanets(TestFormatUser):
         self.func = format_object.user_planets
 
 
-class TestFormatPlanet(BaseFormatMethodTest):
-    # TODO: add tests for the "rates" flag, or refactor it away
-    def setUp(self):
-        self.func = format_object.planet
-        self.test_obj = model.Planet(500, 1)
-        self.has_verbose_opt = True
-
-
 class TestFormatSystem(BaseFormatMethodTest):
     # TODO: add tests for the "_coord" flag, or refactor it away
     def setUp(self):
