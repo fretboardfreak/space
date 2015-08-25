@@ -5,8 +5,8 @@ type: :bugfix
 component: model
 release: v1.0
 reporter: Curtis Sand <curtis@curtissand.com>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2015-08-14 09:08:39.246731 Z
 references: []
 
@@ -15,4 +15,8 @@ log_events:
 - - 2015-08-14 09:08:39.252641 Z
   - Curtis Sand <curtis@curtissand.com>
   - created
+  - ""
+- - 2015-08-25 13:05:21.847859 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - closed with disposition fixed
   - ""
