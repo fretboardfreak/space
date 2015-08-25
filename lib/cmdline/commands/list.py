@@ -29,6 +29,8 @@ class List(CommandMixin):
             print('No focussed object, listing all available...\n')
             self.__list_planets(opts)
             return
+        if hasattr(self.current_object[1], 'update'):
+            self.current_object[1].update()
         print(self.current_object[1])
 
     def __setup_parser(self):
