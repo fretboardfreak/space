@@ -30,13 +30,14 @@ class TestSpaceEngine(SpaceTest):
 
     def test_load(self):
         orig_state = hash(self.object)
+        current_obj_name = 'current_obj_name'
         with open(self.save_file.name, "w") as fout:
-            json.dump(self.object.__getstate__(), fout)
+            json.dump((current_obj_name, self.object.__getstate__()), fout)
         self.save_file.file.seek(0)
 
-        self.object.load()
-
+        saved_current_obj = self.object.load()
         self.assertTrue(orig_state, hash(self.object))
+        self.assertEqual(current_obj_name, saved_current_obj)
 
     def test_save(self):
         self.skipTest('NI')

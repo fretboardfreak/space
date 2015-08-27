@@ -55,12 +55,18 @@ class SpaceEngine(ModelQueryMixin):
             debug('No save file to load.')
             raise FileNotFoundError('No save file to load.')
         with open(self.save_file, 'r') as sf:
-            self.__setstate__(json.load(sf))
+            state = json.load(sf)
+            self.__setstate__(state[1])
+            return state[0]
 
-    def save(self):
+    def save(self, current_object=None):
         debug('Saving game')
         with open(self.save_file, 'w') as fd:
-            json.dump(self.__getstate__(), fd)
+            current_obj_state = None
+            if current_object:
+                current_obj_state = current_object[1].name
+            state = (current_obj_state, self.__getstate__())
+            json.dump(state, fd)
 
     def _system_callback(self, coords):
         return self.galaxy.system(coords)

@@ -28,17 +28,18 @@ class SpaceCmdInterpreter(Cmd, Quit, Debug, List, Cd, Build):
         self.doc_header = 'Space Commands'
         self.undoc_header = 'Alias Commands'
         self.debug = False if debug is None else debug
-        # TODO: create a "current_object" class with keys for the coordinate
-        # and for the focusable object. The state of this "current_object"
-        # should be passed into engine.save as persisted state for the front
-        # end.
         self.current_object = None
 
     def start(self):
         try:
             try:
                 debug('Trying to load the saved game...')
-                self.engine.load()
+                current_obj_name = self.engine.load()
+                debug('running cd to set current object to '
+                      '"{}"'.format(current_obj_name))
+                self.onecmd('cd {}'.format(current_obj_name))
+                debug('Current object set to "{}" after '
+                      'load'.format(self.current_object))
             except FileNotFoundError:
                 debug('No save game, starting new game...')
                 self.start_new_game()
@@ -52,7 +53,7 @@ class SpaceCmdInterpreter(Cmd, Quit, Debug, List, Cd, Build):
             self.debug_post_mortem()
         finally:
             try:
-                self.engine.save()
+                self.engine.save(self.current_object)
             except:
                 self.debug_post_mortem()
 

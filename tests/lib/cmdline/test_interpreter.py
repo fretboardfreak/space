@@ -49,11 +49,13 @@ class TestInterpreterModule(SpaceTest):
 
     def test_start_save_file_loads(self):
         sci = self.get_interpreter_instance()
+        sci.onecmd = Mock()
         sci.start()
         self.assertTrue(self.mock_engine.load.called)
         self.assertTrue(sci.cmdloop.called)
         self.assertTrue(self.mock_engine.save.called)
         self.assertFalse(sci.start_new_game.called)
+        self.assertTrue(sci.onecmd.called)  # current_object restored
 
     def test_start_no_save_file(self):
         self.mock_engine.load.side_effect = FileNotFoundError('foobar')
