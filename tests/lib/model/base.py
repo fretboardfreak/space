@@ -60,14 +60,17 @@ class ModelObjectTest(SpaceTest):
     def setUp(self):
         self.object = self.get_new_instance()
 
-    def assert_attrs_in_string(self, string):
+    def assert_attrs_in_string(self, string, assert_missing=True):
         lower = string.lower()
         for attr in self.expected_attrs:
             attr = attr.replace('_', ' ')
             patterns = ['{}:{}'.format(attr, sep) for sep in (' ', '\n')]
-            self.assertTrue(any(pat in lower for pat in patterns),
-                            "Expected Attr {} is missing from model "
-                            "{}".format(attr, type(self.object)))
+            msg = "Expected Attr {} is missing from model {}"
+            if assert_missing:
+                self.assertTrue(any(pat in lower for pat in patterns),
+                                msg.format(attr, type(self.object)))
+            elif not any(pat in lower for pat in patterns):
+                print(msg.format(attr, type(self.object)))
 
     def test_repr(self):
         rep = repr(self.object)
@@ -79,7 +82,7 @@ class ModelObjectTest(SpaceTest):
 
     def test_str(self):
         string = str(self.object)
-        self.assert_attrs_in_string(string)
+        self.assert_attrs_in_string(string, assert_missing=False)
 
     def test_attrs(self):
         actual = set(attr for attr in dir(self.object)
