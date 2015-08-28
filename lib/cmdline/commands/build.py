@@ -36,7 +36,7 @@ class Build(CommandMixin):
                 print('{} has been constructed.'.format(opts.building_type))
             else:
                 print('Could not construct a {}. Make sure you have enough '
-                      'resources.')
+                      'resources.'.format(opts.building_type))
 
     def __setup_parser(self):
         parser = ArgumentParser(prog='build', description=Build.__doc__)
