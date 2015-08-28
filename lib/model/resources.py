@@ -73,8 +73,9 @@ class Resources(UserDict):
 
     def __repr__(self):
         res_list = deepcopy(ALL_RESOURCES)
-        return '({}, trade value: {})'.format(
-            ', '.join("%s: %s" % (res, self[res]) for res in res_list),
+        return '({}, trade value: {:.2F})'.format(
+            ', '.join("{res}: {amt:.2F}".format(res=res, amt=self[res])
+                      for res in res_list),
             self.trade_value)
 
     def __str__(self):

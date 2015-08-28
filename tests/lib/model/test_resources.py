@@ -76,8 +76,8 @@ class TestResources(ModelObjectTest, EqualityMixinTest):
     def test_repr(self):
         super().test_repr()
         rep = repr(self.object)
-        self.assertEqual(len(resources.ALL_RESOURCES),
-                         len(re.findall(': \d+[,\)]', rep)))
+        self.assertEqual(len(resources.ALL_RESOURCES + ['trade value']),
+                         len(re.findall("[a-zA-Z ]+:\s+[\d\.]+", rep)))
 
     def test_str(self):
         super().test_str()
@@ -85,7 +85,7 @@ class TestResources(ModelObjectTest, EqualityMixinTest):
         self.assertFalse(string.startswith('('))
         self.assertFalse(string.endswith('('))
         self.assertEqual(len(resources.ALL_RESOURCES + ['trade_value']),
-                         len(re.findall(': \d+\n?', string, re.MULTILINE)))
+                         len(re.findall(':\s*\d+\n?', string, re.MULTILINE)))
 
     def test_add(self):
         value = self.get_equal_tst_values()
