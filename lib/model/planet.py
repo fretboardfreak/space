@@ -147,16 +147,20 @@ class Planet(object):
                     self.last_update))
 
     def __str__(self):
-        resources = ['  {}: {} ({})'.format(name, self.resources[name],
-                                            self.rates[name])
+        resources = ['  {}: {:.2F} ({:.2F})\n'.format(name,
+                                                      self.resources[name],
+                                                      self.rates[name])
                      for name in self.resources]
-        buildings = ['  {}'.format(bld) for bld in self.buildings]
-        return ("{}: {}, Emperor: {},\nSun: {}, Electricity: {}\n"
-                "Resources:\n{}\nBuildings:\n{}\nResearch: {}\n"
-                "Last Update: {}".format(
+        buildings = ['  {}\n'.format(bld) for bld in self.buildings]
+        buildings = ''.join([text for text in buildings
+                             if not text.isspace()])
+        if not self.research:
+            research = ""
+        return ("{}: {}, Emperor: {},\nSun: {:.2F}, Electricity: {:.2F}\n"
+                "Resources:\n{}Buildings:\n{}Research: {}".format(
                     self.__class__.__name__, self.name, self.emperor, self.sun,
-                    self.electricity, '\n'.join(resources),
-                    '\n'.join(buildings), self.research, self.last_update))
+                    self.electricity, ''.join(resources),
+                    buildings, research))
 
     @property
     def ore(self):
