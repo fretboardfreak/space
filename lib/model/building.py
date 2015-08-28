@@ -165,7 +165,7 @@ class Mine(Building):
 
     @property
     def modifier(self):
-        return Resources(ore=2*self.level, metal=0.25*self.level)
+        return Resources(ore=0.2*self.level, metal=0.025*self.level)
 
     def electricity(self, sun_energy):
         return -1 * pow(self.level, 2)
