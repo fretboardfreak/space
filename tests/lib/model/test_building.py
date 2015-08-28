@@ -151,9 +151,8 @@ class TestBuildingRequirements(ModelObjectTest, StateMixinTest):
         self.assert_attrs_in_string(rep)
 
     def test_str(self):
+        str(self.object)
         super().test_str()
-        string = str(self.object)
-        self.assertEqual(2, string.count('\n'))
 
 
 class TestBuildingBaseClass(ModelObjectTest, EqualityMixinTest):

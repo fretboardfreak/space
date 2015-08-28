@@ -66,9 +66,13 @@ class BuildingRequirements(object):
             repr(self.buildings)))
 
     def __str__(self):
-        return "Resources: {}\nResearch: {}\nBuildings: {}".format(
-            str(self.resources).replace('\n', ', '), self.research,
-            self.buildings)
+        # remove 1st and last char from resources repr string, "(", ")"
+        ret_val = repr(self.resources)[1:-1]
+        if self.research:
+            ret_val += "\nResearch: {}".format(self.research)
+        if self.buildings:
+            ret_val += "\nBuildings: {}".format(self.buildings)
+        return ret_val
 
     def __getstate__(self):
         return (self.resources, self.research, self.buildings)
@@ -110,7 +114,7 @@ class Building(object):
         return ("{}: level: {}\n  - modifier: {}\n"
                 "  - requirements: {})".format(
                     self.__class__.__name__, self.level,
-                    repr(self.modifier),
+                    repr(self.modifier)[1:-1],
                     str(self.requirements).replace('\n', '\n' + ' ' * 8)))
 
     def __eq__(self, other):
