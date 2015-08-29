@@ -96,18 +96,3 @@ class SpaceEngine(ModelQueryMixin):
 
     def run(self):
         SpaceCmdInterpreter(self, self.opts.debug).start()
-
-    def get_focusable_objects(self):
-        """Return a list of objects that can be focussed on."""
-        return list(self.user_planets(self.user))
-
-    def get_object_id_map(self):
-        """Map acceptable Object ID strings to the focusable objects."""
-        id_map = {}
-        for num, (coord, obj) in enumerate(self.get_focusable_objects()):
-            value = (coord, obj)
-            id_map[obj.name] = value
-            id_map[obj.name.upper()] = value
-            id_map[obj.name.lower()] = value
-            id_map[str(num)] = value
-        return id_map
