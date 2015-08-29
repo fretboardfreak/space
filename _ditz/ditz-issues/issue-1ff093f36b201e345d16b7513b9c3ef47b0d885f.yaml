@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: add a point system to model objects
+desc: ""
+type: :feature
+component: model
+release: 
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-08-29 12:09:29.668600 Z
+references: []
+
+id: 1ff093f36b201e345d16b7513b9c3ef47b0d885f
+log_events: 
+- - 2015-08-29 12:09:29.670544 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""

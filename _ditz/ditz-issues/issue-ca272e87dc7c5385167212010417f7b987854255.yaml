@@ -5,8 +5,8 @@ type: :feature
 component: front_end
 release: v1.0
 reporter: Curtis Sand <curtis@curtissand.com>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2015-08-29 11:45:16.736682 Z
 references: []
 
@@ -15,4 +15,8 @@ log_events:
 - - 2015-08-29 11:45:16.739168 Z
   - Curtis Sand <curtis@curtissand.com>
   - created
+  - ""
+- - 2015-08-29 12:48:37.499273 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - closed with disposition fixed
   - ""
