@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: add public str methods with options for printing formats
+desc: Model objects should be able to vary what and how they print their info based on the requirements of the moment. For instance, when showing the buildings that have been built on a planet you don't need the requirements for constructing the next level.
+type: :feature
+component: front_end
+release: 
+reporter: Curtis Sand <curtis@curtissand.com>
+status: :unstarted
+disposition: 
+creation_time: 2015-08-29 11:43:35.952524 Z
+references: []
+
+id: 3844deed5e5805dab86033b5b538191da37d20de
+log_events: 
+- - 2015-08-29 11:43:35.954492 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - created
+  - ""
