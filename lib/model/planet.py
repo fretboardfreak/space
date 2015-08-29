@@ -71,7 +71,8 @@ class Planet(object):
 
     def __getstate__(self):
         resources = self.resources.__getstate__()
-        buildings = [(blding.abbr, blding.level) for blding in self.buildings]
+        buildings = [(blding.abbr, blding.level)
+                     for blding in self.buildings]
         return (self.name, self.emperor, self.sun_brightness,
                 self.sun_distance, resources, buildings, self.last_update)
 
