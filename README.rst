@@ -38,20 +38,29 @@ be used in a similar manner.
 
 :ls [OBJECT]: list focus-able entitites like planets or squadrons
 
-    - aliases: list, show, sh
+    - aliases: list
 
-    - With no arguments, print details of focussed object.
-      With object identifier argument, print details of identefied object.
+    - With no arguments print details of focussed object.
+      With object identifier argument print details of identefied object.
       With "-a|--available", print a list of objects that could be focussed on
       using the "cd" commmand.
 
 :cd OBJECT: change focussed object
 
-    - aliases: focus
+    - With no arguments print a list of objets that can be chosen.
+      With object identifier argument change focus. Further commands will,
+      operate on this new object.
 
 :user: access to the user's profile and statistics
 
+    - With no options show some stats about the user's account.
+      Option is available for changing the user's name.
+
 :build: direct construction activities
+
+    - With no options list buildings that are available for construction.
+      With a building type or abbreviation, try to build that building on the
+      focussed planet.
 
 *Planned Future Commands:*
 
@@ -101,8 +110,16 @@ decimal number or minor version will be incremented when something new happens.
 The definition of "when something new happens" is intentionally left ambiguous
 until there is a better idea of what the minor number changes actually mean.
 
+In Ditz, after v1.0, the releases will not be numbered but will have a short
+goal description as the title. Then depending on the other changes that happen
+by the time the release gets cut will determine whether the large or small
+version number will be changed.
+
 The version number will be monotonically increasing and the format used will be
 the same as interpreted by ``ls -v`` or by distutils' ``LooseVersion`` class.
+
+The ``CHANGES.rst`` file will contain a section with release date, title, and
+description for all releases.
 
 Coding Style
 ^^^^^^^^^^^^
