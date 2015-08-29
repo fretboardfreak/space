@@ -5,8 +5,8 @@ type: :task
 component: space
 release: v1.0
 reporter: Curtis Sand <curtis@curtissand.com>
-status: :in_progress
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2015-06-07 15:19:03.691627 Z
 references: []
 
@@ -19,4 +19,8 @@ log_events:
 - - 2015-06-07 15:19:33.106881 Z
   - Curtis Sand <curtis@curtissand.com>
   - changed status from unstarted to in progress
+  - ""
+- - 2015-08-29 14:47:50.192994 Z
+  - Curtis Sand <curtis@curtissand.com>
+  - closed with disposition fixed
   - ""
