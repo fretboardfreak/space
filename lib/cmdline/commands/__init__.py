@@ -17,5 +17,6 @@ from .list import List
 from .debug import Debug
 from .cd import Cd
 from .build import Build
+from .user import User
 
-__all__ = [Quit, List, Debug, Cd, Build]
+__all__ = [Quit, List, Debug, Cd, Build, User]
