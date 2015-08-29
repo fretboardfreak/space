@@ -1,6 +1,15 @@
 Space Changelog
 ===============
 
+:version: 1.0
+:date: UNRELEASED
+:summary: The basic goal of this release is to reach a relatively stable state
+          with respect to the game model code, save file format, a basic yet
+          more or less complete command line interface and the way that the
+          various pieces are glued together.
+
+----
+
 :version: 0.2
 :date: 2015-05-29
 - bugfix: state methods should call getstate/setstate dunder methods recursively

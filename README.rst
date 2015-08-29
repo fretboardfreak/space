@@ -28,6 +28,8 @@ object" concept. Each planet and ship squadron will be a focus-able object. To
 leverage a familiar command concept the linux ``cd`` and ``ls`` commands will
 be used in a similar manner.
 
+*Command List:*
+
 :debug: access to debugging tools and game internals
 
 :quit: save and exit the game
@@ -50,6 +52,8 @@ be used in a similar manner.
 :user: access to the user's profile and statistics
 
 :build: direct construction activities
+
+*Planned Future Commands:*
 
 :shipyard: direct shipyard activities
 
