@@ -2,9 +2,3 @@ pep8
 pyflakes
 nose
 coverage
-hgtools
-jinja2
-markups
-pyyaml
-six
-voluptuous
