@@ -80,25 +80,9 @@ Bitbucket.
 The code is predominantly written in python 3 and the python PEP8
 recommendation is followed to help ensure clean readable style.
 
-For planning and issue tracking I am trying out the `PyDitz`_ project, which is
-a python fork of the original Ditz project.
+For planning and issue tracking I am using a public Trello Board::
 
-Note:
-
-    For installing pyditz I've cloned the mercurial repository and have been
-    using 0.9 in-development version.  To do this I cloned the repo, installed
-    the pre-requisites (now included in Space's ``dev-requirements.txt`` file),
-    and installed ditz with "python setup.py install".  At the time of this
-    writing you can also get pyditz by installing version 0.8 from `PyPi`_.
-
-.. _PyDitz: https://bitbucket.org/zondo/pyditz
-.. _PyPI: https://pypi.python.org
-
-Note:
-
-    Releases v0.1 and v0.2 were created before the project migrated to ditz.
-    As such the content in the ``CHANGES`` change-log file and export content
-    from pyditz may appear different than later releases.
+    https://trello.com/b/Oi1ucOMB/space
 
 Versioning
 ^^^^^^^^^^
@@ -109,11 +93,6 @@ decimal number or minor version will be incremented when something new happens.
 
 The definition of "when something new happens" is intentionally left ambiguous
 until there is a better idea of what the minor number changes actually mean.
-
-In Ditz, after v1.0, the releases will not be numbered but will have a short
-goal description as the title. Then depending on the other changes that happen
-by the time the release gets cut will determine whether the large or small
-version number will be changed.
 
 The version number will be monotonically increasing and the format used will be
 the same as interpreted by ``ls -v`` or by distutils' ``LooseVersion`` class.
