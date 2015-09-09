@@ -17,6 +17,18 @@ if [[ $# -eq 0 ]]; then
         sed -e '/ \.\.\. SKIP: base class/d' -e '/ \.\.\. ok/d' \
             -e 's/ \.\.\. S/\n    S/' -e '/UserWarning/d' -e '/WARNING/d' \
             -e '/warn/d'
+
+    echo "Cleaning up after the tests..."
+    find . -iname "*.pyc" -or -iname "*.pyo" -or -iname "__pycache__" \
+        -exec rm -rf '{}' '+'
+elif [[ $# -eq 1 ]]; then
+    if [[ "${1}" == "--clean" ]] || [[ "${1}" == "-c" ]]; then
+        echo "Cleaning up..."
+        find . -iname "*.pyc" -or -iname "*.pyo" -or -iname "__pycache__" \
+            -exec rm -rf '{}' '+'
+    else
+        exec $CMD $@
+    fi
 else
     exec $CMD $@
 fi
