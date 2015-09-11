@@ -12,13 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from unittest import skip
+
 import lib.cmdline.commands as commands
 
 from .test_base import BaseCommandTest
 
 
-class QuitTest(BaseCommandTest):
+class DebugTest(BaseCommandTest):
     def setUp(self):
         super().setUp()
-        self.command_class = commands.Quit
-        self.alias_commands = ['do_q', 'do_EOF']
+        self.command_class = commands.Debug
+        self.alias_commands = ['do_dbg']
+
+    @skip('NI')
+    def test_print_state(self):
+        pass
+
+    @skip('NI')
+    def test_interactive(self):
+        pass
+
+    @skip('NI')
+    def test_new_state(self):
+        pass

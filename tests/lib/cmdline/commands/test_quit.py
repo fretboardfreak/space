@@ -17,8 +17,8 @@ import lib.cmdline.commands as commands
 from .test_base import BaseCommandTest
 
 
-class DebugTest(BaseCommandTest):
+class QuitTest(BaseCommandTest):
     def setUp(self):
         super().setUp()
-        self.command_class = commands.Debug
-        self.alias_commands = []
+        self.command_class = commands.Quit
+        self.alias_commands = ['do_q', 'do_EOF', 'do_exit']
