@@ -14,7 +14,7 @@
 
 from unittest.mock import Mock
 from itertools import chain
-from unittest import skip
+from argparse import ArgumentParser
 
 from tests.base import SpaceTest
 
@@ -31,13 +31,36 @@ class TestBase(SpaceTest):
         self.assertTrue(hasattr(self.cm, 'engine'))
         self.assertEqual(self.cm.engine, self.mock_engine)
 
-    @skip('NI')
     def test_command_mixin_do(self):
-        pass
+        parser = ArgumentParser()
+        parser.set_defaults(action=None)
+        default_action = Mock()
+        setup_parser = Mock(return_value=(parser, default_action))
 
-    @skip('NI')
+        # no opts.action defined, expect default action
+        self.cm._do('one two', setup_parser)
+        self.assertTrue(setup_parser.called)
+        self.assertTrue(default_action.called)
+
+        # defined opts.action callable
+        other_action = Mock()
+        parser.add_argument('-b', action='store_const', dest='action',
+                            const=other_action)
+        default_action.reset_mock()
+        setup_parser = Mock(return_value=(parser, default_action))
+        self.cm._do('-b', setup_parser)
+        self.assertTrue(setup_parser.called)
+        self.assertFalse(default_action.called)
+        self.assertTrue(other_action.called)
+
     def test_command_mixin_add_argument(self):
-        pass
+        parser = Mock()
+        self.cm._add_argument(parser, '-b')
+        required = {'action': 'store_const', 'dest': 'action'}
+        _, kwargs = parser.add_argument.call_args
+        for key in required:
+            self.assertIn(key, kwargs)
+            self.assertEqual(required[key], kwargs[key])
 
 
 class BaseCommandTest(SpaceTest):
