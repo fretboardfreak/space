@@ -80,9 +80,8 @@ Bitbucket.
 The code is predominantly written in python 3 and the python PEP8
 recommendation is followed to help ensure clean readable style.
 
-For planning and issue tracking I am using a public Trello Board::
-
-    https://trello.com/b/Oi1ucOMB/space
+For planning and issue tracking I am using a `Trello Board
+<https://trello.com/b/Oi1ucOMB/space>`_.
 
 Versioning
 ^^^^^^^^^^
