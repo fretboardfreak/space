@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from unittest import skip
 from unittest.mock import patch
 
 import lib.cmdline.commands as commands
@@ -33,12 +32,17 @@ class ListTest(BaseCommandTest):
         self.assertTrue(print_object.called)
         self.assertTrue(self.mock_engine.get_focusable_objects.called)
 
-    @skip('NI')
-    def test_show_focussed_no_current_object(self):
+    @patch('lib.cmdline.format_object.print_object')
+    def test_show_focussed_no_current_object(self, print_object):
         ls = self.get_instance()
-        ls.do_ls('-a')
+        ls.current_object = None
+        ls.do_ls('')
+        self.assertTrue(print_object.called)
+        self.assertTrue(self.mock_engine.get_focusable_objects.called)
 
-
-    @skip('NI')
-    def test_show_focussed(self):
-        pass
+    @patch('lib.cmdline.format_object.print_object')
+    def test_show_focussed(self, print_object):
+        ls = self.get_instance()
+        ls.do_ls('')
+        self.assertFalse(print_object.called)
+        self.assertFalse(self.mock_engine.get_focusable_objects.called)
