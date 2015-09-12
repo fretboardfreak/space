@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from unittest import skip
+from unittest.mock import Mock
 
 import lib.cmdline.commands as commands
 
@@ -25,6 +25,27 @@ class CdTest(BaseCommandTest):
         self.command_class = commands.Cd
         self.alias_commands = []
 
-    @skip('NI')
+    def set_up_mock_object_id_map(self, object_name):
+        target_object = (Mock(), Mock())
+        target_object[1].name = object_name
+        ret_val = {object_name: target_object}
+        self.mock_engine.get_object_id_map = Mock(return_value=ret_val)
+        return target_object
+
     def test_change_focussed(self):
-        pass
+        cd = self.get_instance()
+        cd.do_list = Mock()
+        object_name = 'some-object'
+        target = self.set_up_mock_object_id_map(object_name)
+        cd.current_object = None
+
+        cd.do_cd('')
+        self.assertTrue(cd.do_list.called)
+        self.assertFalse(self.mock_engine.get_object_id_map.called)
+        self.assertEqual(cd.current_object, None)
+        cd.do_list.reset_mock()
+
+        cd.do_cd(object_name)
+        self.assertFalse(cd.do_list.called)
+        self.assertTrue(self.mock_engine.get_object_id_map.called)
+        self.assertEqual(cd.current_object, target)
