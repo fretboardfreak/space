@@ -22,8 +22,8 @@ class System(object):
     size_range = (2, 15)
 
     def __init__(self):
-        self.size = randint(*self.size_range)
-        self.sun_brightness = randint(*self.get_brightness_bounds(self.size))
+        self.size, self.sun_brightness = (
+            self.get_system_size_and_sun_brightness())
         debug('Constructing new system of size %s with sun brightness %s' %
               (self.size, self.sun_brightness))
         self.planets = [Planet(sun_brightness=self.sun_brightness,
@@ -65,3 +65,9 @@ class System(object):
         _brightness_upper_bound = 1000 if size > size_scale else 500
         _brightness_lower_bound = 10 if size <= size_scale else 400
         return (_brightness_lower_bound, _brightness_upper_bound)
+
+    @classmethod
+    def get_system_size_and_sun_brightness(cls):
+        size = randint(*cls.size_range)
+        brightness = randint(*cls.get_brightness_bounds(size))
+        return size, brightness
