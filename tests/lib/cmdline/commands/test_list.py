@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from unittest import skip
+from unittest.mock import patch
 
 import lib.cmdline.commands as commands
 
@@ -25,9 +26,18 @@ class ListTest(BaseCommandTest):
         self.command_class = commands.List
         self.alias_commands = ['do_ls']
 
+    @patch('lib.cmdline.format_object.print_object')
+    def test_list_planets(self, print_object):
+        ls = self.get_instance()
+        ls.do_ls('-a')
+        self.assertTrue(print_object.called)
+        self.assertTrue(self.mock_engine.get_focusable_objects.called)
+
     @skip('NI')
-    def test_list_planets(self):
-        pass
+    def test_show_focussed_no_current_object(self):
+        ls = self.get_instance()
+        ls.do_ls('-a')
+
 
     @skip('NI')
     def test_show_focussed(self):
