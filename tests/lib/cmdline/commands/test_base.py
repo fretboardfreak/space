@@ -20,6 +20,7 @@ from tests.base import SpaceTest
 
 from lib.cmdline.commands.base import CommandMixin
 from lib.engine import SpaceEngine
+import lib.model as model
 
 
 class TestBase(SpaceTest):
@@ -68,13 +69,19 @@ class BaseCommandTest(SpaceTest):
         self.command_class = CommandMixin
         self.alias_commands = []
         self.mock_engine = Mock(spec=SpaceEngine)
+        _, brightness = model.System.get_system_size_and_sun_brightness()
+        self.mock_planet = (
+            model.Planet(sun_brightness=brightness, sun_distance=1))
+        self.mock_coord = model.Coord()
 
     def skip_base_class(self):
         if self.__class__.__name__ == 'BaseCommandTest':
             self.skipTest('base class, not valid test')
 
     def get_instance(self):
-        return self.command_class(self.mock_engine)
+        inst = self.command_class(self.mock_engine)
+        inst.current_object = (self.mock_coord, self.mock_planet)
+        return inst
 
     def test_required_methods(self):
         self.skip_base_class()
