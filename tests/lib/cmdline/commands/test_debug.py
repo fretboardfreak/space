@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from unittest import skip
+from unittest.mock import patch
 
 import lib.cmdline.commands as commands
 
@@ -25,14 +25,27 @@ class DebugTest(BaseCommandTest):
         self.command_class = commands.Debug
         self.alias_commands = ['do_dbg']
 
-    @skip('NI')
-    def test_print_state(self):
-        pass
+    # note: need patch the default action using the mangled named
+    @patch('lib.cmdline.commands.Debug._Debug__print_state')
+    def test_default_command_action(self, mock_print_state):
+        debug_cmd = self.get_instance()
+        debug_cmd.do_debug('')
+        self.assertTrue(mock_print_state.called)
 
-    @skip('NI')
-    def test_interactive(self):
-        pass
+    @patch('builtins.print')
+    def test_print_state(self, mock_print):
+        debug_cmd = self.get_instance()
+        debug_cmd.do_debug('--print-state')
+        self.assertTrue(mock_print.called)
+        mock_print.assert_called_with(debug_cmd.engine)
 
-    @skip('NI')
+    @patch('code.interact')
+    def test_interactive(self, mock_interact):
+        debug_cmd = self.get_instance()
+        debug_cmd.do_debug('--interact')
+        self.assertTrue(mock_interact.called)
+
     def test_new_state(self):
-        pass
+        debug_cmd = self.get_instance()
+        debug_cmd.do_debug('--new-state')
+        self.assertTrue(self.mock_engine.new_game.called)
