@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from unittest import skip
+from unittest.mock import Mock, patch
 
 import lib.cmdline.commands as commands
+import lib.model as model
 
 from .test_base import BaseCommandTest
 
@@ -24,11 +25,40 @@ class UserTest(BaseCommandTest):
         super().setUp()
         self.command_class = commands.User
         self.alias_commands = []
+        self.username = 'username'
+        self.mock_engine.user = model.User(self.username, self.mock_coord)
 
-    @skip('NI')
+    def get_instance(self):
+        self.mock_planet.emperor = self.username
+        inst = super().get_instance()
+        inst.engine.user_planets = Mock(return_value=[(self.mock_coord,
+                                                       self.mock_planet)])
+        return inst
+
     def test_print_stats(self):
-        pass
+        user = self.get_instance()
+        user.do_user('')
+        self.assertTrue(user.engine.user_planets.called)
 
-    @skip('NI')
-    def test_change_name(self):
-        pass
+    @patch('builtins.input')
+    def test_change_name(self, mock_input):
+        user_cmd = self.get_instance()
+        mock_input.return_value = 'no'
+
+        user_cmd.do_user('--change-name')
+        self.assertEqual(self.username, user_cmd.engine.user.name)
+        self.assertEqual(self.username, self.mock_planet.emperor)
+        self.assertFalse(mock_input.called)
+        mock_input.reset_mock()
+
+        user_cmd.do_user('--change-name new-username')
+        self.assertEqual(self.username, user_cmd.engine.user.name)
+        self.assertEqual(self.username, self.mock_planet.emperor)
+        self.assertTrue(mock_input.called)
+
+        mock_input.return_value = 'yes'
+        new_name = 'new-username'
+        user_cmd.do_user('--change-name {}'.format(new_name))
+        self.assertEqual(new_name, user_cmd.engine.user.name)
+        self.assertEqual(new_name, self.mock_planet.emperor)
+        self.assertTrue(mock_input.called)
