@@ -15,11 +15,12 @@
 import json
 import tempfile
 from collections import Iterable
-from unittest.mock import Mock
+from unittest.mock import Mock, patch, mock_open
 
 from tests.base import SpaceTest
 
 import lib.engine as engine
+import lib.model as model
 
 
 class TestSpaceEngine(SpaceTest):
@@ -39,18 +40,45 @@ class TestSpaceEngine(SpaceTest):
         self.assertTrue(orig_state, hash(self.object))
         self.assertEqual(current_obj_name, saved_current_obj)
 
-    def test_save(self):
-        self.skipTest('NI')
+    @patch('json.dump')
+    def test_save(self, mock_dump):
+        self.object.__getstate__ = Mock(return_value=('state',))
+        current_obj = (model.Coord(), model.Planet(sun_brightness=1000,
+                                                   sun_distance=1))
+        with patch('builtins.open', mock_open()):
+            self.object.save(current_obj)
+
+        self.assertTrue(self.object.__getstate__.called)
+        args, _ = mock_dump.call_args
+        self.assertEqual(args[0], (current_obj[1].name, ('state',)))
 
     def test_system_callback(self):
-        self.skipTest('NI')
+        self.object.galaxy = Mock()
+        system, coord = 'system', 'coord'
+        self.object.galaxy.system.return_value = system
+        ret_val = self.object._system_callback(coord)
+        self.object.galaxy.system.assert_called_with(coord)
+        self.assertEqual(ret_val, system)
 
     def test_new_game(self):
-        self.skipTest('NI')
+        username = 'name'
+        coord = model.Coord()
+        orig_galaxy, orig_user = self.object.galaxy, self.object.user
+        self.object.new_game(lambda system_cb: (username, coord))
+        self.assertNotEqual(orig_galaxy, self.object.galaxy)
+        self.assertNotEqual(orig_user, self.object.user)
+        self.assertEqual(self.object.user.name, username)
+        self.assertEqual(1, len(self.object.user.planets))
+        self.assertEqual(coord, self.object.user.planets[0])
+
+        planet = self.object.galaxy.planet(self.object.user.planets[0])
+        self.assertEqual(username, planet.emperor)
+        self.assertNotEqual(0, planet.resources.trade_value)
 
     def test_mock_new_game_info_cb(self):
-        self.skipTest('NI: check that interface and return values are '
-                      'consistent between the original and the mock methods.')
+        """The new game info callback defines the new user."""
+        test_value = self.object.mock_new_game_info_cb(Mock())
+        model.User(*test_value)
 
     def recurse_objects(self, state, frame):
         """Recursively yield every item in state."""
