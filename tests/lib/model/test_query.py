@@ -46,3 +46,20 @@ class TestModelQuery(SpaceTest):
         for coord, planet in result:
             self.assertIsInstance(coord, model.Coord)
             self.assertIsInstance(planet, model.Planet)
+
+    def test_get_focusable_objects(self):
+        result = self.mq.get_focusable_objects()
+        for coord, planet in result:
+            self.assertIsInstance(coord, model.Coord)
+            self.assertIsInstance(planet, model.Planet)
+            self.assertIn(coord, self.mq.user.planets)
+
+    def test_get_object_id_map(self):
+        focusable_objs = self.mq.get_focusable_objects()
+        id_map = self.mq.get_object_id_map()
+        for key in id_map:
+            if not key.isdigit():
+                self.assertTrue(key.lower() in [obj.name.lower()
+                                                for _, obj in focusable_objs])
+        self.assertEqual(set(focusable_objs),
+                         set(id_map.values()))
