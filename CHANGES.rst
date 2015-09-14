@@ -2,16 +2,35 @@ Space Changelog
 ===============
 
 :version: 1.0
-:date: UNRELEASED
+:date: 2015-09-14
 :summary: The basic goal of this release is to reach a relatively stable state
           with respect to the game model code, save file format, a basic yet
           more or less complete command line interface and the way that the
           various pieces are glued together.
 
+- include electricity in str representation of planets
+- fix bug in planet.build so buildings upgrade properly (it was adding multiple
+  level 1 instances instead of upgrading the existing instance)
+- include interpreter state in save file: now saves current_object setting
+- added model query mixin to keep this type of code in one place, and
+  accompanying unit tests
+- document command line interface in README
+- move logic for changing engine state from the front end into the engine
+- remove the gamestate model object, not necessary
+- commands: extract common command code into a base class and unit test
+- fix Trello link in README
+- Remove ditz content and move back to Trello for planning/issue tracking
+- add/unittest user command
+- add/unittest build command
+- add/unittest list command
+- add/unittest cd command
+- add/unittest debug command
+
 ----
 
 :version: 0.2
 :date: 2015-05-29
+
 - bugfix: state methods should call getstate/setstate dunder methods recursively
 - bugfix: test that getstate only returns primitive objects
 - bugfix: factory methods or better constructors for restoring state
@@ -26,6 +45,7 @@ Space Changelog
 
 :version: 0.1
 :date: 2015-05-06
+
 - bugfix: building: add sun callback to solar power plant state
 - bugfix: building: comparison tests make wrong assumption about value
 - bugfix: lib.util needs to be abolished
