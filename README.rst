@@ -15,10 +15,6 @@ ideas were chosen due to frustrations found in similar games.
 Command Line Interface
 ----------------------
 
-:added: v1.0 dev
-
-*Under Construction*
-
 The user is the ruler of an empire of planets. He/She needs to be able to
 manage the development of each planet while also performing exploratory and
 military type space activities too.
