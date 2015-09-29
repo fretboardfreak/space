@@ -19,6 +19,7 @@ from logging import debug
 from lib.error import ModelObjectError
 from lib.namegen import NameGen
 
+from .update import ResourceUpdater
 from .resources import Resources
 from .building import ALL_BUILDINGS, get_building
 
@@ -95,14 +96,10 @@ class Planet(object):
         return rates
 
     def update(self):
-        new_t = time()
-        num_secs = new_t - self.last_update
-        debug('Updating planet {} by {}'.format(self.name, num_secs))
-        for res in self.rates:
-            difference = self.rates[res] * num_secs
-            self.resources[res] = min(self.resources[res] + difference,
-                                      self.max_resources[res])
-        self.last_update = new_t
+        updater = ResourceUpdater(self.last_update, self.resources,
+                                  self.rates, self.max_resources)
+        self.resources, self.last_update = updater.update()
+        debug('Updated planet {} by {}'.format(self.name, updater.difference))
 
     def _build_building(self, building_name, level=None):
         self.update()

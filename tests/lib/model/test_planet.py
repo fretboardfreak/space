@@ -79,7 +79,6 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
                          model.Resources(ore=sum(range(10))))
 
     def prep_update_tst(self):
-        planet.time = Mock(return_value=110.0)
         self.object.last_update = 100.0
         time_diff = 10.0
         self.object.buildings.append(Building(1))
@@ -87,22 +86,12 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
         return time_diff, expected_rate
 
     def test_update(self):
-        time_diff, expected_rate = self.prep_update_tst()
+        self.object.buildings.append(Building(1))
         start_res = self.object.resources.copy()
+        start_last_update = self.object.last_update
         self.object.update()
-        end_res = self.object.resources.copy()
-        res_diff = end_res - start_res
-        self.assertEqual(res_diff.trade_value,
-                         time_diff * expected_rate)
-
-    def test_update_max_resources(self):
-        time_diff, expected_rate = self.prep_update_tst()
-        max_res = self.object.max_resources.copy()
-        max_res.ore -= time_diff * expected_rate
-        self.object.resources = max_res.copy()
-        self.object.update()
-        self.assertEqual(self.object.resources,
-                         self.object.max_resources)
+        self.assertNotEqual(start_res, self.object.resources)
+        self.assertNotEqual(start_last_update, self.object.last_update)
 
     def test_update_no_available_resources(self):
         """
