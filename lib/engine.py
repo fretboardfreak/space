@@ -17,15 +17,17 @@ import os
 from logging import debug
 
 from .cmdline.interpreter import SpaceCmdInterpreter
-from .model import Galaxy, User, Coord, ModelQueryMixin
+from . import model
 
 
-class SpaceEngine(ModelQueryMixin):
+class SpaceEngine(model.ModelQueryMixin):
     def __init__(self, save_file, opts=None):
         self.save_file = save_file
         self.opts = opts
         self.user = None
         self.galaxy = None
+        model.update.delayed_action_trigger.CALLABLE = (
+            self.execute_delayed_actions)
 
     def __repr__(self):
         return "{}(save file: {}, user: {}, galaxy: {})".format(
@@ -42,10 +44,10 @@ class SpaceEngine(ModelQueryMixin):
         self.user = None
         self.galaxy = None
         if user_state is not None:
-            self.user = User(name='')
+            self.user = model.User(name='')
             self.user.__setstate__(user_state)
         if galaxy_state is not None:
-            self.galaxy = Galaxy()
+            self.galaxy = model.Galaxy()
             self.galaxy.__setstate__(galaxy_state)
 
     def load(self):
@@ -79,8 +81,8 @@ class SpaceEngine(ModelQueryMixin):
             home_planet)
         """
         try:
-            self.galaxy = Galaxy()
-            self.user = User(*new_game_info_cb(self._system_callback))
+            self.galaxy = model.Galaxy()
+            self.user = model.User(*new_game_info_cb(self._system_callback))
             system = self.galaxy.system(self.user.planets[0])
             planet = system.planets[int(self.user.planets[0].planet)]
             planet.resources.ore = 25
@@ -91,8 +93,11 @@ class SpaceEngine(ModelQueryMixin):
 
     def mock_new_game_info_cb(self, system_callback):
         """Mock callback for creating test gamestates"""
-        coord, name = Coord(), "emperor nim"
+        coord, name = model.Coord(), "emperor nim"
         return (name, coord)
 
     def run(self):
         SpaceCmdInterpreter(self, self.opts.debug).start()
+
+    def execute_delayed_actions(self):
+        debug('delayed actions happening')
