@@ -13,8 +13,23 @@
 # limitations under the License.
 
 import time
+import functools
+from logging import debug
 
 from .resources import Resources
+
+
+def delayed_action_trigger(func):
+    """Decorator to trigger delayed actions before calling a method."""
+
+    functools.wraps(func)
+    def new_function(*args, **kwargs):
+        if hasattr(delayed_action_trigger, 'CALLABLE'):
+            debug('Performing Delayed Actions...')
+            delayed_action_trigger.CALLABLE()
+        return func(*args, **kwargs)
+
+    return new_function
 
 
 def calculate_update_increments(last_update, new_time=None):
