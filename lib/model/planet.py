@@ -19,7 +19,7 @@ from logging import debug
 from lib.error import ModelObjectError
 from lib.namegen import NameGen
 
-from .update import ResourceUpdater
+from .update import ResourceUpdater, delayed_action_trigger
 from .resources import Resources
 from .building import ALL_BUILDINGS, get_building
 
@@ -95,6 +95,7 @@ class Planet(object):
             rates += bld.modifier
         return rates
 
+    @delayed_action_trigger
     def update(self):
         updater = ResourceUpdater(self.last_update, self.resources,
                                   self.rates, self.max_resources)
