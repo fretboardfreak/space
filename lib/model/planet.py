@@ -19,7 +19,7 @@ from logging import debug
 from lib.error import ModelObjectError
 from lib.namegen import NameGen
 
-from .update import ResourceUpdater, delayed_action_trigger
+from .update import ResourceUpdater, delayed_event_trigger
 from .resources import Resources
 from .building import ALL_BUILDINGS, get_building
 
@@ -95,7 +95,7 @@ class Planet(object):
             rates += bld.modifier
         return rates
 
-    @delayed_action_trigger
+    @delayed_event_trigger
     def update(self):
         updater = ResourceUpdater(self.last_update, self.resources,
                                   self.rates, self.max_resources)
@@ -197,6 +197,10 @@ class Planet(object):
     def research(self):
         return dict()
 
+    # trigger delayed events to ensure any building construction is completed
+    # the rest of the update process is not needed when looking at just a
+    # building though.
+    @delayed_event_trigger
     def building(self, building_type):
         bld_cls = get_building(building_type)
         for building in self.buildings:

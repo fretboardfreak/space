@@ -19,14 +19,14 @@ from logging import debug
 from .resources import Resources
 
 
-def delayed_action_trigger(func):
-    """Decorator to trigger delayed actions before calling a method."""
+def delayed_event_trigger(func):
+    """Decorator to trigger delayed events before calling a method."""
 
-    functools.wraps(func)
+    @functools.wraps(func)
     def new_function(*args, **kwargs):
-        if hasattr(delayed_action_trigger, 'CALLABLE'):
+        if hasattr(delayed_event_trigger, 'CALLABLE'):
             debug('Performing Delayed Actions...')
-            delayed_action_trigger.CALLABLE()
+            delayed_event_trigger.CALLABLE()
         return func(*args, **kwargs)
 
     return new_function
@@ -58,6 +58,7 @@ class ResourceUpdater(object):
         self.new_time, self.difference, self.resources = [None, None, None]
 
     def update(self):
+        """Calculate the new value of resources for planet."""
         self.new_time = time.time()
         increments = calculate_update_increments(self.last_update,
                                                  new_time=self.new_time)

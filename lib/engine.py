@@ -26,8 +26,8 @@ class SpaceEngine(model.ModelQueryMixin):
         self.opts = opts
         self.user = None
         self.galaxy = None
-        model.update.delayed_action_trigger.CALLABLE = (
-            self.execute_delayed_actions)
+        model.update.delayed_event_trigger.CALLABLE = (
+            self.execute_delayed_events)
 
     def __repr__(self):
         return "{}(save file: {}, user: {}, galaxy: {})".format(
@@ -99,5 +99,5 @@ class SpaceEngine(model.ModelQueryMixin):
     def run(self):
         SpaceCmdInterpreter(self, self.opts.debug).start()
 
-    def execute_delayed_actions(self):
+    def execute_delayed_events(self):
         debug('delayed actions happening')
