@@ -19,6 +19,18 @@ from logging import debug
 from .resources import Resources
 
 
+def update_trigger(func):
+    """Decorator to trigger an update before given method is called."""
+
+    @functools.wraps(func)
+    def new_function(*args, **kwargs):
+        if len(args) > 0 and hasattr(args[0], 'update'):
+            args[0].update()
+        return func(*args, **kwargs)
+
+    return new_function
+
+
 def delayed_event_trigger(func):
     """Decorator to trigger delayed events before calling a method."""
 

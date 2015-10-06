@@ -19,7 +19,7 @@ from logging import debug
 from lib.error import ModelObjectError
 from lib.namegen import NameGen
 
-from .update import ResourceUpdater, delayed_event_trigger
+from .update import ResourceUpdater, delayed_event_trigger, update_trigger
 from .resources import Resources
 from .building import ALL_BUILDINGS, get_building
 
@@ -103,7 +103,6 @@ class Planet(object):
         debug('Updated planet {} by {}'.format(self.name, updater.difference))
 
     def _build_building(self, building_name, level=None):
-        self.update()
         building = get_building(building_name)
         if building.are_requirements_met(self, level):
             debug('Constructing {} level {} on planet {}'.format(
@@ -120,11 +119,13 @@ class Planet(object):
                   'resources.'.format(self.name))
             return False
 
+    @update_trigger
     def build(self, building):
         existing = self.building(building)
         level = 1 if not existing else existing.level + 1
         return self._build_building(building, level)
 
+    @update_trigger
     def get_available_buildings(self):
         debug('Retrieving buildings available for construction on planet '
               '{}'.format(self.name))
