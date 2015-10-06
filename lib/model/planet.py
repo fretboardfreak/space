@@ -71,6 +71,7 @@ class Planet(object):
                   repr(self.resources)))
 
     def __getstate__(self):
+        """Return the save state for this planet."""
         resources = self.resources.__getstate__()
         buildings = [(blding.abbr, blding.level)
                      for blding in self.buildings]
@@ -78,18 +79,21 @@ class Planet(object):
                 self.sun_distance, resources, buildings, self.last_update)
 
     def __setstate__(self, state):
+        """Restore a saved planet state."""
         (self.name, self.emperor, self.sun_brightness,
          self.sun_distance, resources, buildings, self.last_update) = state
         self.resources = Resources().__setstate__(resources)
         self.load_buildings(buildings)
 
     def load_buildings(self, buildings):
+        """Helper method for loading buildings from save states."""
         self.buildings = []
         for bld, level in buildings:
             self.buildings.append(get_building(bld)(level))
 
     @property
     def rates(self):
+        """Calculate the production rates of this planet."""
         rates = Resources()
         for bld in self.buildings:
             rates += bld.modifier
@@ -97,6 +101,7 @@ class Planet(object):
 
     @delayed_event_trigger
     def update(self):
+        """Update the state of the planet."""
         updater = ResourceUpdater(self.last_update, self.resources,
                                   self.rates, self.max_resources)
         self.resources, self.last_update = updater.update()
@@ -127,6 +132,8 @@ class Planet(object):
 
     @update_trigger
     def get_available_buildings(self):
+        """With the amount of resources available what buildings can be built?
+        """
         debug('Retrieving buildings available for construction on planet '
               '{}'.format(self.name))
         avail = []
@@ -203,6 +210,11 @@ class Planet(object):
     # building though.
     @delayed_event_trigger
     def building(self, building_type):
+        """Retrieve a building instance of given type, if it has been built.
+
+        If an instance of the requested building type has not been built,
+        return None.
+        """
         bld_cls = get_building(building_type)
         for building in self.buildings:
             if isinstance(building, bld_cls):
