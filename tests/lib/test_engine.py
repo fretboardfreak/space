@@ -29,6 +29,9 @@ class TestSpaceEngine(SpaceTest):
         self.object = engine.SpaceEngine(self.save_file)
         self.object.save_file = self.save_file.name
 
+    def tearDown(self):
+        self.save_file.close()
+
     def test_load(self):
         orig_state = hash(self.object)
         current_obj_name = 'current_obj_name'

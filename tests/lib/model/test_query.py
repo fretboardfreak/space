@@ -38,6 +38,9 @@ class TestModelQuery(SpaceTest):
         self.mq.galaxy = engine.galaxy
         self.mq.user = engine.user
 
+    def tearDown(self):
+        self.tempfile.close()
+
     def test_user_planets(self):
         result = self.mq.user_planets(self.mq.user)
         # ensure result is a map of some sort, i.e. list of tuples, vs. dict
