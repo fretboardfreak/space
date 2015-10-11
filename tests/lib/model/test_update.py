@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 from tests.base import SpaceTest
 
@@ -28,6 +28,48 @@ class TestUpdate(SpaceTest):
         self.assertEqual(1, update.calculate_update_increments(last_update))
         self.assertEqual(3, update.calculate_update_increments(last_update,
                                                                new_time=3))
+
+    def test_update_trigger_decorator(self):
+        # cannot use update.update_trigger because within the test_class scope
+        # the "update" portion resolves to the test_class method rather than
+        # the module.
+        decorator = update.update_trigger
+
+        class test_class(object):
+            def __init__(self):
+                self.update_called = False
+                self.func_called = False
+
+            def update(self):
+                self.update_called = True
+
+            @decorator
+            def func(self, *args):
+                self.func_called = True
+                self.func_args = args
+
+        test_obj = test_class()
+        args = (1, 2, 'foo', 5)
+        test_obj.func(*args)
+
+        self.assertTrue(test_obj.func_called)
+        self.assertTrue(test_obj.update_called)
+        self.assertEqual(test_obj.func_args, args)
+
+    def test_delayed_event_trigger_decorator(self):
+
+        def do_delayed_actions():
+            do_delayed_actions.called = True
+
+        @update.delayed_event_trigger
+        def test_method(*args):
+            test_method.args = args
+
+        update.delayed_event_trigger.CALLABLE = do_delayed_actions
+        args = (9, 'bar', 4)
+        test_method(*args)
+        self.assertTrue(getattr(do_delayed_actions, 'called', False))
+        self.assertEqual(getattr(test_method, 'args', tuple()), args)
 
 
 class TestResourceUpdater(SpaceTest):
