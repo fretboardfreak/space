@@ -56,7 +56,7 @@ def calculate_update_increments(last_update, new_time=None):
 
 class ResourceUpdater(object):
 
-    """Helper class to handle updating resources based on income.
+    """Helper class to handle updating a Planet's resources based on income.
 
     Attributes "new_time", "difference", "resources" will be unset until the
     update() method is called.
@@ -85,3 +85,44 @@ class ResourceUpdater(object):
                 new_val = self.resources[res] + self.difference[res]
             self.resources[res] = new_val
         return self.resources, self.new_time
+
+
+class DelayedEvent(object):
+
+    """Perform an action after some delay.
+
+    :descriptor: A string describing the event.
+    :delay: A number representing the number of seconds to delay.
+    :action: A callable to be executed after the delay.
+
+    When triggered, if the period of delay has passed, the provided action
+    callable will be executed.  If the event triggered it will return True
+    otherwise it will return None.  When triggered the attribute "triggered"
+    will change from False to True unless an exception was thrown by the action
+    callable.  Once the "triggered" attribute is set to True the event cannot
+    be re-triggered.
+
+    When triggering events, the trigger time can be passed in as the keyword
+    "_time" otherwise time.time() will be used.
+    """
+
+    def __init__(self, descriptor, delay, action):
+        self.descriptor = descriptor
+        self.delay = delay
+        self.action = action
+        self.trigger_time = time.time() + delay
+        self.triggered = False
+
+    def is_delay_over(self, _time=None):
+        if not _time:
+            _time = time.time()
+        return _time >= self.trigger_time
+
+    def __call__(self, _time=None, *args, **kwargs):
+        if not self.is_delay_over(_time):
+            return
+        if not self.triggered:
+            debug('Triggering event "{}"...'.format(self.descriptor))
+            self.action(*args, **kwargs)
+            self.triggered = True
+        return True

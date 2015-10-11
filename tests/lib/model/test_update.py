@@ -82,7 +82,8 @@ class TestResourceUpdater(SpaceTest):
                                          self.rates)
 
     def tearDown(self):
-        self.time_patch.stop()
+        if hasattr(self.time_patch, 'target'):
+            self.time_patch.stop()
 
     def test_update(self):
         mock_time = self.time_patch.start()
@@ -109,3 +110,44 @@ class TestResourceUpdater(SpaceTest):
         self.assertGreater((new_time - self.last_update) * self.rates.ore,
                            max_resources.ore)
         self.assertEqual(self.ru.resources.ore, max_resources.ore)
+
+
+class TestDelayedEvent(SpaceTest):
+    def setUp(self):
+        self.time_patch = patch('time.time')
+
+    def tearDown(self):
+        if hasattr(self.time_patch, 'target'):
+            self.time_patch.stop()
+
+    def initialize(self, times):
+        mock_time = self.time_patch.start()
+        delay, action = 1, Mock()
+        mock_time.side_effect = times
+        event = update.DelayedEvent('descriptor', delay, action)
+        return event, action, mock_time
+
+    def test_is_delay_over(self):
+        event, _, mock_time = self.initialize([100, 101])
+        self.assertTrue(event.is_delay_over())
+        self.time_patch.stop()
+
+        event, _, mock_time = self.initialize([100, 100])
+        self.assertFalse(event.is_delay_over())
+
+    def test_trigger(self):
+        event, action, _ = self.initialize([100] + [101] * 4)
+        self.assertTrue(event())
+        self.assertTrue(action.called)
+
+    def test_trigger_delay_not_over(self):
+        event, action, _ = self.initialize([100] * 4)
+        self.assertFalse(event())
+        self.assertFalse(action.called)
+
+    def test_trigger_action_error(self):
+        mock_time = self.time_patch.start()
+        mock_time.side_effect = [100] + [101] * 4
+        action = Mock(side_effect=Exception)
+        event = update.DelayedEvent('descriptor', 1, action)
+        self.assertRaises(Exception, event)
