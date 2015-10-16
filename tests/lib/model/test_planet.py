@@ -123,18 +123,13 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
         self.assertEqual(self.object.building(building_type).level, 2)
 
     def test_build_resource_subtraction(self):
-        # Skipping this test because Resource subtraction still seems to have
-        # some problems.
-        self.skipTest('Broken: resource subtraction is causes problems here.')
         res_amt = 100
         self.object.resources.ore = res_amt
-        self.object.resources.metal = res_amt
         building_type = 'Mine'
         result = self.object.build(building_type)
         self.assertTrue(result)
         self.assertEqual(len(self.object.buildings), 1)
         self.assertLess(self.object.resources.ore, res_amt)
-        self.assertLess(self.object.resources.metal, res_amt)
 
     def test_get_available_buildings(self):
         expected = [
