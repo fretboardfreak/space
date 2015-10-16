@@ -18,7 +18,8 @@
 
 from .coord import Coord, SystemCoord
 from .resources import (Resources, ALL_RESOURCES, ORE, METAL, THORIUM,
-                        HYDROCARBON, DEUTERIUM, SUN, ELECTRICITY, TRADE_RATIO)
+                        HYDROCARBON, DEUTERIUM, SUN, ELECTRICITY, TRADE_RATIO,
+                        NotSufficientResourcesError)
 from .building import (Mine, SolarPowerPlant, ALL_BUILDINGS, get_building,
                        get_all_building_names, get_all_building_abbr)
 from .planet import Planet
@@ -32,7 +33,7 @@ __all__ = [Coord, SystemCoord, ]
 
 __all__.extend([Resources, ALL_RESOURCES, ORE, METAL, THORIUM,
                 HYDROCARBON, DEUTERIUM, SUN, ELECTRICITY,
-                TRADE_RATIO])
+                TRADE_RATIO, NotSufficientResourcesError])
 
 __all__.extend([Mine, SolarPowerPlant, ALL_BUILDINGS, get_building,
                 get_all_building_names, get_all_building_abbr])
