@@ -33,7 +33,7 @@ TRADE_RATIO = {ORE: 1.0, METAL: 2.0, THORIUM: 4.0, HYDROCARBON: 3.0,
 
 
 class NotSufficientResourcesError(ArithmeticError):
-    """Thrown when an operation results in less than zero of some resource."""
+    """Thrown when there are not enough resources to perform an operation."""
     def __init__(self, defecit, *args, **kwargs):
         self.defecit = defecit
 
@@ -56,26 +56,6 @@ class Resources(UserDict):
         for res in ALL_RESOURCES:
             value += float(TRADE_RATIO[res]) * self[res]
         return value
-
-    def __getattribute__(self, item):
-        val = None
-        try:
-            val = super(Resources, self).__getattribute__(item)
-        except AttributeError:
-            val = self[item]
-        if item in ALL_RESOURCES:
-            if val < 0:
-                val = abs(val)
-                self.__setattr__(item, val)
-        return val
-
-    def __getitem__(self, item):
-        val = super(Resources, self).__getitem__(item)
-        if item in ALL_RESOURCES:
-            if val < 0:
-                val = abs(val)
-                self.__setitem__(item, val)
-        return val
 
     def __repr__(self):
         res_list = deepcopy(ALL_RESOURCES)
@@ -116,24 +96,9 @@ class Resources(UserDict):
         return result
 
     def __sub__(self, other):
-        """Attempt to subtract the value of other from self.
-
-        If the subtraction operation results in a negative value the
-        NotSufficientResourcesError exception will be thrown. The
-        NotSufficientResourcesError exception will include a "defecit"
-        attribute which will be a Resources object with the values of resources
-        that were missing for this subtraction operation.
-        """
         result = Resources()
-        nsr = {}
         for res in ALL_RESOURCES:
-            temp = self[res] - other[res]
-            if temp < 0:
-                nsr[res] = abs(temp)
-                continue
-            result[res] = temp
-        if nsr:
-            raise NotSufficientResourcesError(defecit=Resources(**nsr))
+            result[res] = self[res] - other[res]
         return result
 
     def copy(self):

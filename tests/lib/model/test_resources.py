@@ -50,16 +50,6 @@ class TestResources(ModelObjectTest, EqualityMixinTest):
             self.assertTrue(getattr(self.object, res.lower()) == 0,
                             err.format(res))
 
-    def test_negative_values(self):
-        self.object.ore = 3
-        self.assertEqual(self.object.ore, 3)
-        self.object['thorium'] = -3
-        self.assertEqual(self.object.thorium, 3)
-        self.object.metal = -3
-        self.assertEqual(self.object.metal, 3)
-        self.object.deuterium = -3
-        self.assertEqual(self.object['deuterium'], 3)
-
     def get_equal_tst_values(self):
         for res in resources.ALL_RESOURCES:
             self.object[res] = 1
@@ -99,19 +89,10 @@ class TestResources(ModelObjectTest, EqualityMixinTest):
 
     def test_sub(self):
         zero, one = self.get_new_instance(), self.get_new_instance(ore=1)
-        two = self.get_new_instance(ore=2)
+        two, neg = self.get_new_instance(ore=2), self.get_new_instance(ore=-1)
         self.assertEqual(one, one - zero)
         self.assertEqual(one, two - one)
-
-        new_value, defecit = None, None
-        try:
-            new_value = one - two
-        except resources.NotSufficientResourcesError as nsr:
-            defecit = nsr.defecit
-
-        self.assertIsNone(new_value)
-        self.assertIsNotNone(defecit)
-        self.assertEqual(defecit, one)
+        self.assertEqual(neg, one - two)
 
     def test_trade_value(self):
         # expected value: sum of relative values of resources in order: ore,
