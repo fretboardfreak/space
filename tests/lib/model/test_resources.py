@@ -94,6 +94,26 @@ class TestResources(ModelObjectTest, EqualityMixinTest):
         self.assertEqual(one, two - one)
         self.assertEqual(neg, one - two)
 
+    def test_mul(self):
+        two, three, six = [self.get_new_instance(ore=val) for val in [2, 3, 6]]
+        neg_one = self.get_new_instance(ore=-1)
+        neg_six = self.get_new_instance(ore=-6)
+        self.assertEqual(six, two * three)
+        self.assertEquals(neg_six, neg_one * six)
+
+    def test_truediv(self):
+        two, three, six = [self.get_new_instance(ore=val) for val in [2, 3, 6]]
+        neg_one = self.get_new_instance(ore=-1)
+        neg_six = self.get_new_instance(ore=-6)
+        for res in [two, three, six, neg_one, neg_six]:
+            for material in res:
+                if res[material] == 0:
+                    res[material] = 1  # divide by 1 not 0
+        self.assertEqual(two, six / three)
+        self.assertEquals(neg_one, neg_six / six)
+        with_zeros = self.get_new_instance(ore=3)
+        self.assertRaises(ZeroDivisionError, lambda: six / with_zeros)
+
     def test_trade_value(self):
         # expected value: sum of relative values of resources in order: ore,
         # metal, hydrocarbon, thorium, deuterium

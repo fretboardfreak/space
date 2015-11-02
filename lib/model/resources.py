@@ -101,6 +101,18 @@ class Resources(UserDict):
             result[res] = self[res] - other[res]
         return result
 
+    def __mul__(self, other):
+        result = Resources()
+        for res in ALL_RESOURCES:
+            result[res] = self[res] * other[res]
+        return result
+
+    def __truediv__(self, other):
+        result = Resources()
+        for res in ALL_RESOURCES:
+            result[res] = self[res] / other[res]
+        return result
+
     def copy(self):
         copy = self.__class__()
         for attr in self:
