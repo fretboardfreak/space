@@ -40,3 +40,11 @@ class ModelQueryMixin(object):
             id_map[obj.name.lower()] = value
             id_map[str(num)] = value
         return id_map
+
+    def planet(self, coord):
+        """Query the galaxy for a specific planet."""
+        return self.galaxy.planet(coord)
+
+    def system(self, coord):
+        """Query the galaxy for a specific system."""
+        return self.galaxy.system(coord)

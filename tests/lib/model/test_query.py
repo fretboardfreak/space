@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import tempfile
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 from tests.base import SpaceTest
 from .base import LibModelTest
 
@@ -66,3 +66,13 @@ class TestModelQuery(SpaceTest):
                                                 for _, obj in focusable_objs])
         self.assertEqual(set(focusable_objs),
                          set(id_map.values()))
+
+    def test_planet(self):
+        with patch.object(self.mq.galaxy, 'planet') as mgalaxy:
+            self.mq.planet(Mock())
+            self.assertTrue(mgalaxy.called)
+
+    def test_system(self):
+        with patch.object(self.mq.galaxy, 'system') as mgalaxy:
+            self.mq.system(Mock())
+            self.assertTrue(mgalaxy.called)
