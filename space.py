@@ -27,7 +27,7 @@ from argparse import ArgumentParser
 from lib.engine import SpaceEngine
 
 
-def main():
+def init():
     args = parse_args()
     logging.basicConfig(
         filename=args.log_file, level=logging.DEBUG, filemode='a',
@@ -35,7 +35,12 @@ def main():
     print('logging to %s started' % args.log_file)
     logging.debug('logging to %s started' % args.log_file)
 
-    SpaceEngine(args.save_file, opts=args).run()
+    return SpaceEngine(args.save_file, opts=args)
+
+
+def main():
+    engine = init()
+    engine.run()
 
 
 def parse_args():
