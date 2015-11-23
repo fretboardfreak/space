@@ -90,11 +90,21 @@ class Building(object):
             self.level = 1
         else:
             self.level = level
+        self.under_construction = False
+
+    def _modifier(self):
+        """The building's per time unit resource production."""
+        return Resources(ore=self.level)
+
+    def _construction_modifier(self):
+        """The building's production capacity while under construction."""
+        return Resources()
 
     @property
     def modifier(self):
-        """The building's per time unit resource production."""
-        return Resources(ore=self.level)
+        if self.under_construction:
+            return self._construction_modifier()
+        return self._modifier()
 
     def electricity(self, sun_energy):
         """The building's per time unit electricity production/consumption."""
@@ -105,16 +115,16 @@ class Building(object):
         return BuildingRequirements()
 
     def __repr__(self):
-        return ("{}(level: {}, modifier: {}, "
+        return ("{}(level: {}, modifier: {}, under construction: {}"
                 "requirements: {})".format(
                     self.__class__.__name__, self.level, repr(self.modifier),
-                    repr(self.requirements)))
+                    self.under_construction, repr(self.requirements)))
 
     def __str__(self):
-        return ("{}: level: {}\n  - modifier: {}\n"
+        return ("{}: level: {}\n  - modifier: {}\n  - under construction:{}\n"
                 "  - requirements: {})".format(
                     self.__class__.__name__, self.level,
-                    repr(self.modifier)[1:-1],
+                    repr(self.modifier)[1:-1], self.under_construction,
                     str(self.requirements).replace('\n', '\n' + ' ' * 8)))
 
     def __eq__(self, other):
@@ -163,8 +173,7 @@ class Mine(Building):
     name = 'Mine'
     abbr = 'Mn'
 
-    @property
-    def modifier(self):
+    def _modifier(self):
         return Resources(ore=0.2*self.level, metal=0.025*self.level)
 
     def electricity(self, sun_energy):
@@ -180,8 +189,7 @@ class SolarPowerPlant(Building):
     name = 'Solar Power Plant'
     abbr = 'SPP'
 
-    @property
-    def modifier(self):
+    def _modifier(self):
         return Resources()
 
     def electricity(self, sun_energy):

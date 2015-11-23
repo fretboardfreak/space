@@ -166,7 +166,8 @@ class TestBuildingBaseClass(ModelObjectTest, EqualityMixinTest):
         self.expected_state = (int, Callable)
         self.expected_attrs = {'level': int, 'modifier': model.Resources,
                                'requirements': building.BuildingRequirements,
-                               'name': str, 'abbr': str}
+                               'name': str, 'abbr': str,
+                               "under_construction": bool}
         self.expected_modifier_type = model.Resources
         self.expected_requirements_type = building.BuildingRequirements
         self.object = self.get_new_instance()
