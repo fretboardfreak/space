@@ -128,6 +128,12 @@ class Planet(object):
     def build(self, building):
         existing = self.building(building)
         level = 1 if not existing else existing.level + 1
+        # check if planet has resources to perform the construction
+        # if so, pay the construction costs
+        # mark any existing versions of the building "under construction"
+        # add building construction event to the event queue
+        # building construction event:
+        #   add new building to list, remove old building
         return self._build_building(building, level)
 
     @update_trigger
