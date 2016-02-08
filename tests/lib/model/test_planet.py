@@ -101,6 +101,8 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
         self.skipTest('NI: Need to determine desired '
                       'behaviour here. Deferring tests for now.')
 
+    # TODO: replace this with higher level test and add low level tests for
+    # sub-pieces
     def test_build(self):
         # not enough resources
         result = self.object.build('Mine')
@@ -122,6 +124,8 @@ class TestPlanet(ModelObjectTest, StateMixinTest):
         self.assertEqual(len(self.object.buildings), 1)
         self.assertEqual(self.object.building(building_type).level, 2)
 
+    # TODO: replace this with higher level test and add low level tests for
+    # sub-pieces
     def test_build_resource_subtraction(self):
         res_amt = 100
         self.object.resources.ore = res_amt
