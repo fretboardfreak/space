@@ -57,6 +57,13 @@ class Resources(UserDict):
             value += float(TRADE_RATIO[res]) * self[res]
         return value
 
+    @property
+    def has_negative(self):
+        for res in ALL_RESOURCES:
+            if self[res] < 0:
+                return True
+        return False
+
     def __repr__(self):
         res_list = deepcopy(ALL_RESOURCES)
         return '({}, trade value: {:.2F})'.format(

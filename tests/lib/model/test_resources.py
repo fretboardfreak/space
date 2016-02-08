@@ -128,3 +128,8 @@ class TestResources(ModelObjectTest, EqualityMixinTest):
         self.object.ore += 10
         self.assertEqual(foo, self.object)
         self.assertNotEqual(copy, self.object)
+
+    def test_has_negative(self):
+        self.assertFalse(self.object.has_negative)
+        self.object.ore = -10
+        self.assertTrue(self.object.has_negative)
