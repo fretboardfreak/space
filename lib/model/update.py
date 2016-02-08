@@ -18,6 +18,17 @@ from logging import debug
 
 from .resources import Resources
 
+# Using a global to hold the delayed events for now.
+# Also, delayed events are currently executed through the delayed_event_trigger
+# rather than a separate event thread.
+DELAYED_EVENTS = []
+# TODO:
+# - make engine queries threadsafe
+# - ensure that only queries are used to interact with the model
+# - write a class that will run its own thread for managing
+# - Move event handling from engine into the event manager class
+# - remove all uses of delayed_event_trigger
+
 
 def update_trigger(func):
     """Decorator to trigger an update before given method is called."""
@@ -106,10 +117,12 @@ class DelayedEvent(object):
     "_time" otherwise time.time() will be used.
     """
 
-    def __init__(self, descriptor, delay, action):
+    def __init__(self, descriptor, delay, action, *args, **kwargs):
         self.descriptor = descriptor
         self.delay = delay
         self.action = action
+        self.args = args
+        self.kwargs = kwargs
         self.trigger_time = time.time() + delay
         self.triggered = False
 
@@ -118,11 +131,11 @@ class DelayedEvent(object):
             _time = time.time()
         return _time >= self.trigger_time
 
-    def __call__(self, _time=None, *args, **kwargs):
+    def __call__(self, _time=None):
         if not self.is_delay_over(_time):
             return
         if not self.triggered:
             debug('Triggering event "{}"...'.format(self.descriptor))
-            self.action(*args, **kwargs)
+            self.action(*self.args, **self.kwargs)
             self.triggered = True
         return True

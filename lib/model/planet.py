@@ -124,6 +124,54 @@ class Planet(object):
                   'resources.'.format(self.name))
             return False
 
+    def get_next_building_level(self, building):
+        existing = self.building(building)
+        level = 1 if not existing else existing.level + 1
+        return level
+
+    def can_start_construction(self, building):
+        level = self.get_next_building_level(building)
+        return get_building(building).are_requirements_met(self, level)
+
+    def pay_construction_costs(self, building_requirements):
+        new_resources = self.resources - building_requirements.resources
+        if new_resources.has_negative():
+            return False
+        self.resources = new_resources
+        debug('Paying construction cost of "{}", Remaining resources on '
+              'planet "{}" are "{}".'.format(
+                  building_requirements.resources, self.name, self.resources))
+
+    def start_construction(self, new_building, level):
+        pass
+
+    # TODO: rename to "build" and remove original "build" when ready
+    @update_trigger
+    def _new_build(self, building):
+        """Start construction on the next level of the specified building.
+
+        steps:
+        - is the new construction allowed?
+        - set existing building object to "under_construction"
+        - pay construction costs of new building
+        - start construction
+            - create delayed event object whose action will replace the
+              existing 'under_construction' building with the new building.
+        """
+        if not self.can_start_construction(building):
+            return False
+        existing = self.building(building)
+        existing.under_construction = True
+        current_resources = self.resources
+
+        try:
+            next_level = self.get_next_building_level(building)
+            new_building = get_building(building)(next_level)
+            self.pay_construction_costs(new_building.requirements)
+            self.start_construction(new_building, next_level)
+        except:  # error, cancel build action, undo any side effects
+            self.resources = current_resources
+
     @update_trigger
     def build(self, building):
         existing = self.building(building)
