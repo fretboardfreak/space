@@ -4,7 +4,8 @@ Design Notes
 Database Schema
 ===============
 
-The galaxy is represented by the database as a whole.
+The galaxy is represented by the database as a whole. *Items in italics are
+future expansions to the game model.*
 
 table SYSTEMS {
     - id : int
@@ -29,8 +30,9 @@ table PLANETS {
     - system : SYSTEMS.id
     - emperor : USERS.id
     - resources : RESOURCES.id
-    - buildings :
+    - buildings : BUILDINGS.id
     - last_update : datetime
+    - *type : str*
 }
 
 table USERS {
@@ -45,4 +47,14 @@ table BUILDINGS {
     - type : str
     - level : int
     - under_construction : bool
+    - *production_output : percentage*
+}
+
+table RESOURCES {
+    - id : int
+    - ore : int
+    - metal : int
+    - thorium : int
+    - hydrocarbon : int
+    - deuterium : int
 }
